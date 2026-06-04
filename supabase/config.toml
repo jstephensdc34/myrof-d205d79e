@@ -1,5 +1,5 @@
 
-project_id = "owpyvsxftbwqqstsxwmp"
+project_id = ""
 
 [functions.copy-library-items]
 verify_jwt = true

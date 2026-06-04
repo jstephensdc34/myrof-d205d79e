@@ -11,23 +11,23 @@ interface ReportHeaderProps {
 
 export const ReportHeader = ({ settings = [], loading = false }: ReportHeaderProps) => {
   const [clinicInfo, setClinicInfo] = useState({
-    name: "My Chiropractic Clinic",
-    address: "123 Health Street, Medical City, CA 90210",
-    phone: "(555) 123-4567",
-    email: "contact@mychiropractic.com",
-    website: "www.mychiropractic.com",
+    name: "",
+    address: "",
+    phone: "",
+    email: "",
+    website: "",
     logoUrl: ""
   });
 
   useEffect(() => {
     if (settings.length > 0) {
       const info = {
-        name: settings.find(s => s.name === "clinic_name")?.value || clinicInfo.name,
-        address: settings.find(s => s.name === "clinic_address")?.value || clinicInfo.address,
-        phone: settings.find(s => s.name === "clinic_phone")?.value || clinicInfo.phone,
-        email: settings.find(s => s.name === "clinic_email")?.value || clinicInfo.email,
-        website: settings.find(s => s.name === "clinic_website")?.value || clinicInfo.website,
-        logoUrl: settings.find(s => s.name === "logo_url")?.value || clinicInfo.logoUrl
+        name: settings.find(s => s.name === "clinic_name")?.value || "",
+        address: settings.find(s => s.name === "clinic_address")?.value || "",
+        phone: settings.find(s => s.name === "clinic_phone")?.value || "",
+        email: settings.find(s => s.name === "clinic_email")?.value || "",
+        website: settings.find(s => s.name === "clinic_website")?.value || "",
+        logoUrl: settings.find(s => s.name === "logo_url")?.value || ""
       };
       setClinicInfo(info);
     }
