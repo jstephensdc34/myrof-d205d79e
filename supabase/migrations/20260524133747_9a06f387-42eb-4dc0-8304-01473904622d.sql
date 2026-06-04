@@ -1,0 +1,1 @@
+DELETE FROM public.library_subcategories WHERE id='estimated_cost';

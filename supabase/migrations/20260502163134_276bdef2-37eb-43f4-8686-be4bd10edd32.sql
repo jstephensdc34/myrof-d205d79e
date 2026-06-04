@@ -1,0 +1,1 @@
+INSERT INTO library_subcategories (id, name, parent_category_id) VALUES ('general_exercises', 'General', 'exercises');

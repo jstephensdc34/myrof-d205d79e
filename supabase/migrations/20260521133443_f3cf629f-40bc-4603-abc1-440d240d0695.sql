@@ -1,0 +1,1 @@
+INSERT INTO public.library_subcategories (id, name, parent_category_id, description) VALUES ('phase_of_care', 'Phase of Care', 'treatment', 'Phase of care for treatment plan');

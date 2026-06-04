@@ -1,0 +1,8 @@
+
+project_id = "owpyvsxftbwqqstsxwmp"
+
+[functions.copy-library-items]
+verify_jwt = true
+
+[functions.search-users]
+verify_jwt = true

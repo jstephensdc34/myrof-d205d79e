@@ -1,0 +1,1 @@
+UPDATE public.library_subcategories SET name = 'Miscellaneous' WHERE id = 'wellness';
