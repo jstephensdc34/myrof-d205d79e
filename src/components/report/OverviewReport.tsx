@@ -224,7 +224,7 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
             {(() => {
               const getSetting = (n: string, f = "") => settings.find((s) => s.name === n)?.value || f;
               const clinic = {
-                name: getSetting("clinic_name", "My Chiropractic Clinic"),
+                name: getSetting("clinic_name", "Your Clinic Name"),
                 address: getSetting("clinic_address"),
                 phone: getSetting("clinic_phone"),
                 email: getSetting("clinic_email"),
