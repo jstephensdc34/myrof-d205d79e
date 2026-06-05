@@ -1,22 +1,50 @@
-## Plan: Use verified Resend domain for report emails
+## Diagnosis
 
-Update the `send-report-email` edge function to send from your verified domain `info.chiropracticspecialistsmn.com` instead of Resend's shared sandbox sender. This unblocks sending to any recipient (not just your own Resend account email).
+The "invalid path specified in request URL" error comes from Supabase Auth rejecting the redirect target. Two issues in your URL Configuration screenshot are causing it:
 
-### Changes
+1. **Site URL is still `http://localhost:3000`** — Supabase uses this as the default redirect when no matching redirect URL is found, and as the base for email links. It must be your Vercel production URL.
+2. **Redirect URL is too narrow** — only `https://therapy-trail-maker.vercel.app/` is whitelisted. Any deep path (like `/auth`, `/report`, or an email confirmation link with query params) won't match exactly, so Supabase rejects it as "invalid path."
 
-1. **`supabase/functions/send-report-email/index.ts`**
-   - Replace `onboarding@resend.dev` with `reports@info.chiropracticspecialistsmn.com`.
-   - Keep the `From` display name as the clinic name from settings (e.g. `Chiropractic Specialists MN <reports@info.chiropracticspecialistsmn.com>`).
-   - Keep `reply_to` pointing at the clinic email from settings so patient replies go to the clinic, not the sender mailbox.
+The app also never tells Supabase where to redirect after signup confirmation, so it falls back to the (wrong) Site URL.
 
-2. **Deploy** the updated edge function.
+## Fix Plan
 
-3. **Verify** by sending a test report email to a non-Resend-account address.
+### 1. Update Supabase URL Configuration (you do this in the Supabase dashboard)
 
-### White-label note
+- **Site URL**: change `http://localhost:3000` → `https://therapy-trail-maker.vercel.app`
+- **Redirect URLs**: replace the single entry with these three:
+  - `https://therapy-trail-maker.vercel.app/**`  (covers all paths on prod)
+  - `https://*-therapy-trail-maker.vercel.app/**`  (covers Vercel preview deployments)
+  - `http://localhost:3000/**`  (covers local dev)
 
-Hardcoding the sender domain ties every cloned clinic to *your* Resend domain. If you plan to clone this app per clinic via Vercel/GitHub, a cleaner pattern is to read the from-address from an env var (e.g. `REPORT_FROM_ADDRESS`) or from a clinic setting, so each clone uses its own verified domain.
+Click **Save changes** on Site URL and **Add URL** for each redirect entry.
 
-**Question:** Do you want me to:
-- **(A)** Hardcode `reports@info.chiropracticspecialistsmn.com` now (simplest, works immediately for your clinic), or
-- **(B)** Make it configurable via a `REPORT_FROM_ADDRESS` secret, defaulting to your domain (white-label friendly)?
+### 2. Code change: pass `emailRedirectTo` on signup
+
+Update `src/components/auth/AuthForm.tsx` so the signup call tells Supabase exactly where to send users after email confirmation:
+
+```ts
+await supabase.auth.signUp({
+  email,
+  password,
+  options: {
+    emailRedirectTo: `${window.location.origin}/report`,
+  },
+});
+```
+
+This makes the confirmation link land back on the same origin the user signed up from (prod, preview, or localhost) instead of relying on the Site URL fallback.
+
+### 3. Verify
+
+After saving Supabase config and redeploying:
+- Visit `https://therapy-trail-maker.vercel.app/auth`
+- Try signup and login — both should complete without the "invalid path" error.
+
+## Why this fixes it
+
+Supabase validates every redirect (including the implicit one used during auth page loads and email links) against Site URL + Redirect URL allow-list. A bare `https://therapy-trail-maker.vercel.app/` only matches that exact URL — not `/auth` or any callback with query params. The `/**` wildcard suffix permits all subpaths, and updating Site URL ensures the default fallback is a real, allowed URL.
+
+## Note on Vercel SPA routing
+
+You're already reaching `/auth` (the error comes from Supabase, not a 404), so SPA rewrites are working. No `vercel.json` is needed right now — but if you later see Vercel 404s on refresh of deep links, add one with a catch-all rewrite to `/index.html`.

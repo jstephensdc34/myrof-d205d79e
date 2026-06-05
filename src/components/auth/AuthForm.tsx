@@ -37,6 +37,9 @@ export const AuthForm = ({ mode, toggleMode }: AuthFormProps) => {
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/report`,
+          },
         });
 
         if (error) throw error;
