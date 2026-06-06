@@ -1,50 +1,39 @@
-## Diagnosis
+## Problem
 
-The "invalid path specified in request URL" error comes from Supabase Auth rejecting the redirect target. Two issues in your URL Configuration screenshot are causing it:
+Two separate issues stemming from the white-label cleanup:
 
-1. **Site URL is still `http://localhost:3000`** — Supabase uses this as the default redirect when no matching redirect URL is found, and as the base for email links. It must be your Vercel production URL.
-2. **Redirect URL is too narrow** — only `https://therapy-trail-maker.vercel.app/` is whitelisted. Any deep path (like `/auth`, `/report`, or an email confirmation link with query params) won't match exactly, so Supabase rejects it as "invalid path."
+1. **Lovable preview is blank.** `src/integrations/supabase/client.ts` throws when `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` are missing. Deleting `.env` removed those vars from the Lovable sandbox, so the app crashes on import. (Vercel is unaffected because env vars are set there.)
 
-The app also never tells Supabase where to redirect after signup confirmation, so it falls back to the (wrong) Site URL.
+2. **"Library items failed to load" on Vercel after login.** Almost certainly an RLS/GRANT or empty-data issue in the connected Supabase project — not a code bug.
 
-## Fix Plan
+## Plan
 
-### 1. Update Supabase URL Configuration (you do this in the Supabase dashboard)
+### Step 1 — Fix the blank preview (restore local `.env`, keep it out of git)
 
-- **Site URL**: change `http://localhost:3000` → `https://therapy-trail-maker.vercel.app`
-- **Redirect URLs**: replace the single entry with these three:
-  - `https://therapy-trail-maker.vercel.app/**`  (covers all paths on prod)
-  - `https://*-therapy-trail-maker.vercel.app/**`  (covers Vercel preview deployments)
-  - `http://localhost:3000/**`  (covers local dev)
+- Add `.env` and `.env.local` to `.gitignore` so secrets never get committed again.
+- Recreate `.env` in the project root with the Lovable Cloud Supabase URL + anon key the preview was using. This file stays local to the sandbox; it will not be pushed to GitHub.
+- Soften `client.ts` so a missing env var renders a friendly inline error message instead of throwing during module import (prevents future blank-screen crashes for template buyers who forget to set env vars).
 
-Click **Save changes** on Site URL and **Add URL** for each redirect entry.
+### Step 2 — Diagnose the "library items failed to load" error
 
-### 2. Code change: pass `emailRedirectTo` on signup
+I need one piece of info from you before changing anything backend-side. On your Vercel site, after logging in and seeing the red error:
 
-Update `src/components/auth/AuthForm.tsx` so the signup call tells Supabase exactly where to send users after email confirmation:
+1. Open DevTools → **Network** tab
+2. Find the failing request to `…supabase.co/rest/v1/library_items…`
+3. Tell me the **HTTP status** (200 / 401 / 403 / etc.) and the **response body** text
 
-```ts
-await supabase.auth.signUp({
-  email,
-  password,
-  options: {
-    emailRedirectTo: `${window.location.origin}/report`,
-  },
-});
-```
+Most likely outcomes and the fix for each:
 
-This makes the confirmation link land back on the same origin the user signed up from (prod, preview, or localhost) instead of relying on the Site URL fallback.
+- **403 + "permission denied for table library_items"** → missing `GRANT SELECT … TO authenticated` on the table. Fix with a migration.
+- **200 + empty `[]`** → table is empty in the new Supabase project. Fix by seeding starter library data.
+- **401** → anon key / URL mismatch in Vercel env vars. Re-paste the keys.
 
-### 3. Verify
+### Step 3 — Document for template buyers
 
-After saving Supabase config and redeploying:
-- Visit `https://therapy-trail-maker.vercel.app/auth`
-- Try signup and login — both should complete without the "invalid path" error.
+Add a short `README.md` section explaining required env vars (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`) and how to seed the library tables, so future buyers don't hit the same two issues.
 
-## Why this fixes it
+## Technical details
 
-Supabase validates every redirect (including the implicit one used during auth page loads and email links) against Site URL + Redirect URL allow-list. A bare `https://therapy-trail-maker.vercel.app/` only matches that exact URL — not `/auth` or any callback with query params. The `/**` wildcard suffix permits all subpaths, and updating Site URL ensures the default fallback is a real, allowed URL.
-
-## Note on Vercel SPA routing
-
-You're already reaching `/auth` (the error comes from Supabase, not a 404), so SPA rewrites are working. No `vercel.json` is needed right now — but if you later see Vercel 404s on refresh of deep links, add one with a catch-all rewrite to `/index.html`.
+- `.env` is read by Vite at dev-server start; restoring it requires a dev-server restart, which Lovable handles automatically.
+- The friendly-error change in `client.ts` exports a sentinel and the app renders a centered "Configuration required" card when env vars are absent — no thrown error, no blank page.
+- No code change can fix step 2 until we know the failing request's status; running a migration without that risks adding the wrong policy or masking a different issue.
