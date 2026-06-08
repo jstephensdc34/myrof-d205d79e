@@ -1,39 +1,61 @@
-## Problem
+## Goal
 
-Two separate issues stemming from the white-label cleanup:
+Fix the 403 "Failed to load resource" errors on `/rest/v1/library_categories`, `library_subcategories`, `library_items`, and `care_plans` by adding the missing GRANTs and RLS policies. Save it as a migration in `supabase/migrations/` so future remixes carry it, and also run it once in the external Supabase project's SQL Editor since that project isn't connected via Lovable Cloud.
 
-1. **Lovable preview is blank.** `src/integrations/supabase/client.ts` throws when `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` are missing. Deleting `.env` removed those vars from the Lovable sandbox, so the app crashes on import. (Vercel is unaffected because env vars are set there.)
+## What I'll create
 
-2. **"Library items failed to load" on Vercel after login.** Almost certainly an RLS/GRANT or empty-data issue in the connected Supabase project — not a code bug.
+A new file `supabase/migrations/<timestamp>_library_grants_and_rls.sql` containing:
 
-## Plan
+### 1. GRANTs (Data API visibility)
 
-### Step 1 — Fix the blank preview (restore local `.env`, keep it out of git)
+```sql
+-- Reference data: readable by anyone signed in (and anon, since they're not user-scoped)
+GRANT SELECT ON public.library_categories    TO anon, authenticated;
+GRANT SELECT ON public.library_subcategories TO anon, authenticated;
+GRANT ALL    ON public.library_categories    TO service_role;
+GRANT ALL    ON public.library_subcategories TO service_role;
 
-- Add `.env` and `.env.local` to `.gitignore` so secrets never get committed again.
-- Recreate `.env` in the project root with the Lovable Cloud Supabase URL + anon key the preview was using. This file stays local to the sandbox; it will not be pushed to GitHub.
-- Soften `client.ts` so a missing env var renders a friendly inline error message instead of throwing during module import (prevents future blank-screen crashes for template buyers who forget to set env vars).
+-- User-owned data
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.library_items TO authenticated;
+GRANT ALL ON public.library_items TO service_role;
 
-### Step 2 — Diagnose the "library items failed to load" error
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.care_plans TO authenticated;
+GRANT ALL ON public.care_plans TO service_role;
+```
 
-I need one piece of info from you before changing anything backend-side. On your Vercel site, after logging in and seeing the red error:
+### 2. Enable RLS
 
-1. Open DevTools → **Network** tab
-2. Find the failing request to `…supabase.co/rest/v1/library_items…`
-3. Tell me the **HTTP status** (200 / 401 / 403 / etc.) and the **response body** text
+```sql
+ALTER TABLE public.library_categories    ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.library_subcategories ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.library_items         ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.care_plans            ENABLE ROW LEVEL SECURITY;
+```
 
-Most likely outcomes and the fix for each:
+### 3. Policies
 
-- **403 + "permission denied for table library_items"** → missing `GRANT SELECT … TO authenticated` on the table. Fix with a migration.
-- **200 + empty `[]`** → table is empty in the new Supabase project. Fix by seeding starter library data.
-- **401** → anon key / URL mismatch in Vercel env vars. Re-paste the keys.
+- **library_categories / library_subcategories** — `SELECT` for `authenticated` `USING (true)` (reference data, no writes from client).
+- **library_items** — uses the existing `user_id uuid` column:
+  - `SELECT`: `user_id = auth.uid() OR user_id IS NULL` (lets seeded shared items show for everyone)
+  - `INSERT`: `WITH CHECK (user_id = auth.uid())`
+  - `UPDATE`: `USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid())`
+  - `DELETE`: `USING (user_id = auth.uid())`
+- **care_plans** — assumes a `user_id uuid` column with the same four policies as `library_items` (without the `IS NULL` clause, since care plans aren't shared).
 
-### Step 3 — Document for template buyers
+All policies use `CREATE POLICY IF NOT EXISTS`-style guards (`DROP POLICY IF EXISTS` then `CREATE POLICY`) so re-running is safe.
 
-Add a short `README.md` section explaining required env vars (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`) and how to seed the library tables, so future buyers don't hit the same two issues.
+## After the file is created
 
-## Technical details
+Since your Vercel deployment talks to an external Supabase project (`brotpabqmiulrfzhmzvc`) that isn't connected to Lovable Cloud, the migration won't auto-apply there. You'll need to:
 
-- `.env` is read by Vite at dev-server start; restoring it requires a dev-server restart, which Lovable handles automatically.
-- The friendly-error change in `client.ts` exports a sentinel and the app renders a centered "Configuration required" card when env vars are absent — no thrown error, no blank page.
-- No code change can fix step 2 until we know the failing request's status; running a migration without that risks adding the wrong policy or masking a different issue.
+1. Open that Supabase project's SQL Editor.
+2. Paste the contents of the new migration file.
+3. Click **Run**.
+
+I'll give you the exact SQL to paste once the file is written.
+
+## Assumptions to confirm (otherwise tell me)
+
+- `library_items.user_id` is `uuid` and nullable (nullable so seeded "global" items remain visible to everyone).
+- `care_plans` has a `user_id uuid` column. If it's named something else (e.g. `owner_id`, `created_by`), let me know and I'll adjust.
+- `library_categories` and `library_subcategories` are reference data — no client writes needed. If clinicians need to create custom subcategories from the app, say so and I'll add INSERT policies.
