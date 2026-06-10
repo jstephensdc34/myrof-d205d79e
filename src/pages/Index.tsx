@@ -3,13 +3,39 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { Navbar } from "@/components/layout/Navbar";
+import { useAuth } from "@/components/auth/AuthContext";
+import { useSupabaseConnection } from "@/hooks/useSupabaseConnection";
+import { useReportSettings } from "@/hooks/useReportSettings";
+import { AlertCircle } from "lucide-react";
 
 const Index = () => {
+  const { isAuthenticated } = useAuth();
+  const { connectionStatus } = useSupabaseConnection();
+  const { settings, loading } = useReportSettings(connectionStatus);
+  const clinicName = settings.find((s) => s.name === "clinic_name")?.value?.trim() ?? "";
+  const showWelcomeNudge = isAuthenticated && !loading && clinicName === "";
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       <Navbar />
       <div className="container mx-auto px-4 py-16">
         <div className="flex flex-col items-center justify-center space-y-8 text-center">
+          {showWelcomeNudge && (
+            <div className="w-full max-w-6xl rounded-lg border border-amber-300 bg-amber-50 p-4 text-left flex items-start gap-3">
+              <AlertCircle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <h3 className="font-semibold text-amber-900">Welcome — finish setting up your clinic</h3>
+                <p className="text-sm text-amber-800 mt-1">
+                  Add your clinic name, contact info, and logo so they appear on every report and PDF you generate.
+                </p>
+                <Link to="/report" className="inline-block mt-2">
+                  <Button size="sm" className="bg-amber-600 hover:bg-amber-700">
+                    Add clinic information
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          )}
           <div className="space-y-3">
             <h1 className="text-4xl font-bold tracking-tight text-medical-800 sm:text-5xl">
               MyROF Report
