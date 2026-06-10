@@ -10,7 +10,7 @@ export const Navbar = () => {
     <nav className="border-b border-gray-200 bg-white px-4 py-2.5 shadow-sm">
       <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
         <Link to="/" className="flex items-center space-x-3">
-          <span className="text-xl font-semibold text-medical-700">Chiro Patient Ed Suite</span>
+          <span className="text-xl font-semibold text-medical-700">MyROF Report</span>
         </Link>
         <div className="flex items-center lg:order-2">
           <div className="flex space-x-2">
