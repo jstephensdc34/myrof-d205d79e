@@ -1,62 +1,38 @@
 
-# Remove All Edge Functions + Delete Admin Page
+# Auth: Email/Password Only — Confirmed
 
-## Confirmation
+## Current state (verified)
 
-Yes — after this plan executes, **buyers will deploy ZERO edge functions**. Their setup is:
-1. Create a free Supabase project
-2. Paste `setup.sql` into the SQL Editor and click Run
-3. Deploy the GitHub repo to Vercel with two env vars (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`)
+I scanned the codebase for any social-OAuth code (Google, Apple, Facebook, GitHub, Discord, generic `signInWithOAuth`, `provider:` options). **None exists.**
 
-No Supabase CLI, no Deno, no service-role keys, no function deploys.
+- `src/components/auth/AuthForm.tsx` uses only `supabase.auth.signInWithPassword()` and `signUp()`.
+- No `signInWithOAuth` calls anywhere.
+- No social provider buttons in the UI.
+- The only "apple" reference is in a CSS font-family stack (`-apple-system`) — that's a system font fallback, unrelated to Apple sign-in.
 
-## Files to delete
+The app already meets your requirement. No code changes needed today.
 
-- `supabase/functions/copy-library-items/` (folder)
-- `supabase/functions/search-users/` (folder)
-- `supabase/functions/serve-report/` (folder)
-- `src/components/admin/CopyLibraryItems.tsx`
-- `src/services/adminService.ts`
-- `src/pages/Admin.tsx`
+## Rule going forward (will be enforced in all future work)
 
-## Files to edit
+I will:
+- Never add Google, Apple, Facebook, GitHub, Discord, magic-link, or any social/OAuth provider UI or code.
+- Never call `supabase.auth.signInWithOAuth()` or `signInWithOtp()`.
+- Keep `AuthForm.tsx` strictly email + password.
+- Add this to project memory so future sessions don't reintroduce it.
 
-- **`src/App.tsx`** — remove the `Admin` import and the `/admin` route.
-- **`src/components/layout/Navbar.tsx`** — remove the Admin link if present.
-- **`src/pages/SharedReport.tsx`** — replace any call to the `serve-report` edge function with a direct Supabase Storage download:
-  ```ts
-  const { data, error } = await supabase.storage
-    .from('shared-reports')
-    .download(fileName);
-  const html = await data.text();
-  // pass `html` to the existing iframe srcDoc
-  ```
-- **`supabase/config.toml`** — remove the `[functions.copy-library-items]` and `[functions.search-users]` blocks.
+## What buyers need to do in their own Supabase project
 
-## Shared-report storage policy (covered in setup.sql later)
+Just one thing in their Supabase dashboard, and only if they want — defaults already work:
 
-For the direct-download approach to work with the anon key, the `shared-reports` bucket must allow read access. Two options:
+- **Authentication → Providers → Email** is enabled by default in every new Supabase project. Nothing to configure.
+- **Optional:** turn off "Confirm email" if they want users to log in immediately after signup without clicking a verification link. (Otherwise Supabase sends a default verification email automatically — no domain, no API key, no setup required from the buyer.)
 
-- **Public bucket** — simplest; the `download()` call works for anyone. Links are unguessable (timestamp + name) but technically reachable by anyone with the URL. This is the same security posture as the current edge-function flow.
-- **Private bucket + RLS policy** — `SELECT` allowed to `anon`/`authenticated` on `storage.objects` where `bucket_id = 'shared-reports'`. Functionally identical to public for this use case, just expressed as a policy.
+This will be documented in the `BUYER_SETUP.md` as one optional line, not a required step.
 
-Recommendation: **public bucket** — simpler for buyers, behavior unchanged.
+## What I'd like to confirm before moving on
 
-## Verification before handoff
+You're choosing to use **Supabase's default auth emails** (signup confirmation, password reset). These are sent from a generic `noreply@mail.app.supabase.io` address and work with zero buyer setup. Custom-branded auth emails would require each buyer to configure their own email domain — exactly the kind of friction we're avoiding.
 
-1. `grep -r "functions.invoke" src/` returns nothing.
-2. `grep -r "/admin" src/` returns nothing.
-3. `supabase/functions/` directory is empty or absent.
-4. App builds cleanly; `/shared-report?file=…` still renders existing test reports.
+Confirm: stick with Supabase default auth emails (recommended for the BYOK model) → I'll save the rule to memory and we're done with this topic.
 
-## What I'll do in build mode
-
-Single pass:
-1. Delete the six files/folders above.
-2. Edit `App.tsx`, `Navbar.tsx`, `SharedReport.tsx`, `config.toml`.
-3. Run the three greps above to confirm nothing was missed.
-4. Visit a shared report URL in the preview to confirm the iframe still renders.
-
-Packaging deliverables (`setup.sql`, `BUYER_SETUP.md`, `.env.example`) remain in the larger white-label plan and will be tackled in a follow-up build pass — not part of this one, which is scoped strictly to edge-function removal.
-
-Approve and I'll execute.
+Or, if you want to revisit: the only path to branded auth emails per buyer is them setting up an email-sending service themselves (Resend, SendGrid, etc.) and pasting an SMTP config into their Supabase dashboard. That's optional and doesn't touch our codebase.
