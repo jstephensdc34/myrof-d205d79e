@@ -28,6 +28,26 @@
 
 ---
 
+## Build the buyer ZIP (one command)
+
+Bundle all six handoff files into a single download:
+
+```
+npm install        # one time
+npm run handoff
+```
+
+Output: `dist-handoff/myrof-report-handoff.zip` — attach this single
+file to the buyer handoff email. It contains:
+`LICENSE`, `setup.sql`, `.env.example`, `BUYER_SETUP.md`,
+`SELLER_CHECKLIST.md`, `README.md`.
+
+Remember to remove `SELLER_CHECKLIST.md` from the ZIP before sending if
+you don't want the buyer to see it (edit the `FILES` array in
+`scripts/build-handoff-zip.mjs`).
+
+---
+
 ## Per-sale checklist
 
 - [ ] Payment received and recorded.
