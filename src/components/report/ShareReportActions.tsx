@@ -55,7 +55,7 @@ export const ShareReportActions = ({
 
     return composeReportEmail({
       patientName: patient.name,
-      clinicName: getSetting("clinic_name", "Chiropractic Clinic"),
+      clinicName: getSetting("clinic_name", "Your Clinic"),
       fullReportUrl,
       overviewReportUrl,
     });

@@ -24,7 +24,7 @@ export const generateReportHtml = ({
   subcategories
 }: GenerateReportHtmlParams): string => {
   // Get clinic info from settings
-  const clinicName = settings.find(s => s.name === "clinic_name")?.value || "Chiropractic Clinic";
+  const clinicName = settings.find(s => s.name === "clinic_name")?.value || "Your Clinic";
   const clinicAddress = settings.find(s => s.name === "clinic_address")?.value || "";
   const clinicPhone = settings.find(s => s.name === "clinic_phone")?.value || "";
   const clinicEmail = settings.find(s => s.name === "clinic_email")?.value || "";
