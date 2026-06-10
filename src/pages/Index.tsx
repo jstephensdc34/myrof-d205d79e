@@ -109,7 +109,7 @@ const Index = () => {
       
       <footer className="bg-white py-6 border-t border-gray-200 mt-12">
         <div className="container mx-auto px-4">
-          <p className="text-center text-gray-500 text-sm">© 2025 MyROF Report. All rights reserved.</p>
+          <p className="text-center text-gray-500 text-sm">© 2026 MyROF Report. All rights reserved.</p>
         </div>
       </footer>
     </div>

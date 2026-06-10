@@ -41,7 +41,7 @@ const renderSectionHeader = (label: string, headerBg: string) => `
 export const generateOverviewReportHtml = (params: GenerateOverviewHtmlParams): string => {
   const { patient, selectedItems, notes, customTreatmentGoals, estimatedCost, settings, subcategories } = params;
 
-  const clinicName = settings.find(s => s.name === "clinic_name")?.value || "Chiropractic Clinic";
+  const clinicName = settings.find(s => s.name === "clinic_name")?.value || "Your Clinic";
   const clinicAddress = settings.find(s => s.name === "clinic_address")?.value || "";
   const clinicPhone = settings.find(s => s.name === "clinic_phone")?.value || "";
   const clinicEmail = settings.find(s => s.name === "clinic_email")?.value || "";
