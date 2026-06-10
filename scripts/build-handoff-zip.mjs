@@ -21,7 +21,6 @@ const FILES = [
   "setup.sql",
   ".env.example",
   "BUYER_SETUP.md",
-  "SELLER_CHECKLIST.md",
   "README.md",
 ];
 
