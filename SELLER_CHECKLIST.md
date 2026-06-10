@@ -22,15 +22,37 @@
   - [ ] `setup.sql` runs clean with `Setup complete`
   - [ ] App loads on the Vercel URL
   - [ ] Sign up + log in works
+  - [ ] **Load Starter Library** button appears on the empty Library page and imports without errors
   - [ ] Create a library item
   - [ ] Generate a report (PDF download works)
   - [ ] Share a report (shared link loads in a fresh browser)
 
 ---
 
+## Before each release: refresh the starter library
+
+The starter library ships as `public/library-seed.csv` inside the repo and
+is served as `/library-seed.csv` on the deployed app. Re-export it from
+your live database whenever you've added/edited items you want buyers to
+receive:
+
+```
+npm run library:export   # pulls from your Supabase into public/library-seed.csv
+npm run library:check    # validates IDs against setup.sql
+```
+
+`library:export` reads `SUPABASE_SERVICE_ROLE_KEY` (preferred) or
+`VITE_SUPABASE_ANON_KEY` from `.env.local`. The service-role key bypasses
+RLS so per-user rows are included as shared starter content.
+
+Commit the updated CSV and re-deploy. Buyers who deploy after that point
+get the latest version automatically.
+
+---
+
 ## Build the buyer ZIP (one command)
 
-Bundle all six handoff files into a single download:
+Bundle the five buyer-handoff docs into a single download:
 
 ```
 npm install        # one time
@@ -38,13 +60,14 @@ npm run handoff
 ```
 
 Output: `dist-handoff/myrof-report-handoff.zip` — attach this single
-file to the buyer handoff email. It contains:
-`LICENSE`, `setup.sql`, `.env.example`, `BUYER_SETUP.md`,
-`SELLER_CHECKLIST.md`, `README.md`.
+file to the buyer handoff email. It contains: `LICENSE`, `setup.sql`,
+`.env.example`, `BUYER_SETUP.md`, `README.md`.
 
-Remember to remove `SELLER_CHECKLIST.md` from the ZIP before sending if
-you don't want the buyer to see it (edit the `FILES` array in
-`scripts/build-handoff-zip.mjs`).
+The starter library (`public/library-seed.csv`) is **not** in the ZIP —
+it ships inside the Vercel deployment automatically. Buyers load it from
+the in-app "Load Starter Library" button.
+
+`SELLER_CHECKLIST.md` is also intentionally excluded from the ZIP.
 
 ---
 

@@ -67,6 +67,17 @@ Do **not** copy the `service_role` key.
 2. Click **Sign Up** and create your clinic's account using your work email and a strong password.
 3. Log in. You're ready to start building your library and generating reports.
 
+## Step 6 — Load the starter library
+
+1. After signing in, click **Library** in the top navigation.
+2. You'll see a **Load Starter Library** button at the top-right.
+3. Click it and confirm. The app loads the curated starter content that
+   shipped with your deployment. When it finishes you'll see
+   "Imported N starter items".
+4. The button disappears once your library has items in it — no risk of
+   accidentally re-importing later. You can edit, add, or delete any
+   item from here on.
+
 ---
 
 ## Optional: skip email confirmation
