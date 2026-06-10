@@ -1,61 +1,62 @@
-## Goal
 
-Fix the 403 "Failed to load resource" errors on `/rest/v1/library_categories`, `library_subcategories`, `library_items`, and `care_plans` by adding the missing GRANTs and RLS policies. Save it as a migration in `supabase/migrations/` so future remixes carry it, and also run it once in the external Supabase project's SQL Editor since that project isn't connected via Lovable Cloud.
+# Remove All Edge Functions + Delete Admin Page
 
-## What I'll create
+## Confirmation
 
-A new file `supabase/migrations/<timestamp>_library_grants_and_rls.sql` containing:
+Yes — after this plan executes, **buyers will deploy ZERO edge functions**. Their setup is:
+1. Create a free Supabase project
+2. Paste `setup.sql` into the SQL Editor and click Run
+3. Deploy the GitHub repo to Vercel with two env vars (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`)
 
-### 1. GRANTs (Data API visibility)
+No Supabase CLI, no Deno, no service-role keys, no function deploys.
 
-```sql
--- Reference data: readable by anyone signed in (and anon, since they're not user-scoped)
-GRANT SELECT ON public.library_categories    TO anon, authenticated;
-GRANT SELECT ON public.library_subcategories TO anon, authenticated;
-GRANT ALL    ON public.library_categories    TO service_role;
-GRANT ALL    ON public.library_subcategories TO service_role;
+## Files to delete
 
--- User-owned data
-GRANT SELECT, INSERT, UPDATE, DELETE ON public.library_items TO authenticated;
-GRANT ALL ON public.library_items TO service_role;
+- `supabase/functions/copy-library-items/` (folder)
+- `supabase/functions/search-users/` (folder)
+- `supabase/functions/serve-report/` (folder)
+- `src/components/admin/CopyLibraryItems.tsx`
+- `src/services/adminService.ts`
+- `src/pages/Admin.tsx`
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON public.care_plans TO authenticated;
-GRANT ALL ON public.care_plans TO service_role;
-```
+## Files to edit
 
-### 2. Enable RLS
+- **`src/App.tsx`** — remove the `Admin` import and the `/admin` route.
+- **`src/components/layout/Navbar.tsx`** — remove the Admin link if present.
+- **`src/pages/SharedReport.tsx`** — replace any call to the `serve-report` edge function with a direct Supabase Storage download:
+  ```ts
+  const { data, error } = await supabase.storage
+    .from('shared-reports')
+    .download(fileName);
+  const html = await data.text();
+  // pass `html` to the existing iframe srcDoc
+  ```
+- **`supabase/config.toml`** — remove the `[functions.copy-library-items]` and `[functions.search-users]` blocks.
 
-```sql
-ALTER TABLE public.library_categories    ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.library_subcategories ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.library_items         ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.care_plans            ENABLE ROW LEVEL SECURITY;
-```
+## Shared-report storage policy (covered in setup.sql later)
 
-### 3. Policies
+For the direct-download approach to work with the anon key, the `shared-reports` bucket must allow read access. Two options:
 
-- **library_categories / library_subcategories** — `SELECT` for `authenticated` `USING (true)` (reference data, no writes from client).
-- **library_items** — uses the existing `user_id uuid` column:
-  - `SELECT`: `user_id = auth.uid() OR user_id IS NULL` (lets seeded shared items show for everyone)
-  - `INSERT`: `WITH CHECK (user_id = auth.uid())`
-  - `UPDATE`: `USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid())`
-  - `DELETE`: `USING (user_id = auth.uid())`
-- **care_plans** — assumes a `user_id uuid` column with the same four policies as `library_items` (without the `IS NULL` clause, since care plans aren't shared).
+- **Public bucket** — simplest; the `download()` call works for anyone. Links are unguessable (timestamp + name) but technically reachable by anyone with the URL. This is the same security posture as the current edge-function flow.
+- **Private bucket + RLS policy** — `SELECT` allowed to `anon`/`authenticated` on `storage.objects` where `bucket_id = 'shared-reports'`. Functionally identical to public for this use case, just expressed as a policy.
 
-All policies use `CREATE POLICY IF NOT EXISTS`-style guards (`DROP POLICY IF EXISTS` then `CREATE POLICY`) so re-running is safe.
+Recommendation: **public bucket** — simpler for buyers, behavior unchanged.
 
-## After the file is created
+## Verification before handoff
 
-Since your Vercel deployment talks to an external Supabase project (`brotpabqmiulrfzhmzvc`) that isn't connected to Lovable Cloud, the migration won't auto-apply there. You'll need to:
+1. `grep -r "functions.invoke" src/` returns nothing.
+2. `grep -r "/admin" src/` returns nothing.
+3. `supabase/functions/` directory is empty or absent.
+4. App builds cleanly; `/shared-report?file=…` still renders existing test reports.
 
-1. Open that Supabase project's SQL Editor.
-2. Paste the contents of the new migration file.
-3. Click **Run**.
+## What I'll do in build mode
 
-I'll give you the exact SQL to paste once the file is written.
+Single pass:
+1. Delete the six files/folders above.
+2. Edit `App.tsx`, `Navbar.tsx`, `SharedReport.tsx`, `config.toml`.
+3. Run the three greps above to confirm nothing was missed.
+4. Visit a shared report URL in the preview to confirm the iframe still renders.
 
-## Assumptions to confirm (otherwise tell me)
+Packaging deliverables (`setup.sql`, `BUYER_SETUP.md`, `.env.example`) remain in the larger white-label plan and will be tackled in a follow-up build pass — not part of this one, which is scoped strictly to edge-function removal.
 
-- `library_items.user_id` is `uuid` and nullable (nullable so seeded "global" items remain visible to everyone).
-- `care_plans` has a `user_id uuid` column. If it's named something else (e.g. `owner_id`, `created_by`), let me know and I'll adjust.
-- `library_categories` and `library_subcategories` are reference data — no client writes needed. If clinicians need to create custom subcategories from the app, say so and I'll add INSERT policies.
+Approve and I'll execute.
