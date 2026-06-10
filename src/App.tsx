@@ -9,7 +9,6 @@ import Index from "./pages/Index";
 import Report from "./pages/Report";
 import Library from "./pages/Library";
 import Auth from "./pages/Auth";
-import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import SharedReport from "./pages/SharedReport";
 import { isSupabaseConfigured } from "@/integrations/supabase/client";
@@ -84,7 +83,6 @@ VITE_SUPABASE_ANON_KEY="your-anon-key"
                   <Route path="/shared-report" element={<SharedReport />} />
                   <Route path="/library" element={<Library />} />
                   <Route path="/auth" element={<Auth />} />
-                  <Route path="/admin" element={<Admin />} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
