@@ -1,0 +1,85 @@
+MyROF Report — Single-Clinic Commercial License
+© 2026 [Your Name / Company]. All rights reserved.
+
+1. DEFINITIONS
+   "Software" means the MyROF Report application source code, database
+   schema, documentation, and all related files distributed under this
+   license. "Licensor" is the copyright holder named above. "Licensee"
+   is the single legal business entity that has purchased a license to
+   use the Software.
+
+2. GRANT OF LICENSE
+   Subject to Licensee's full compliance with this Agreement and payment
+   of all applicable fees, Licensor grants Licensee a non-exclusive,
+   non-transferable, non-sublicensable, revocable license to install,
+   deploy, and use the Software solely for the internal business
+   operations of one (1) legal business entity (the Licensee), including
+   all clinical locations owned and operated by that entity.
+
+3. PERMITTED USE
+   Licensee may modify the source code of the Software for the sole
+   purpose of internal use at the licensed entity. All modifications
+   remain subject to the restrictions in Section 4.
+
+4. RESTRICTIONS
+   Licensee shall NOT, directly or indirectly:
+   (a) resell, sublicense, lease, rent, lend, or otherwise transfer the
+       Software or any rights granted herein;
+   (b) redistribute, publish, or make the Software (in source or compiled
+       form) available to any third party;
+   (c) share, disclose, or provide access to the source code, repository
+       link, fork, archive, build artifacts, or deployment credentials to
+       any other clinic, business entity, individual, or third party;
+   (d) use the Software to provide a service, product, or hosted offering
+       to any party other than the Licensee;
+   (e) remove, alter, or obscure any copyright, trademark, or proprietary
+       notice in the Software;
+   (f) white-label, rebrand, or re-distribute the Software as part of
+       another commercial offering.
+
+5. OWNERSHIP
+   The Software is licensed, not sold. Licensor retains all right, title,
+   and interest in and to the Software, including all intellectual
+   property rights. No rights are granted to Licensee other than those
+   expressly set forth in this Agreement.
+
+6. TERMINATION
+   This license terminates automatically and without notice upon any
+   breach by Licensee of this Agreement. Upon termination, Licensee
+   shall immediately cease all use of the Software and destroy all copies
+   in its possession or control, including any modifications and any
+   deployed instances.
+
+7. DISCLAIMER OF WARRANTY
+   THE SOFTWARE IS PROVIDED "AS IS" AND "AS AVAILABLE", WITHOUT WARRANTY
+   OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+   WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE,
+   ACCURACY, OR NON-INFRINGEMENT.
+
+8. MEDICAL DISCLAIMER
+   The Software is a documentation and patient-education tool. It is NOT
+   a medical device and does NOT provide medical advice, diagnosis, or
+   treatment recommendations. Licensee and its clinicians are solely
+   responsible for the clinical content created using the Software and
+   for all care decisions made for any patient.
+
+9. LIMITATION OF LIABILITY
+   TO THE MAXIMUM EXTENT PERMITTED BY LAW, IN NO EVENT SHALL LICENSOR BE
+   LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR
+   PUNITIVE DAMAGES, OR ANY LOSS OF PROFITS, DATA, OR GOODWILL, ARISING
+   OUT OF OR IN CONNECTION WITH THIS AGREEMENT OR THE USE OF THE
+   SOFTWARE. LICENSOR'S TOTAL CUMULATIVE LIABILITY SHALL NOT EXCEED THE
+   FEES ACTUALLY PAID BY LICENSEE FOR THE SOFTWARE.
+
+10. GOVERNING LAW
+    This Agreement shall be governed by and construed in accordance with
+    the laws of [Your Jurisdiction], without regard to its conflict of
+    laws principles.
+
+11. ENTIRE AGREEMENT
+    This Agreement constitutes the entire agreement between the parties
+    regarding the Software and supersedes all prior agreements and
+    understandings, whether written or oral.
+
+By installing, deploying, or using the Software, Licensee acknowledges
+that it has read, understood, and agrees to be bound by this Agreement.
