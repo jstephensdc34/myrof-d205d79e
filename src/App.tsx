@@ -11,7 +11,10 @@ import Library from "./pages/Library";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import SharedReport from "./pages/SharedReport";
+import ResetPassword from "./pages/ResetPassword";
 import { isSupabaseConfigured } from "@/integrations/supabase/client";
+import { useDatabaseReady } from "@/hooks/useDatabaseReady";
+import { SetupRequired } from "@/components/SetupRequired";
 
 // Create a new QueryClient instance with error handling
 const queryClient = new QueryClient({
@@ -40,6 +43,21 @@ const queryClient = new QueryClient({
 const getBasename = () => {
   const baseUrl = import.meta.env.BASE_URL || '/';
   return baseUrl === '/' ? '/' : baseUrl;
+};
+
+const DatabaseGuard = ({ children }: { children: React.ReactNode }) => {
+  const { state, errorMessage } = useDatabaseReady();
+  if (state === "checking") {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <p className="text-sm text-muted-foreground">Loading…</p>
+      </div>
+    );
+  }
+  if (state === "not-ready") {
+    return <SetupRequired errorMessage={errorMessage} />;
+  }
+  return <>{children}</>;
 };
 
 const App = () => {
@@ -77,15 +95,18 @@ VITE_SUPABASE_ANON_KEY="your-anon-key"
               <TooltipProvider>
                 <Toaster />
                 <Sonner />
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/report" element={<Report />} />
-                  <Route path="/shared-report" element={<SharedReport />} />
-                  <Route path="/library" element={<Library />} />
-                  <Route path="/auth" element={<Auth />} />
-                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
+                <DatabaseGuard>
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/report" element={<Report />} />
+                    <Route path="/shared-report" element={<SharedReport />} />
+                    <Route path="/library" element={<Library />} />
+                    <Route path="/auth" element={<Auth />} />
+                    <Route path="/reset-password" element={<ResetPassword />} />
+                    {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </DatabaseGuard>
               </TooltipProvider>
             </AuthProvider>
           </ErrorBoundary>

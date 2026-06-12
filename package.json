@@ -10,6 +10,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "handoff": "node scripts/build-handoff-zip.mjs",
+    "handoff:check": "node scripts/validate-handoff.mjs",
+    "dry-run": "node scripts/dry-run-checklist.mjs",
     "library:check": "node scripts/validate-library-csv.mjs",
     "library:export": "node scripts/export-library-csv.mjs"
   },
