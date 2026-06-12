@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { ForgotPasswordDialog } from "@/components/auth/ForgotPasswordDialog";
 
 interface AuthFormProps {
   mode: "login" | "signup";
@@ -16,6 +16,7 @@ export const AuthForm = ({ mode, toggleMode }: AuthFormProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [forgotOpen, setForgotOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -43,9 +44,15 @@ export const AuthForm = ({ mode, toggleMode }: AuthFormProps) => {
         });
 
         if (error) throw error;
-        
-        toast.success("Account created and logged in successfully!");
-        navigate("/report");
+
+        if (data.session) {
+          toast.success("Account created and logged in successfully!");
+          navigate("/report");
+        } else {
+          toast.info(
+            "Account created. Check your email to confirm — if it doesn't arrive within a minute, see BUYER_SETUP.md → Troubleshooting."
+          );
+        }
       }
     } catch (error: any) {
       toast.error(error.message || "An error occurred during authentication");
@@ -55,6 +62,7 @@ export const AuthForm = ({ mode, toggleMode }: AuthFormProps) => {
   };
 
   return (
+    <>
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
@@ -69,7 +77,18 @@ export const AuthForm = ({ mode, toggleMode }: AuthFormProps) => {
       </div>
       
       <div className="space-y-2">
-        <Label htmlFor="password">Password</Label>
+        <div className="flex items-center justify-between">
+          <Label htmlFor="password">Password</Label>
+          {mode === "login" && (
+            <button
+              type="button"
+              className="text-xs text-medical-600 hover:underline"
+              onClick={() => setForgotOpen(true)}
+            >
+              Forgot password?
+            </button>
+          )}
+        </div>
         <Input
           id="password"
           type="password"
@@ -101,5 +120,11 @@ export const AuthForm = ({ mode, toggleMode }: AuthFormProps) => {
         </Button>
       </div>
     </form>
+      <ForgotPasswordDialog
+        open={forgotOpen}
+        onOpenChange={setForgotOpen}
+        defaultEmail={email}
+      />
+    </>
   );
 };

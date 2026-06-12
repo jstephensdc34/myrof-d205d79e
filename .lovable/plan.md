@@ -1,98 +1,98 @@
-## Phase 3 — Library handoff & in-app starter loader (revised)
+## Phase 4 — Final BYOK polish, deploy hardening & QA (revised)
 
-Great catch on the Vercel-clone flow. Updated plan below.
+Adjustments noted: email confirmation is now a **mandatory** pre-flight step, and the docs include an emergency admin password-reset path that bypasses SMTP entirely.
 
-## Root cause recap
+### 1. Vercel SPA hardening
 
-The last attempt failed because `setup.sql` doesn't actually create `library_categories`, `library_subcategories`, `library_items`, `report_settings`, or the `clinic-assets` bucket — those came from Lovable Cloud's auto-migrations. Only later migrations (which `INSERT` extra subcategory rows) are in the file, so a fresh project ends up missing tables and subcategories. We fix this once and for all by rewriting `setup.sql` from scratch.
+- Add **`vercel.json`** with SPA rewrites so `/library`, `/report`, `/shared-report?id=...`, `/reset-password` all survive a hard refresh:
+  ```json
+  { "rewrites": [{ "source": "/(.*)", "destination": "/" }] }
+  ```
+- Add `Cache-Control: no-cache` header for `/library-seed.csv` so buyers always fetch the latest seed after a re-deploy.
 
-## Changes
+### 2. Password reset flow (UI + emergency fallback)
 
-### 1. Rewrite `setup.sql` as a true from-scratch script
+UI flow:
+- "Forgot password?" link on `AuthForm` login mode.
+- `ForgotPasswordDialog` → `supabase.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + '/reset-password' })`.
+- New **`/reset-password`** public route that detects `type=recovery`, shows a new-password form, calls `supabase.auth.updateUser({ password })`, then routes to `/auth`.
 
-Idempotent, single-file, runs cleanly on a brand-new Supabase project:
+Docs (Troubleshooting → **Emergency Admin Recovery**):
+- Step-by-step instructions to bypass UI + SMTP entirely:
+  1. Supabase dashboard → **Authentication → Users**
+  2. Find your account → **⋯ menu → Send password recovery** (or **Reset password** to set one directly)
+  3. If SMTP is unreliable, use **Reset password** to set a temporary password directly in the dashboard — no email needed.
+- Explicit note that because the buyer owns the Supabase project, they can never be permanently locked out.
 
-- `library_categories` table + 5 seed rows (diagnosis, extremity, treatment, homecare, exercises)
-- `library_subcategories` table + **every** subcategory row currently in your DB (all diagnosis regions, extremity regions, `care_plan_type`, `phase_of_care`, `treatment_modalities`, `treatment_goals`, `home_therapy`, `adls`, `activity_modification`, `condition_specific`, `wellness`→Miscellaneous, all `*_exercises`, etc.)
-- `library_items` table (empty — populated by Load Starter Library button)
-- `report_settings` table + default blank rows (clinic_name, address, phone, email, website, logo_url)
-- `care_plans` table
-- `clinic-assets` storage bucket + policies (currently missing — logo upload silently fails on fresh installs)
-- `shared-reports` bucket + policies (keep)
-- `claim_and_update_library_item` RPC + `update_modified_column` trigger
-- All GRANTs and RLS in the correct order
-- `ON CONFLICT DO NOTHING` on every seed insert (safe to re-run)
-- **Removes** `patients`, `posture_assessments`, `posture_photos`, `posture_measurements` (posture feature was removed)
+### 3. Friendly "database not set up yet" guard
 
-### 2. RLS adjustment for starter library items
+If a buyer deploys with valid env vars but skips `setup.sql`, the app currently 404s silently in the console. Add:
+- `useDatabaseReady` hook: one `head` query against `library_categories`.
+- On `42P01` / PostgREST 404, render a `SetupRequired` screen mirroring the existing `Configuration required` style, pointing back to BUYER_SETUP.md Step 2.
 
-Current `UPDATE` and `DELETE` policies on `library_items` are `user_id = auth.uid()`, which would lock buyers out of editing or deleting starter rows (which have `user_id IS NULL`). Adjust to:
+### 4. Email-confirmation aware signup (UI fallback only)
 
-```sql
--- UPDATE: own rows OR shared starter rows
-USING      (user_id = auth.uid() OR user_id IS NULL)
-WITH CHECK (user_id = auth.uid() OR user_id IS NULL)
+- After `signUp`, inspect `data.session`. If null, show "Check your email to confirm your account — if it doesn't arrive within a minute, see BUYER_SETUP.md Troubleshooting" and stay on `/auth`.
+- This is purely a safety net. Per the revised plan, the docs push buyers to disable email confirmation entirely before first login, so this path should rarely fire.
 
--- DELETE: own rows OR shared starter rows
-USING      (user_id = auth.uid() OR user_id IS NULL)
-```
+### 5. BUYER_SETUP.md — mandatory pre-flight step
 
-This is correct for a single-clinic app: any signed-in clinic user can edit or remove starter items. The existing `claim_and_update_library_item` RPC still works (and is now strictly redundant for the NULL case, but it stays in place for the cross-user case and to avoid touching working code).
+Insert a new **Step 3.5 — REQUIRED: Disable email confirmation** between Step 3 (copy keys) and Step 4 (deploy to Vercel), with strong wording:
 
-### 3. Ship `library-seed.csv` from the React app's `public/` folder
+> ### ⚠️ Step 3.5 — REQUIRED: Disable email confirmation
+>
+> Supabase's built-in test email server is heavily rate-limited and frequently drops messages in the first week. If you skip this step, your very first signup may never receive a confirmation email and you'll be locked out of your own app.
+>
+> 1. In your Supabase project, go to **Authentication → Providers → Email**.
+> 2. Toggle **Confirm email** to **OFF**.
+> 3. Click **Save**.
+>
+> You can re-enable confirmation later after configuring your own SMTP provider — but for initial setup, this step is mandatory, not optional.
 
-- New file: **`public/library-seed.csv`** — your exported library, columns: `name, definition, description, info_link, category_id, subcategory_id`.
-- Because it's in `public/`, Vercel serves it at `/library-seed.csv` automatically — no buyer downloads, no file picker, works on day one of any clone.
-- A small validator script `scripts/validate-library-csv.mjs` (runs via `npm run library:check`) parses the CSV and verifies every `subcategory_id` exists in the `INSERT` list in `setup.sql`. Run by the seller before shipping; fails loudly if a row points at a missing subcategory — prevents the "subcategories didn't copy over" class of bug from recurring.
+The existing "Step 5 — Create your clinic login" now works on the first try.
 
-### 4. In-app "Load Starter Library" button (no file picker)
+Troubleshooting section additions:
+- "I never received my confirmation email" → points back to Step 3.5.
+- "I'm locked out of my account" → Emergency Admin Recovery (Section 2 above).
+- "App loads but everything 404s / 'Setup required' screen" → run `setup.sql`.
+- "Configuration required screen" → check Vercel env vars.
 
-- New component `src/components/library/LoadStarterLibraryButton.tsx`.
-- Appears in `LibraryHeader` only when `library_items` is empty (cheap `count: 'exact', head: true` query via a new `useLibraryItemCount` hook). Disappears after first use — no risk of buyers accidentally wiping their library.
-- onClick:
-  1. `fetch('/library-seed.csv')`
-  2. Parse with `papaparse` (new runtime dep, ~45KB, zero native).
-  3. Validate headers + every category/subcategory id against what's already in the DB.
-  4. Bulk-insert in chunks of 500 with `user_id: null`.
-  5. Progress toast → final "Imported N items" toast.
-  6. On error, surface the offending row number; partial chunks roll back so the user can retry cleanly.
-- Confirmation dialog before insert ("This will add ~N starter items. Continue?").
+### 6. Final no-OAuth audit
 
-### 5. Update BUYER_SETUP.md
+The only `google|apple|oauth` match in `src/` is unrelated string content in `renderReportToHtml.tsx`. Lock it in with a CI-style check: new `scripts/validate-handoff.mjs` greps for `signInWithOAuth` / `signInWithOtp` and fails loudly if either reappears. Wired into `npm run handoff:check`.
 
-Add a new **Step 6 — Load the starter library** at the end:
+### 7. End-to-end dry-run checklist for the seller
 
-> After signing in, go to the **Library** page and click **Load Starter Library**. The app will pull in the curated content shipped with your deployment. You'll see "Imported N items" when it's done. The button disappears after first use; you can edit, add, or delete any item from there.
+New `scripts/dry-run-checklist.mjs` — interactive terminal checklist the seller ticks off before each release. Now includes the SMTP-bypass steps explicitly:
+1. Fresh Supabase project created
+2. `setup.sql` ran clean
+3. **Email confirmation toggled OFF in Supabase**
+4. Env vars set in Vercel; build succeeded
+5. Signup → immediate login works (no email round-trip)
+6. Load Starter Library imported N items
+7. Library item create/edit/delete works
+8. Report generation + PDF + share link in incognito
+9. `/reset-password` works end-to-end (or admin-reset documented works)
+10. `npm run handoff:check` exits clean
 
-Drop any references to a local "handoff folder" — buyers don't have one.
+Writes a timestamped log to `dist-handoff/dry-run-<date>.log`.
 
-### 6. Update SELLER_CHECKLIST.md + handoff ZIP
+### 8. Doc polish (SELLER_CHECKLIST.md, README.md)
 
-- The handoff ZIP no longer needs to include `library-seed.csv` (it's in the repo's `public/` folder and ships with the Vercel deploy automatically). Update `scripts/build-handoff-zip.mjs` and the checklist accordingly.
-- New seller step: "Before publishing a new version, run `npm run library:export` to regenerate `public/library-seed.csv` from your live Supabase, then `npm run library:check` to validate."
-- New `scripts/export-library-csv.mjs` reads from your `.env.local` Supabase and overwrites `public/library-seed.csv`. One command per release.
+- `SELLER_CHECKLIST.md`: add dry-run script + no-OAuth grep + reminder that BUYER_SETUP.md Step 3.5 is mandatory wording.
+- `README.md`: tighten buyer summary; add "What's not included" (no OAuth, no transactional email, no AI keys, no production SMTP — buyers may add their own SMTP in Supabase later).
 
 ### Technical details
 
-- New runtime dep: `papaparse` + `@types/papaparse`.
-- New files:
-  - `public/library-seed.csv`
-  - `src/components/library/LoadStarterLibraryButton.tsx`
-  - `src/hooks/library/useLibraryItemCount.ts`
-  - `src/services/library/loadStarterLibrary.ts`
-  - `scripts/validate-library-csv.mjs`
-  - `scripts/export-library-csv.mjs`
-- Edits: `setup.sql` (full rewrite), `src/components/library/LibraryHeader.tsx` (conditional button), `BUYER_SETUP.md`, `SELLER_CHECKLIST.md`, `scripts/build-handoff-zip.mjs`, `package.json`.
-- No edge functions, no new secrets, no OAuth.
+- **New files:** `vercel.json`, `src/pages/ResetPassword.tsx`, `src/components/auth/ForgotPasswordDialog.tsx`, `src/hooks/useDatabaseReady.ts`, `src/components/SetupRequired.tsx`, `scripts/validate-handoff.mjs`, `scripts/dry-run-checklist.mjs`.
+- **Edited:** `src/App.tsx` (new `/reset-password` route + setup guard wrapper), `src/components/auth/AuthForm.tsx` (forgot-password link, session-aware signup), `BUYER_SETUP.md`, `SELLER_CHECKLIST.md`, `README.md`, `package.json` (add `handoff:check`, `dry-run` scripts).
+- No new runtime deps. No edge functions. No new secrets. No OAuth.
 
-### Note on CSV content
+### Out of scope
 
-I'll create `public/library-seed.csv` as an empty-with-header placeholder so the build is green. You'll run `npm run library:export` once after this lands to fill it from your live database — that way I never have to see or hardcode your clinical content.
+- Custom transactional email (Resend) — excluded per project memory.
+- OAuth providers — excluded per project memory.
+- Multi-tenant or role hierarchies beyond single-clinic.
+- In-app admin UI for Supabase configuration.
 
-## Out of scope
-
-- A multi-tenant "share library across clinics" feature.
-- An in-app CSV export UI (seller uses the npm script).
-- Migrating off string-id subcategories.
-
-Approve and I'll build it.
+Approve to execute.

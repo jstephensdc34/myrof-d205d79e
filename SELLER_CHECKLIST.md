@@ -20,12 +20,23 @@
 
 - [ ] Do a full **dry-run deployment** yourself using throwaway Supabase + Vercel accounts:
   - [ ] `setup.sql` runs clean with `Setup complete`
+  - [ ] **Disabled "Confirm email"** in Supabase → Authentication → Providers → Email (matches BUYER_SETUP.md Step 3.5)
   - [ ] App loads on the Vercel URL
   - [ ] Sign up + log in works
   - [ ] **Load Starter Library** button appears on the empty Library page and imports without errors
   - [ ] Create a library item
   - [ ] Generate a report (PDF download works)
   - [ ] Share a report (shared link loads in a fresh browser)
+  - [ ] `/reset-password` flow works end-to-end (or admin-reset path in BUYER_SETUP.md Troubleshooting works)
+  - [ ] `npm run handoff:check` exits clean (no OAuth in src/, all handoff files present)
+
+You can run the full interactive checklist with:
+
+```
+npm run dry-run
+```
+
+A timestamped pass/fail log is written to `dist-handoff/dry-run-<date>.log`.
 
 ---
 

@@ -21,6 +21,15 @@ redistribution, and sharing with other clinics is prohibited.
 Vite • React • TypeScript • Tailwind CSS • shadcn/ui • Supabase
 (database, auth, storage). No edge functions, no server required.
 
+## What's not included (by design)
+
+- ❌ OAuth providers (Google, Apple, etc.) — email + password only
+- ❌ Transactional email service (Resend, SendGrid) — uses mailto drafts
+- ❌ AI API keys — no LLM calls anywhere in the app
+- ❌ Production SMTP — buyers can plug their own SMTP into Supabase later
+
+This keeps deployment to two env vars and zero recurring third-party costs.
+
 ---
 
 Built with [Lovable](https://lovable.dev).

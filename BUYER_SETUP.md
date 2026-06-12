@@ -52,6 +52,21 @@ account, an email service, or any paid API key.
 These are safe to use in the deployed app — they are public keys.
 Do **not** copy the `service_role` key.
 
+## ⚠️ Step 3.5 — REQUIRED: Disable email confirmation
+
+**Do not skip this step.** Supabase's built-in test email server is heavily
+rate-limited and frequently drops messages in the first week of a new
+project. If you leave confirmation on, your very first signup may never
+receive a confirmation email and you'll be locked out of your own app
+before you've even started.
+
+1. In your Supabase project, go to **Authentication → Providers → Email**.
+2. Toggle **Confirm email** to **OFF**.
+3. Click **Save**.
+
+You can re-enable confirmation later after configuring your own SMTP
+provider in Supabase. For initial setup, this step is mandatory.
+
 ## Step 4 — Deploy to Vercel
 
 1. Click the **Deploy to Vercel** link your seller provided (or import the repo manually at [vercel.com/new](https://vercel.com/new)).
@@ -80,14 +95,6 @@ Do **not** copy the `service_role` key.
 
 ---
 
-## Optional: skip email confirmation
-
-By default, Supabase sends a "confirm your email" link when you sign up. If you want users to log in instantly without that step:
-
-1. In Supabase, go to **Authentication → Providers → Email**.
-2. Turn **off** "Confirm email".
-3. Save.
-
 ## What is NOT required
 
 You will not need to do any of the following — they are intentionally not part of this app:
@@ -103,14 +110,43 @@ You will not need to do any of the following — they are intentionally not part
 
 ## Troubleshooting
 
-**The app loads but I can't sign up / log in.**
-Re-check that your two environment variables in Vercel exactly match the Project URL and `anon` key from your Supabase project. Redeploy after fixing.
+**"Configuration required" screen on first load.**
+Your Vercel environment variables aren't set or don't match. Open Vercel
+→ Project → Settings → Environment Variables and re-paste the values
+from Supabase → Project Settings → API. Redeploy.
+
+**"Database setup required" screen on first load.**
+You skipped Step 2. Open Supabase → SQL Editor, paste the entire
+`setup.sql`, and click Run. Reload the page.
+
+**I never received my confirmation email after signing up.**
+You skipped Step 3.5. Go back, toggle **Confirm email** off in Supabase,
+then either sign up with a different email or use the Emergency Admin
+Recovery below to set a password directly.
+
+**I'm locked out of my account (Emergency Admin Recovery).**
+Because you own the Supabase project, you can never be permanently
+locked out — even if email delivery is broken:
+
+1. Open your Supabase project → **Authentication → Users**.
+2. Find your account email in the list.
+3. Click the **⋯ menu → Reset password** to set a new password directly
+   (no email needed). Use that password to log in.
+4. As an alternative, **⋯ menu → Send password recovery** will email a
+   reset link — but only do this once Step 3.5 / your own SMTP is set up.
 
 **The SQL setup script shows an error.**
-You may have run it twice. The script is safe to re-run on a fresh project — if you've already created tables, delete the Supabase project and start fresh, or contact your seller.
+You may have run it twice. The script is safe to re-run on a fresh
+project — if you've already created tables, delete the Supabase project
+and start fresh, or contact your seller.
 
 **A shared report link returns 404 / blank.**
-Make sure Step 2 completed and `Setup complete` was shown. The shared-reports storage bucket is created at the end of that script.
+Make sure Step 2 completed and `Setup complete` was shown. The
+shared-reports storage bucket is created at the end of that script.
+
+**Deep links (e.g. /library) 404 on page refresh.**
+The `vercel.json` SPA rewrite handles this automatically. If you removed
+or modified it, restore the original from the repo root.
 
 ---
 
