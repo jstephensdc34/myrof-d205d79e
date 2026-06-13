@@ -61,18 +61,22 @@ get the latest version automatically.
 
 ---
 
-## Build the buyer ZIP (one command)
+## Build the Welcome Kit ZIP (one command)
 
-Bundle the five buyer-handoff docs into a single download:
+Bundle the three setup assets the buyer actually needs into a single download:
 
 ```
 npm install        # one time
 npm run handoff
 ```
 
-Output: `dist-handoff/myrof-report-handoff.zip` — attach this single
-file to the buyer handoff email. It contains: `LICENSE`, `setup.sql`,
-`.env.example`, `BUYER_SETUP.md`, `README.md`.
+Output: `dist-handoff/myrof-welcome-kit.zip` — attach this single file to
+the buyer handoff email. It contains: `BUYER_SETUP.md`, `setup.sql`,
+`LICENSE`.
+
+Buyers receive only this Welcome Kit plus your Deploy-to-Vercel URL. They
+never clone the source repo, and they never need a GitHub account — the
+Vercel one-click link handles cloning from your public repository for them.
 
 The starter library (`public/library-seed.csv`) is **not** in the ZIP —
 it ships inside the Vercel deployment automatically. Buyers load it from
@@ -87,20 +91,15 @@ the in-app "Load Starter Library" button.
 - [ ] Payment received and recorded.
 - [ ] Collect from the buyer:
   - [ ] Buyer's full legal business entity name (for license record)
-  - [ ] Buyer's GitHub username (if granting repo access directly)
   - [ ] Primary contact email
-- [ ] Grant repository access:
-  - **Option A (recommended):** Add buyer as a collaborator on a fresh private fork dedicated to that buyer.
-  - **Option B:** Send them a zip / archive of the source.
-- [ ] Send the buyer:
-  - [ ] Link to `BUYER_SETUP.md`
+- [ ] Email the buyer:
+  - [ ] The Welcome Kit ZIP (`dist-handoff/myrof-welcome-kit.zip`)
   - [ ] Your custom Deploy-to-Vercel URL
   - [ ] Their license record (entity name + sale date)
-- [ ] Log the sale in your records: entity name, sale date, GitHub access granted, version sold.
+- [ ] Log the sale in your records: entity name, sale date, version sold.
 
 ---
 
 ## When ending a license
 
-- [ ] Revoke GitHub collaborator access.
 - [ ] Notify buyer in writing that the license has terminated and they must destroy all copies (per LICENSE §6).
