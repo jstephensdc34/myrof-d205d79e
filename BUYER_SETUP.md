@@ -28,6 +28,18 @@ account, an email service, or any paid API key.
 
 ---
 
+## Step 0 — Open your Welcome Kit
+
+Unzip the Welcome Kit folder you received upon purchase. Inside you'll find
+three files: this guide (`BUYER_SETUP.md`), `setup.sql`, and `LICENSE`.
+
+Open `setup.sql` in any plain text editor (Notepad on Windows, TextEdit on
+Mac, or VS Code) and keep it open — you'll paste its contents in Step 2.
+
+You do **not** need to download the application source code. Vercel will
+pull it from our repository automatically in Step 4. No GitHub account is
+required.
+
 ## Step 1 — Create your Supabase project
 
 1. Sign in at [supabase.com](https://supabase.com) and click **New Project**.
@@ -69,7 +81,7 @@ provider in Supabase. For initial setup, this step is mandatory.
 
 ## Step 4 — Deploy to Vercel
 
-1. Click the **Deploy to Vercel** link your seller provided (or import the repo manually at [vercel.com/new](https://vercel.com/new)).
+1. Click the **Deploy to Vercel** link your seller provided. This one-click link clones the application source into your own Vercel account automatically — you don't need a GitHub account or any local code.
 2. When Vercel asks for **Environment Variables**, paste:
    - `VITE_SUPABASE_URL` = the Project URL from Step 3
    - `VITE_SUPABASE_PUBLISHABLE_KEY` = the `anon` key from Step 3
