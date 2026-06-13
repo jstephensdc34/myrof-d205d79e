@@ -2,8 +2,12 @@
 /**
  * MyROF Report — Buyer handoff bundler
  *
- * Bundles the six buyer-handoff files into a single ZIP at
- *   dist-handoff/myrof-report-handoff.zip
+ * Bundles the buyer Welcome Kit (setup assets only) into a single ZIP at
+ *   dist-handoff/myrof-welcome-kit.zip
+ *
+ * Buyers deploy via a Vercel "Deploy" link that clones the public source
+ * repo for them — they never download the application code locally. The
+ * Welcome Kit only contains what they need to paste/read during setup.
  *
  * Usage:
  *   npm run handoff
@@ -17,15 +21,13 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(__dirname, "..");
 
 const FILES = [
-  "LICENSE",
-  "setup.sql",
-  ".env.example",
   "BUYER_SETUP.md",
-  "README.md",
+  "setup.sql",
+  "LICENSE",
 ];
 
 const OUT_DIR = join(repoRoot, "dist-handoff");
-const OUT_FILE = join(OUT_DIR, "myrof-report-handoff.zip");
+const OUT_FILE = join(OUT_DIR, "myrof-welcome-kit.zip");
 
 const missing = FILES.filter((f) => !existsSync(join(repoRoot, f)));
 if (missing.length) {
@@ -43,7 +45,7 @@ for (const f of FILES) {
 zip.writeZip(OUT_FILE);
 
 const sizeKb = (statSync(OUT_FILE).size / 1024).toFixed(1);
-console.log("✅ Buyer handoff ZIP created");
+console.log("✅ Welcome Kit created");
 console.log("   Path:  " + OUT_FILE);
 console.log("   Size:  " + sizeKb + " KB");
 console.log("   Files:");
