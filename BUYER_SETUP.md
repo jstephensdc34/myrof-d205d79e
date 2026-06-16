@@ -64,6 +64,12 @@ required.
 These are safe to use in the deployed app — they are public keys.
 Do **not** copy the `service_role` key.
 
+> **Paste the Project URL exactly as shown** — just the origin
+> (e.g. `https://abcdefgh.supabase.co`). Do **not** include a trailing
+> `/`, `/rest/v1`, `/auth`, quotes, or spaces. Do not paste the
+> `supabase.com/dashboard/project/...` URL from your browser address
+> bar — that is the dashboard, not your Project URL.
+
 ## ⚠️ Step 3.5 — REQUIRED: Disable email confirmation
 
 **Do not skip this step.** Supabase's built-in test email server is heavily
@@ -130,6 +136,13 @@ from Supabase → Project Settings → API. Redeploy.
 **"Database setup required" screen on first load.**
 You skipped Step 2. Open Supabase → SQL Editor, paste the entire
 `setup.sql`, and click Run. Reload the page.
+
+**Signup fails with "Invalid path specified in request URL".**
+Your `VITE_SUPABASE_URL` in Vercel has extra characters. It must be
+exactly your Project URL with nothing after `.supabase.co` — no
+trailing `/`, no `/rest/v1`, no `/auth`, no quotes, no spaces. Fix it
+in Vercel → Settings → Environment Variables, then redeploy from the
+Deployments tab (three-dot menu → Redeploy).
 
 **I never received my confirmation email after signing up.**
 You skipped Step 3.5. Go back, toggle **Confirm email** off in Supabase,
