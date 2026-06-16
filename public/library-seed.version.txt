@@ -1,0 +1,3 @@
+seed-version: 2026-06-16
+rows: 150
+notes: Forces a fresh Vercel deploy so library-seed.csv (150 rows) is published.
