@@ -1,9 +1,25 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
-const SUPABASE_ANON_KEY = (import.meta.env.VITE_SUPABASE_ANON_KEY ||
-  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY) as string;
+// Sanitize the URL defensively: buyers often paste it with a trailing
+// slash or an extra path segment (e.g. ".../rest/v1"), which causes
+// Supabase to reject requests with "Invalid path specified in request URL".
+const sanitizeSupabaseUrl = (raw: string | undefined): string => {
+  if (!raw) return '';
+  let url = raw.trim().replace(/^['"]|['"]$/g, '');
+  // Strip any path/query/hash — only the origin is valid.
+  try {
+    url = new URL(url).origin;
+  } catch {
+    // Fall back to trimming trailing slashes and known suffixes.
+    url = url.replace(/\/+$/, '').replace(/\/(rest|auth|storage|realtime)(\/v\d+)?$/i, '');
+  }
+  return url;
+};
+
+const SUPABASE_URL = sanitizeSupabaseUrl(import.meta.env.VITE_SUPABASE_URL as string);
+const SUPABASE_ANON_KEY = ((import.meta.env.VITE_SUPABASE_ANON_KEY ||
+  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY) as string | undefined)?.trim() || '';
 
 export const isSupabaseConfigured = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
 
