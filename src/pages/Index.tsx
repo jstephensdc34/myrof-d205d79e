@@ -41,11 +41,11 @@ const Index = () => {
               MyROF Report
             </h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Comprehensive chiropractic suite with patient reports and clinical tools.
+              Comprehensive patient education tool to create patient report and deliver patient education materials.
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-6xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-3xl mx-auto">
             <Card className="border-2 hover:border-medical-400 transition-all duration-200">
               <CardHeader>
                 <CardTitle className="text-medical-700">Create New Report</CardTitle>
@@ -78,9 +78,10 @@ const Index = () => {
             <h2 className="text-2xl font-semibold text-medical-700 mb-4">About MyROF Report</h2>
             <div className="text-left space-y-4">
               <p>
-                MyROF Report is a comprehensive chiropractic suite that helps physicians create professional patient reports, 
-                and manage treatment plans with ease. Customize your library with specific diagnoses, 
-                treatment options, home care recommendations, and therapeutic exercises.
+                MyROF Report helps clinicians generate three structured patient reports — Diagnosis, Treatment Plan,
+                and Home Care — from a customizable clinical library. Deliver finished reports to patients as
+                shareable HTML links or polished PDF downloads, so education materials reach them in the format
+                that works best.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
                 <div className="flex items-start">
@@ -90,8 +91,8 @@ const Index = () => {
                     </svg>
                   </div>
                   <div className="ml-3">
-                    <h3 className="text-md font-medium text-gray-800">Customizable Reports</h3>
-                    <p className="text-sm text-gray-600">Fully editable options for different patient needs</p>
+                    <h3 className="text-md font-medium text-gray-800">Diagnosis Report</h3>
+                    <p className="text-sm text-gray-600">Structured findings and assessment documentation</p>
                   </div>
                 </div>
                 <div className="flex items-start">
@@ -101,8 +102,8 @@ const Index = () => {
                     </svg>
                   </div>
                   <div className="ml-3">
-                    <h3 className="text-md font-medium text-gray-800">Expandable Categories</h3>
-                    <p className="text-sm text-gray-600">Create your own custom categories and subcategories</p>
+                    <h3 className="text-md font-medium text-gray-800">Treatment Plan</h3>
+                    <p className="text-sm text-gray-600">Personalized care plans with goals and modalities</p>
                   </div>
                 </div>
                 <div className="flex items-start">
@@ -112,8 +113,8 @@ const Index = () => {
                     </svg>
                   </div>
                   <div className="ml-3">
-                    <h3 className="text-md font-medium text-gray-800">PDF Export</h3>
-                    <p className="text-sm text-gray-600">Generate professional PDF reports for your patients</p>
+                    <h3 className="text-md font-medium text-gray-800">Home Care Report</h3>
+                    <p className="text-sm text-gray-600">Patient take-home instructions and recommendations</p>
                   </div>
                 </div>
                 <div className="flex items-start">
@@ -123,8 +124,8 @@ const Index = () => {
                     </svg>
                   </div>
                   <div className="ml-3">
-                    <h3 className="text-md font-medium text-gray-800">Resource Library</h3>
-                    <p className="text-sm text-gray-600">Include links to educational resources for patients</p>
+                    <h3 className="text-md font-medium text-gray-800">Shareable HTML + PDF Export</h3>
+                    <p className="text-sm text-gray-600">Deliver reports via link or download as PDF</p>
                   </div>
                 </div>
               </div>
