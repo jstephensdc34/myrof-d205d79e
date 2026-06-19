@@ -146,3 +146,30 @@ export const deleteSetting = async (id: string): Promise<void> => {
     throw new Error(error.message);
   }
 };
+
+// Upsert by name: updates if a row with that name exists, otherwise creates it.
+export const upsertSettingByName = async (
+  name: string,
+  value: string
+): Promise<ReportSetting> => {
+  if (!name.trim()) {
+    throw new Error("Setting name cannot be empty");
+  }
+
+  const { data: sessionData } = await supabase.auth.getSession();
+  if (!sessionData.session) {
+    throw new Error("Authentication required to save settings");
+  }
+
+  const { data: existing } = await supabase
+    .from("report_settings")
+    .select("id")
+    .eq("name", name)
+    .maybeSingle();
+
+  if (existing?.id) {
+    return updateSetting(existing.id, value);
+  }
+
+  return createSetting(name, value);
+};
