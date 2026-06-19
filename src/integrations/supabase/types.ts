@@ -14,13 +14,197 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      care_plans: {
+        Row: {
+          active_category: string | null
+          additional_notes: string | null
+          created_at: string
+          custom_treatment_goals: string | null
+          id: string
+          is_draft: boolean
+          patient_name: string | null
+          report_date: string | null
+          selected_item_ids: Json
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          active_category?: string | null
+          additional_notes?: string | null
+          created_at?: string
+          custom_treatment_goals?: string | null
+          id?: string
+          is_draft?: boolean
+          patient_name?: string | null
+          report_date?: string | null
+          selected_item_ids?: Json
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          active_category?: string | null
+          additional_notes?: string | null
+          created_at?: string
+          custom_treatment_goals?: string | null
+          id?: string
+          is_draft?: boolean
+          patient_name?: string | null
+          report_date?: string | null
+          selected_item_ids?: Json
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      library_categories: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      library_items: {
+        Row: {
+          category_id: string
+          created_at: string
+          definition: string | null
+          description: string
+          id: string
+          info_link: string | null
+          name: string
+          subcategory_id: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          category_id: string
+          created_at?: string
+          definition?: string | null
+          description: string
+          id?: string
+          info_link?: string | null
+          name: string
+          subcategory_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          category_id?: string
+          created_at?: string
+          definition?: string | null
+          description?: string
+          id?: string
+          info_link?: string | null
+          name?: string
+          subcategory_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "library_items_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "library_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "library_items_subcategory_id_fkey"
+            columns: ["subcategory_id"]
+            isOneToOne: false
+            referencedRelation: "library_subcategories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      library_subcategories: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          parent_category_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id: string
+          name: string
+          parent_category_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          parent_category_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "library_subcategories_parent_category_id_fkey"
+            columns: ["parent_category_id"]
+            isOneToOne: false
+            referencedRelation: "library_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      report_settings: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          value: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          value?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          value?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      claim_and_update_library_item: {
+        Args: {
+          _category_id: string
+          _definition: string
+          _description: string
+          _info_link: string
+          _item_id: string
+          _name: string
+          _subcategory_id: string
+          _user_id: string
+        }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
