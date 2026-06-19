@@ -1,14 +1,19 @@
-Update `src/pages/Index.tsx` with three specific content changes:
+## Goal
 
-1. **Tagline** — Update the `<p>` under the headline to:  
-   "Comprehensive patient education tool to create patient report and deliver patient education materials."
+Replace the three-tab Settings UI with a single, clean Clinic Information page (logo + clinic fields). Drop the raw "View Settings" table and the "Create Setting" key/value form — they aren't useful for end users.
 
-2. **Center the two cards** — The existing grid uses `grid-cols-1 md:grid-cols-2 lg:grid-cols-3`. Change to a centered 2-column layout so the two cards ("Create New Report", "Manage Library") sit centered rather than left-aligned within a 3-column track.
+## Changes
 
-3. **About section rewrite** —
-   - **Paragraph**: Rewrite to describe MyROF Report as a tool for generating three structured patient reports (Diagnosis, Treatment Plan, Home Care) and delivering them as shareable HTML reports or PDF exports.
-   - **Four bullets** (replaces the existing four):
-     a. **Diagnosis Report** — Structured findings and assessment documentation
-     b. **Treatment Plan** — Personalized care plans with goals and modalities
-     c. **Home Care Report** — Patient take-home instructions and recommendations
-     d. **Shareable HTML + PDF Export** — Deliver reports via link or download as PDF
+1. **`src/components/report/ReportSettings.tsx`** — Rewrite to remove `Tabs`/`TabsList`/`TabsContent` and the `activeTab` state. Render `<ClinicInfoForm>` directly inside the card. Keep the `ConnectionStatus` indicator in the header, the loading/error states, and the auth-aware footer message. Drop imports for `SettingsList`, `CreateSettingForm`, and `Tabs`.
+
+2. **Delete unused files** (no other consumers):
+   - `src/components/report/settings/SettingsList.tsx`
+   - `src/components/report/settings/CreateSettingForm.tsx`
+
+3. **Verify nothing else imports them** — quick `rg` for `SettingsList` and `CreateSettingForm` before deleting. If anything references them, update or leave the file until a follow-up.
+
+## Out of scope
+
+- No backend / database changes. The `report_settings` table stays as-is; clinic fields continue to be stored as individual `clinic_*` rows via the existing `ClinicInfoForm` save logic.
+- No styling redesign of the form itself — just removing the tab wrapper.
+- The "Create Setting" capability goes away from the UI. Custom keys can still exist in the DB but won't be user-editable. If you ever need power-user editing again, we'd add it back as a separate admin route.
