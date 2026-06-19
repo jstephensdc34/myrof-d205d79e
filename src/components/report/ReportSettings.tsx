@@ -5,6 +5,8 @@ import { ConnectionStatus } from "./settings/ConnectionStatus";
 import { useSupabaseConnection } from "@/hooks/useSupabaseConnection";
 import { useReportSettings } from "@/hooks/useReportSettings";
 import { ClinicInfoForm } from "./settings/ClinicInfoForm";
+import { EmailTemplateForm } from "./settings/EmailTemplateForm";
+import { Separator } from "@/components/ui/separator";
 
 interface ReportSettingsProps {
   onSettingsUpdated?: () => void;
@@ -36,12 +38,21 @@ export const ReportSettings = ({ onSettingsUpdated }: ReportSettingsProps) => {
             {error}
           </div>
         ) : (
-          <ClinicInfoForm
-            settings={settings}
-            onSettingUpdated={handleSettingUpdated}
-            isAuthenticated={isAuthenticated}
-            loading={loading}
-          />
+          <div className="space-y-8">
+            <ClinicInfoForm
+              settings={settings}
+              onSettingUpdated={handleSettingUpdated}
+              isAuthenticated={isAuthenticated}
+              loading={loading}
+            />
+            <Separator />
+            <EmailTemplateForm
+              settings={settings}
+              onSettingUpdated={handleSettingUpdated}
+              isAuthenticated={isAuthenticated}
+              loading={loading}
+            />
+          </div>
         )}
       </CardContent>
       <CardFooter className="flex justify-between">
