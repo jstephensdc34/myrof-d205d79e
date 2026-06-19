@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { PatientInfo, ReportItem, Subcategory, ReportSetting } from "@/types";
 import { shareReport } from "@/utils/shareReport";
 import { composeReportEmail, buildMailtoUrl } from "@/utils/composeReportEmail";
+import { EMAIL_TEMPLATE_SETTING_KEYS } from "@/utils/emailTemplateDefaults";
 
 interface ShareReportActionsProps {
   patient: PatientInfo;
@@ -58,6 +59,12 @@ export const ShareReportActions = ({
       clinicName: getSetting("clinic_name", "Your Clinic"),
       fullReportUrl,
       overviewReportUrl,
+      templates: {
+        subject: getSetting(EMAIL_TEMPLATE_SETTING_KEYS.subject),
+        body: getSetting(EMAIL_TEMPLATE_SETTING_KEYS.body),
+        fullButtonLabel: getSetting(EMAIL_TEMPLATE_SETTING_KEYS.fullButton),
+        overviewButtonLabel: getSetting(EMAIL_TEMPLATE_SETTING_KEYS.overviewButton),
+      },
     });
   };
 
