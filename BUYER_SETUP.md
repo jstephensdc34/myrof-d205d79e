@@ -20,7 +20,9 @@ of MyROF Report in about 15 minutes. No coding, no command line.
 ## What you'll need
 
 - A free [Supabase](https://supabase.com) account (your database & login system)
-- A free [Vercel](https://vercel.com) account (where the app will live online)
+- A free Github account 
+- A free Vercel account (where the app will live online) - (log in with your github account)
+
 - About 15 minutes
 
 You do **not** need: a developer, a command line, Docker, an OAuth
