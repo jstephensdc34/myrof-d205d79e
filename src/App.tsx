@@ -12,7 +12,7 @@ import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import SharedReport from "./pages/SharedReport";
 import ResetPassword from "./pages/ResetPassword";
-const isSupabaseConfigured = !!(import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY);
+const isSupabaseConfigured = !!(import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY);
 import { useDatabaseReady } from "@/hooks/useDatabaseReady";
 import { SetupRequired } from "@/components/SetupRequired";
 

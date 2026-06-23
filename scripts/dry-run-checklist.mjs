@@ -20,7 +20,7 @@ const STEPS = [
   "Fresh Supabase project created (throwaway)",
   "setup.sql ran clean (saw 'Setup complete')",
   "Email confirmation toggled OFF in Supabase → Authentication → Providers → Email",
-  "Env vars set in Vercel (VITE_SUPABASE_URL, VITE_SUPABASE_PUBLISHABLE_KEY); build succeeded",
+  "Env vars set in Vercel (VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY); build succeeded",
   "Signup → immediate login works (no email round-trip)",
   "'Load Starter Library' imported N items without error",
   "Library item create / edit / delete works",
