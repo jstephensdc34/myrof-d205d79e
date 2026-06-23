@@ -92,7 +92,7 @@ provider in Supabase. For initial setup, this step is mandatory.
 1. Click the **Deploy to Vercel** link your seller provided. This one-click link clones the application source into your own Vercel account automatically — you don't need a GitHub account or any local code.
 2. When Vercel asks for **Environment Variables**, paste:
    - `VITE_SUPABASE_URL` = the Project URL from Step 3
-   - `VITE_SUPABASE_PUBLISHABLE_KEY` = the `anon` key from Step 3
+   - `VITE_SUPABASE_ANON_KEY` = the `anon` key from Step 3
 3. Click **Deploy**. The first build takes 1–3 minutes.
 4. When the build finishes, click **Visit** to open your live site.
 

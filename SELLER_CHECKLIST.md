@@ -16,7 +16,7 @@
 - [ ] Optionally mark it as a **template repository** so each buyer fork is independent.
 - [ ] Build your one-click Deploy-to-Vercel URL:
 
-      https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FYOUR_ORG%2FYOUR_REPO&env=VITE_SUPABASE_URL,VITE_SUPABASE_PUBLISHABLE_KEY&envDescription=Get%20these%20from%20Supabase%20Project%20Settings%20%E2%86%92%20API
+      https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FYOUR_ORG%2FYOUR_REPO&env=VITE_SUPABASE_URL,VITE_SUPABASE_ANON_KEY&envDescription=Get%20these%20from%20Supabase%20Project%20Settings%20%E2%86%92%20API
 
 - [ ] Do a full **dry-run deployment** yourself using throwaway Supabase + Vercel accounts:
   - [ ] `setup.sql` runs clean with `Setup complete`
