@@ -359,4 +359,49 @@ CREATE POLICY "shared_reports_owner_delete"
   USING (bucket_id = 'shared-reports' AND owner = auth.uid());
 
 -- ============================================================
+-- 8. Automatic cleanup of old shared-report files (90 days).
+-- ============================================================
+-- Shared-report HTML files live in the public `shared-reports` bucket.
+-- Without cleanup they accumulate forever. The job below invokes the
+-- `cleanup-shared-reports` edge function once a day; the function deletes
+-- any file in that bucket whose `created_at` is older than 90 days.
+--
+-- Requires two extensions (safe to re-run):
+CREATE EXTENSION IF NOT EXISTS pg_cron WITH SCHEMA extensions;
+CREATE EXTENSION IF NOT EXISTS pg_net  WITH SCHEMA extensions;
+
+-- ------------------------------------------------------------
+-- Schedule the daily cleanup job.
+--
+-- REPLACE the two placeholders below with values from your own Supabase
+-- project (Project Settings -> API):
+--   <YOUR-PROJECT-REF>  e.g. abcd1234efgh5678ijkl
+--   <YOUR-ANON-KEY>     the "anon public" key (starts with sb_publishable_ or eyJ...)
+--
+-- Safe to re-run: the block first removes any previous schedule with the
+-- same name before creating a new one.
+-- ------------------------------------------------------------
+DO $$
+BEGIN
+  PERFORM cron.unschedule(jobid)
+  FROM cron.job
+  WHERE jobname = 'cleanup-shared-reports-daily';
+EXCEPTION WHEN OTHERS THEN
+  -- No prior job; ignore.
+  NULL;
+END $$;
+
+SELECT cron.schedule(
+  'cleanup-shared-reports-daily',
+  '15 3 * * *',  -- daily at 03:15 UTC
+  $cron$
+  SELECT net.http_post(
+    url     := 'https://<YOUR-PROJECT-REF>.supabase.co/functions/v1/cleanup-shared-reports',
+    headers := '{"Content-Type":"application/json","apikey":"<YOUR-ANON-KEY>","Authorization":"Bearer <YOUR-ANON-KEY>"}'::jsonb,
+    body    := '{}'::jsonb
+  ) AS request_id;
+  $cron$
+);
+
+-- ============================================================
 SELECT 'Setup complete' AS status;

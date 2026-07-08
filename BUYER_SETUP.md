@@ -170,6 +170,24 @@ and start fresh, or contact your seller.
 **A shared report link returns 404 / blank.**
 Make sure Step 2 completed and `Setup complete` was shown. The
 shared-reports storage bucket is created at the end of that script.
+If the link is more than 90 days old, it has been removed by the
+automatic cleanup job (see "Shared report retention" below).
+
+**Shared report retention (90 days).**
+Shared-report HTML files are automatically deleted 90 days after they
+are created by a daily background job that calls the
+`cleanup-shared-reports` edge function. Two things must be true for
+this to work:
+
+1. Before running `setup.sql`, open it and replace the two placeholders
+   near the bottom (`<YOUR-PROJECT-REF>` and `<YOUR-ANON-KEY>`) with
+   the values from your Supabase Project Settings → API page.
+2. Deploy the `cleanup-shared-reports` edge function shipped in
+   `supabase/functions/cleanup-shared-reports/` (Supabase CLI:
+   `supabase functions deploy cleanup-shared-reports --no-verify-jwt`).
+
+To change the retention window, edit `RETENTION_DAYS` at the top of
+`supabase/functions/cleanup-shared-reports/index.ts` and redeploy.
 
 **Deep links (e.g. /library) 404 on page refresh.**
 The `vercel.json` SPA rewrite handles this automatically. If you removed

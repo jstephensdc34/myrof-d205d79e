@@ -1,1 +1,4 @@
 project_id = "evvjturddlywfbcpwqsb"
+
+[functions.cleanup-shared-reports]
+verify_jwt = false
