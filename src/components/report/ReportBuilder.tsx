@@ -77,13 +77,23 @@ export const ReportBuilder = ({
 }: ReportBuilderProps) => {
   const [showShareDialog, setShowShareDialog] = useState(false);
   const [showPdfDialog, setShowPdfDialog] = useState(false);
+  const [activeReportTab, setActiveReportTab] = useState<"full" | "overview">("full");
   const reportPreviewRef = useRef<HTMLDivElement>(null);
   const overviewReportRef = useRef<HTMLDivElement>(null);
 
   const handlePdfFormatSelect = (format: PdfFormat) => {
     setShowPdfDialog(false);
-    const target = format === "overview" ? overviewReportRef.current : reportPreviewRef.current;
-    onGeneratePDF(target);
+    const tabValue = format === "overview" ? "overview" : "full";
+    // Ensure the target tab is visible so html2canvas can measure it.
+    setActiveReportTab(tabValue);
+    // Wait two frames for Radix to unhide the TabsContent before capturing.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const target =
+          format === "overview" ? overviewReportRef.current : reportPreviewRef.current;
+        onGeneratePDF(target);
+      });
+    });
   };
 
   return (
@@ -175,7 +185,11 @@ export const ReportBuilder = ({
           onEstimatedCostChange={onEstimatedCostChange}
         />
         
-        <Tabs defaultValue="full" className="mt-6">
+        <Tabs
+          value={activeReportTab}
+          onValueChange={(v) => setActiveReportTab(v as "full" | "overview")}
+          className="mt-6"
+        >
           <TabsList>
             <TabsTrigger value="full">Full Report</TabsTrigger>
             <TabsTrigger value="overview">Overview Report</TabsTrigger>
