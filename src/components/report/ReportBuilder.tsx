@@ -180,12 +180,7 @@ export const ReportBuilder = ({
             <TabsTrigger value="full">Full Report</TabsTrigger>
             <TabsTrigger value="overview">Overview Report</TabsTrigger>
           </TabsList>
-          <TabsContent
-            value="full"
-            forceMount
-            hidden={false}
-            className="data-[state=inactive]:absolute data-[state=inactive]:-left-[10000px] data-[state=inactive]:top-0 data-[state=inactive]:pointer-events-none data-[state=inactive]:opacity-0"
-          >
+          <TabsContent value="full" forceMount className="data-[state=inactive]:hidden">
             <ReportPreview
               ref={reportPreviewRef}
               patient={patient}
@@ -199,12 +194,7 @@ export const ReportBuilder = ({
               settingsLoading={settingsLoading}
             />
           </TabsContent>
-          <TabsContent
-            value="overview"
-            forceMount
-            hidden={false}
-            className="data-[state=inactive]:absolute data-[state=inactive]:-left-[10000px] data-[state=inactive]:top-0 data-[state=inactive]:pointer-events-none data-[state=inactive]:opacity-0"
-          >
+          <TabsContent value="overview" forceMount className="data-[state=inactive]:hidden">
             <OverviewReport
               ref={overviewReportRef}
               patient={patient}
