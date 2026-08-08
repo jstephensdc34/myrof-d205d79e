@@ -88,7 +88,15 @@ const OverviewCard = ({
       <p className="text-sm text-foreground/80">{definition || "No definition provided."}</p>
       {infoLink && (
         <p className="text-xs text-muted-foreground italic">
-          For more information: {infoLink}
+          For more information:{" "}
+          <a
+            href={infoLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary underline break-all"
+          >
+            {infoLink}
+          </a>
         </p>
       )}
     </div>
