@@ -29,7 +29,15 @@ export const ReportItem = ({ item, style }: ReportItemProps) => {
         )}
         {item.infoLink && (
           <p className="text-xs text-muted-foreground italic">
-            For more information: {item.infoLink}
+            For more information:{" "}
+            <a
+              href={item.infoLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary underline break-all"
+            >
+              {item.infoLink}
+            </a>
           </p>
         )}
       </div>
