@@ -38,7 +38,7 @@ const Index = () => {
           )}
           <div className="space-y-3">
             <h1 className="text-4xl font-bold tracking-tight text-medical-800 sm:text-5xl">
-              MyROF Report
+              Chiropractic Patient Report Generator
             </h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Comprehensive patient education tool to create patient report and deliver patient education materials.
@@ -75,10 +75,10 @@ const Index = () => {
           </div>
           
           <div className="bg-white p-8 rounded-lg shadow-md border border-gray-200 w-full max-w-6xl">
-            <h2 className="text-2xl font-semibold text-medical-700 mb-4">About MyROF Report</h2>
+            <h2 className="text-2xl font-semibold text-medical-700 mb-4">About Chiropractic Patient Report Generator</h2>
             <div className="text-left space-y-4">
               <p>
-                MyROF Report helps clinicians generate three structured patient reports — Diagnosis, Treatment Plan,
+                Chiropractic Patient Report Generator helps clinicians generate three structured patient reports — Diagnosis, Treatment Plan,
                 and Home Care — from a customizable clinical library. Deliver finished reports to patients as
                 shareable HTML links or polished PDF downloads, so education materials reach them in the format
                 that works best.
@@ -136,7 +136,7 @@ const Index = () => {
       
       <footer className="bg-white py-6 border-t border-gray-200 mt-12">
         <div className="container mx-auto px-4">
-          <p className="text-center text-gray-500 text-sm">© 2026 MyROF Report. All rights reserved.</p>
+          <p className="text-center text-gray-500 text-sm">© 2026 Chiropractic Patient Report Generator. All rights reserved.</p>
         </div>
       </footer>
     </div>
