@@ -1,4 +1,4 @@
-# MyROF Report
+# Chiropractic Patient Report Generator
 
 A clinical report generation and patient education library for
 chiropractic and physical therapy clinics. Generate professional

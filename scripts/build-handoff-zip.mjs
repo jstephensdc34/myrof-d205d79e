@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /**
- * MyROF Report — Buyer handoff bundler
+ * Chiropractic Patient Report Generator — Buyer handoff bundler
  *
  * Bundles the buyer Welcome Kit (setup assets only) into a single ZIP at
- *   dist-handoff/myrof-welcome-kit.zip
+ *   dist-handoff/chiropractic-patient-report-generator-welcome-kit.zip
  *
  * Buyers deploy via a Vercel "Deploy" link that clones the public source
  * repo for them — they never download the application code locally. The
@@ -27,7 +27,7 @@ const FILES = [
 ];
 
 const OUT_DIR = join(repoRoot, "dist-handoff");
-const OUT_FILE = join(OUT_DIR, "myrof-welcome-kit.zip");
+const OUT_FILE = join(OUT_DIR, "chiropractic-patient-report-generator-welcome-kit.zip");
 
 const missing = FILES.filter((f) => !existsSync(join(repoRoot, f)));
 if (missing.length) {
