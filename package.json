@@ -13,7 +13,8 @@
     "handoff:check": "node scripts/validate-handoff.mjs",
     "dry-run": "node scripts/dry-run-checklist.mjs",
     "library:check": "node scripts/validate-library-csv.mjs",
-    "library:export": "node scripts/export-library-csv.mjs"
+    "library:export": "node scripts/export-library-csv.mjs",
+    "source:zip": "node scripts/build-source-zip.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
