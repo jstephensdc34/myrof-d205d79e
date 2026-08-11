@@ -104,6 +104,7 @@ VITE_SUPABASE_ANON_KEY="your-anon-key"
                     <Route path="/library" element={<Library />} />
                     <Route path="/auth" element={<Auth />} />
                     <Route path="/reset-password" element={<ResetPassword />} />
+                    <Route path="/source-download" element={<SourceDownload />} />
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                     <Route path="*" element={<NotFound />} />
                   </Routes>
