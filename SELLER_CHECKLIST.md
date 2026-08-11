@@ -70,7 +70,7 @@ npm install        # one time
 npm run handoff
 ```
 
-Output: `dist-handoff/myrof-welcome-kit.zip` — attach this single file to
+Output: `dist-handoff/chiropractic-patient-report-generator-welcome-kit.zip` — attach this single file to
 the buyer handoff email. It contains: `BUYER_SETUP.md`, `setup.sql`,
 `LICENSE`.
 
@@ -93,7 +93,7 @@ the in-app "Load Starter Library" button.
   - [ ] Buyer's full legal business entity name (for license record)
   - [ ] Primary contact email
 - [ ] Email the buyer:
-  - [ ] The Welcome Kit ZIP (`dist-handoff/myrof-welcome-kit.zip`)
+  - [ ] The Welcome Kit ZIP (`dist-handoff/chiropractic-patient-report-generator-welcome-kit.zip`)
   - [ ] Your custom Deploy-to-Vercel URL
   - [ ] Their license record (entity name + sale date)
 - [ ] Log the sale in your records: entity name, sale date, version sold.

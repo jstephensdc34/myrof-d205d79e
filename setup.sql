@@ -1,5 +1,5 @@
 -- ============================================================
--- MyROF Report — Database Setup (single-file, from-scratch)
+-- Chiropractic Patient Report Generator — Database Setup (single-file, from-scratch)
 -- ============================================================
 -- Paste this entire file into your Supabase SQL Editor and click Run.
 -- Safe to re-run on the same project (uses IF NOT EXISTS / ON CONFLICT).

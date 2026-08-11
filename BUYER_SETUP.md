@@ -1,7 +1,7 @@
-# MyROF Report — Buyer Deployment Guide
+# Chiropractic Patient Report Generator — Buyer Deployment Guide
 
 Welcome. This guide walks you through deploying your own private copy
-of MyROF Report in about 15 minutes. No coding, no command line.
+of Chiropractic Patient Report Generator in about 15 minutes. No coding, no command line.
 
 ---
 
@@ -45,7 +45,7 @@ required.
 ## Step 1 — Create your Supabase project
 
 1. Sign in at [supabase.com](https://supabase.com) and click **New Project**.
-2. Pick a name (e.g. "myrof-report"), set a strong database password, and choose the region closest to your clinic.
+2. Pick a name (e.g. "chiropractic-patient-report-generator"), set a strong database password, and choose the region closest to your clinic.
 3. Wait ~2 minutes for the project to finish provisioning.
 
 ## Step 2 — Set up the database
