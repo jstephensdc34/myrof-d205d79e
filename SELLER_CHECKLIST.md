@@ -59,28 +59,6 @@ RLS so per-user rows are included as shared starter content.
 Commit the updated CSV and re-deploy. Buyers who deploy after that point
 get the latest version automatically.
 
-### Releasing updates to existing buyers
-
-Existing buyers do **not** automatically receive code updates. The Vercel one-click link created a fork/clone in their own GitHub account at deploy time, so they must manually sync it with your upstream repository.
-
-- **Code-only updates:** buyers must open their fork on GitHub and click **Sync fork → Update branch**. Vercel redeploys automatically.
-- **Database/schema/edge-function updates:** re-send the latest Welcome Kit ZIP (with the updated `setup.sql`) and tell buyers to run it in Supabase before syncing their fork.
-
-Optional buyer-update email template:
-
-```
-Subject: Chiropractic Patient Report Generator — Update Available
-
-Hi [Clinic Name],
-
-An update is available for your Chiropractic Patient Report Generator deployment.
-
-If this update includes database changes, first run the attached setup.sql in your Supabase SQL Editor (you'll see "Setup complete" when it finishes).
-
-Then, in GitHub, open your forked repository and click "Sync fork" → "Update branch". Vercel will redeploy automatically in 1–3 minutes.
-
-Let me know if you have any questions.
-```
 
 ---
 

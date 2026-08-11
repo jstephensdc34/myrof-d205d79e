@@ -115,28 +115,6 @@ provider in Supabase. For initial setup, this step is mandatory.
 
 ---
 
-## Updating your app to the latest version
-
-The one-click Vercel deploy link cloned the app into your own Vercel/GitHub account at the moment you first deployed. Because it is now your own copy, new updates pushed to the seller's repository do **not** automatically appear in your app.
-
-There are two kinds of updates, and they are handled differently:
-
-1. **Code updates** (new features, bug fixes, UI changes): applied by syncing your fork with the seller's upstream repository. Vercel then redeploys automatically.
-2. **Database updates** (new tables, columns, security rules, or edge functions): applied by re-running the latest `setup.sql` in your Supabase project.
-
-To update your app when the seller releases a new version:
-
-1. Download the latest Welcome Kit ZIP from the seller and extract it.
-2. If the seller says the database/schema changed, open the new `setup.sql`, copy its entire contents, and run it in **Supabase → SQL Editor** just like you did in Step 2. Wait for `Setup complete`.
-3. In GitHub, open your forked repository (the one Vercel created for you).
-4. Click **Sync fork**, then **Update branch**. This pulls the latest code from the seller's repository into your fork.
-5. Vercel detects the change and redeploys automatically. Wait 1–3 minutes, then open your live URL.
-6. Log in and spot-check your library and reports to confirm everything still works.
-
-If you only received code changes (no new `setup.sql`), you can skip Step 2 and just sync your fork.
-
----
-
 ## What is NOT required
 
 You will not need to do any of the following — they are intentionally not part of this app:
