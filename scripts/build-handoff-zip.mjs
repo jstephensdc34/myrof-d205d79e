@@ -44,9 +44,16 @@ for (const f of FILES) {
 }
 zip.writeZip(OUT_FILE);
 
+// Also copy to public/ so the /source-download page serves the latest file.
+const PUBLIC_DIR = join(repoRoot, "public");
+const PUBLIC_FILE = join(PUBLIC_DIR, "chiropractic-patient-report-generator-welcome-kit.zip");
+if (!existsSync(PUBLIC_DIR)) mkdirSync(PUBLIC_DIR, { recursive: true });
+copyFileSync(OUT_FILE, PUBLIC_FILE);
+
 const sizeKb = (statSync(OUT_FILE).size / 1024).toFixed(1);
 console.log("✅ Welcome Kit created");
 console.log("   Path:  " + OUT_FILE);
+console.log("   Public copy: " + PUBLIC_FILE);
 console.log("   Size:  " + sizeKb + " KB");
 console.log("   Files:");
 for (const f of FILES) console.log("     - " + f);
