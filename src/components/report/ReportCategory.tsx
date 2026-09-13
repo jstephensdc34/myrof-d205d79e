@@ -3,7 +3,7 @@ import { ReportItem as ReportItemType } from "@/types";
 import { ReportSubcategory } from "./ReportSubcategory";
 import { getOrderedSubcategories } from "@/utils/categoryUtils";
 import { getSectionIcon } from "@/utils/sectionIcons";
-import { ReportItem } from "./ReportItem";
+import { ReportStyle, DOSSIER_PRIMARY, DOSSIER_PRIMARY_SOFT } from "./reportStyleVariants";
 
 const sectionStyles: Record<string, { bg: string; border: string; headerBg: string; headerText: string }> = {
   diagnosis: { bg: "bg-blue-50", border: "border-blue-200", headerBg: "bg-blue-600", headerText: "text-white" },
@@ -21,6 +21,7 @@ interface ReportCategoryProps {
   getSubcategoryName: (id: string) => string;
   customTreatmentGoals?: string;
   estimatedCost?: string;
+  variant?: ReportStyle;
 }
 
 export const ReportCategory = ({ 
@@ -31,14 +32,20 @@ export const ReportCategory = ({
   getSubcategoryName,
   customTreatmentGoals,
   estimatedCost,
+  variant = "classic",
 }: ReportCategoryProps) => {
   const style = sectionStyles[categoryId] || sectionStyles.diagnosis;
+  const isDossier = variant === "dossier";
+
+  const panelClass = isDossier
+    ? "pl-4 py-2"
+    : `rounded-lg border ${style.border} ${style.bg} overflow-hidden shadow-sm`;
 
   const renderSubcategoryItems = () => {
     const orderedSubcategories = getOrderedSubcategories(categoryId, subcategories);
     
     return (
-      <div className="space-y-3">
+      <div className={isDossier ? "space-y-5" : "space-y-3"}>
         {orderedSubcategories.map(subcategory => {
           const subcategoryItems = items.filter(
             item => item.subcategoryId === subcategory.id
@@ -50,6 +57,7 @@ export const ReportCategory = ({
               title={getSubcategoryName(subcategory.id)}
               items={subcategoryItems}
               style={style}
+              variant={variant}
             />
           );
         })}
@@ -64,27 +72,42 @@ export const ReportCategory = ({
               title="Other"
               items={uncategorizedItems}
               style={style}
+              variant={variant}
             />
           ) : null;
         })()}
 
         {customTreatmentGoals && (
-          <div className={`rounded-lg border ${style.border} ${style.bg} overflow-hidden shadow-sm`}>
-            <div className={`px-4 py-2 ${style.headerBg}`}>
-              <h4 className={`font-semibold text-sm ${style.headerText}`}>Custom Treatment Goal</h4>
-            </div>
-            <div className="px-4 py-3">
+          <div
+            className={panelClass}
+            style={isDossier ? { borderLeft: `2px solid ${DOSSIER_PRIMARY_SOFT}` } : undefined}
+          >
+            {isDossier ? (
+              <h4 className="text-sm font-semibold" style={{ color: DOSSIER_PRIMARY }}>Custom Treatment Goal</h4>
+            ) : (
+              <div className={`px-4 py-2 ${style.headerBg}`}>
+                <h4 className={`font-semibold text-sm ${style.headerText}`}>Custom Treatment Goal</h4>
+              </div>
+            )}
+            <div className={isDossier ? "mt-1.5" : "px-4 py-3"}>
               <p className="text-sm font-bold text-foreground/80">• {customTreatmentGoals}</p>
             </div>
           </div>
         )}
 
         {estimatedCost && (
-          <div className={`rounded-lg border ${style.border} ${style.bg} overflow-hidden shadow-sm`}>
-            <div className={`px-4 py-2 ${style.headerBg}`}>
-              <h4 className={`font-semibold text-sm ${style.headerText}`}>Estimated Cost</h4>
-            </div>
-            <div className="px-4 py-4 text-center">
+          <div
+            className={panelClass}
+            style={isDossier ? { borderLeft: `2px solid ${DOSSIER_PRIMARY_SOFT}` } : undefined}
+          >
+            {isDossier ? (
+              <h4 className="text-sm font-semibold" style={{ color: DOSSIER_PRIMARY }}>Estimated Cost</h4>
+            ) : (
+              <div className={`px-4 py-2 ${style.headerBg}`}>
+                <h4 className={`font-semibold text-sm ${style.headerText}`}>Estimated Cost</h4>
+              </div>
+            )}
+            <div className={isDossier ? "mt-1.5" : "px-4 py-4 text-center"}>
               <p className="text-2xl font-bold text-emerald-700">{estimatedCost}</p>
               <p className="text-xs italic text-muted-foreground mt-2">
                 Note: This is an estimate based on the recommended clinical care plan. Please refer to your official financial breakdown for detailed billing, insurance, and payment information.
@@ -97,6 +120,21 @@ export const ReportCategory = ({
   };
 
   const Icon = getSectionIcon(categoryName);
+
+  if (isDossier) {
+    return (
+      <div className="mb-8">
+        <div className="mb-3 flex items-center gap-2 border-b pb-2" style={{ borderColor: DOSSIER_PRIMARY_SOFT }}>
+          <Icon className="h-5 w-5" strokeWidth={2.25} style={{ color: DOSSIER_PRIMARY }} />
+          <h3 className="text-base font-bold uppercase tracking-wide" style={{ color: DOSSIER_PRIMARY }}>
+            {categoryName}
+          </h3>
+        </div>
+        {renderSubcategoryItems()}
+      </div>
+    );
+  }
+
   return (
     <div className="mb-6">
       <div className={`rounded-lg px-4 py-2.5 ${style.headerBg} mb-3 flex items-center gap-2`}>
