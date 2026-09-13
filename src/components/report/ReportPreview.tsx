@@ -6,6 +6,7 @@ import { ReportHeader } from "./ReportHeader";
 import { ReportSetting } from "@/services/reportSettingsService";
 import { PatientInfoDisplay } from "./PatientInfoDisplay";
 import { ReportCategory } from "./ReportCategory";
+import { ReportStyle, DEFAULT_REPORT_STYLE } from "./reportStyleVariants";
 
 // Category name mapping
 const categoryNames: Record<string, string> = {
@@ -27,6 +28,7 @@ interface ReportPreviewProps {
   settings?: ReportSetting[];
   settingsLoading?: boolean;
   printMode?: boolean;
+  reportStyle?: ReportStyle;
 }
 
 export const ReportPreview = forwardRef<HTMLDivElement, ReportPreviewProps>(({
@@ -40,6 +42,7 @@ export const ReportPreview = forwardRef<HTMLDivElement, ReportPreviewProps>(({
   settings = [],
   settingsLoading = false,
   printMode = false,
+  reportStyle = DEFAULT_REPORT_STYLE,
 }, ref) => {
   const getSelectedItems = (categoryId: string) => {
     return items.filter(item => 
@@ -148,6 +151,7 @@ export const ReportPreview = forwardRef<HTMLDivElement, ReportPreviewProps>(({
                     getSubcategoryName={getSubcategoryName}
                     customTreatmentGoals={category === "treatment" ? customTreatmentGoals : undefined}
                     estimatedCost={category === "treatment" ? estimatedCost : undefined}
+                    variant={reportStyle}
                   />
                 ))}
                 
