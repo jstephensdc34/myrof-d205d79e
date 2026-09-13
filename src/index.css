@@ -34,6 +34,10 @@
 
     --radius: 0.5rem;
 
+    /* Report style variant tokens (Modern Clinical Dossier) */
+    --report-primary: 205 100% 27%;
+    --report-accent: 211 92% 44%;
+
     --sidebar-background: 0 0% 98%;
 
     --sidebar-foreground: 240 5.3% 26.1%;

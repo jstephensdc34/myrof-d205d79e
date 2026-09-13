@@ -1,6 +1,6 @@
 
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { PatientInfo, ReportItem, CategoryType } from "@/types";
 import { PatientInfoForm } from "@/components/report/PatientInfoForm";
@@ -19,6 +19,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Link } from "lucide-react";
 import { CarePlansPanel } from "@/components/report/CarePlansPanel";
 import { useCarePlans } from "@/hooks/useCarePlans";
+import { ReportStyleToggle } from "@/components/report/ReportStyleToggle";
+import {
+  ReportStyle,
+  DEFAULT_REPORT_STYLE,
+  REPORT_STYLE_SETTING_NAME,
+  isReportStyle,
+} from "@/components/report/reportStyleVariants";
 
 interface ReportBuilderProps {
   patient: PatientInfo;
@@ -46,6 +53,7 @@ interface ReportBuilderProps {
   onShareReport: (format: ShareReportFormat) => void;
   onShareUrlChange: (url: string | null) => void;
   carePlans: ReturnType<typeof useCarePlans>;
+  onSettingsUpdated?: () => void;
 }
 
 export const ReportBuilder = ({
@@ -74,12 +82,23 @@ export const ReportBuilder = ({
   onShareReport,
   onShareUrlChange,
   carePlans,
+  onSettingsUpdated,
 }: ReportBuilderProps) => {
   const [showShareDialog, setShowShareDialog] = useState(false);
   const [showPdfDialog, setShowPdfDialog] = useState(false);
   const [activeReportTab, setActiveReportTab] = useState<"full" | "overview">("full");
+  const [reportStyle, setReportStyle] = useState<ReportStyle>(DEFAULT_REPORT_STYLE);
+  const [styleInitialized, setStyleInitialized] = useState(false);
   const reportPreviewRef = useRef<HTMLDivElement>(null);
   const overviewReportRef = useRef<HTMLDivElement>(null);
+
+  // Initialize the layout from the saved default
+  useEffect(() => {
+    if (styleInitialized || settingsLoading) return;
+    const saved = settings.find((s) => s.name === REPORT_STYLE_SETTING_NAME)?.value;
+    setReportStyle(isReportStyle(saved) ? saved : DEFAULT_REPORT_STYLE);
+    setStyleInitialized(true);
+  }, [settings, settingsLoading, styleInitialized]);
 
   const handlePdfFormatSelect = (format: PdfFormat) => {
     setShowPdfDialog(false);
@@ -194,6 +213,14 @@ export const ReportBuilder = ({
             <TabsTrigger value="full">Full Report</TabsTrigger>
             <TabsTrigger value="overview">Overview Report</TabsTrigger>
           </TabsList>
+
+          <ReportStyleToggle
+            value={reportStyle}
+            onChange={setReportStyle}
+            settings={settings}
+            onSaved={onSettingsUpdated}
+          />
+
           <TabsContent value="full" forceMount className="data-[state=inactive]:hidden">
             <ReportPreview
               ref={reportPreviewRef}
@@ -206,6 +233,7 @@ export const ReportBuilder = ({
               subcategories={subcategories}
               settings={settings}
               settingsLoading={settingsLoading}
+              reportStyle={reportStyle}
             />
           </TabsContent>
           <TabsContent value="overview" forceMount className="data-[state=inactive]:hidden">
@@ -220,6 +248,7 @@ export const ReportBuilder = ({
               subcategories={subcategories}
               settings={settings}
               settingsLoading={settingsLoading}
+              reportStyle={reportStyle}
             />
           </TabsContent>
         </Tabs>

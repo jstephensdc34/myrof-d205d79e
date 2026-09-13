@@ -81,6 +81,7 @@ const Report = () => {
               estimatedCost={estimatedCost}
               settings={settings}
               settingsLoading={settingsLoading}
+              onSettingsUpdated={reloadSettings}
               isLoading={isLoading}
               isGeneratingPDF={isGeneratingPDF}
               pdfProgress={pdfProgress}
