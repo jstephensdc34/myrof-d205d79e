@@ -8,6 +8,14 @@ import { InfoLink } from "./InfoLink";
 import { PatientInfo } from "@/types";
 import { ReportSetting } from "@/services/reportSettingsService";
 import { getSectionIcon } from "@/utils/sectionIcons";
+import {
+  ReportStyle,
+  DEFAULT_REPORT_STYLE,
+  DOSSIER_PRIMARY,
+  DOSSIER_ACCENT,
+  DOSSIER_PRIMARY_SOFT,
+  DOSSIER_ACCENT_SOFT,
+} from "./reportStyleVariants";
 
 // Section color configs using HSL-based tokens
 const sectionStyles = {
@@ -66,6 +74,7 @@ interface OverviewReportProps {
   settings?: ReportSetting[];
   settingsLoading?: boolean;
   printMode?: boolean;
+  reportStyle?: ReportStyle;
 }
 
 const OverviewCard = ({
@@ -73,12 +82,50 @@ const OverviewCard = ({
   definition,
   infoLink,
   style,
+  variant = "classic",
 }: {
   name: string;
   definition?: string;
   infoLink?: string;
   style: typeof sectionStyles.diagnosis;
-}) => (
+  variant?: ReportStyle;
+}) =>
+  variant === "dossier" ? (
+    <div className="pl-4 py-1" style={{ borderLeft: `2px solid ${DOSSIER_ACCENT_SOFT}` }}>
+      <div className="flex items-center gap-2">
+        <h4 className="text-sm font-semibold tracking-tight" style={{ color: DOSSIER_ACCENT }}>{name}</h4>
+        {infoLink && <InfoLink link={infoLink} />}
+      </div>
+      <p className="mt-1.5 text-sm text-foreground/80">{definition || "No definition provided."}</p>
+      {infoLink && (
+        <a
+          href={infoLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-2 inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-white shadow-sm transition-colors hover:opacity-90"
+          style={{ backgroundColor: DOSSIER_ACCENT }}
+        >
+          More Information
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+            <polyline points="15 3 21 3 21 9" />
+            <line x1="10" y1="14" x2="21" y2="3" />
+          </svg>
+        </a>
+      )}
+    </div>
+  ) : (
   <div className={`rounded-lg border ${style.border} ${style.bg} overflow-hidden shadow-sm`}>
     <div className={`px-4 py-2 ${style.headerBg} flex items-center gap-2`}>
       <h4 className={`font-semibold text-sm ${style.headerText}`}>{name}</h4>
@@ -114,10 +161,28 @@ const OverviewCard = ({
       )}
     </div>
   </div>
-);
+  );
 
-const SectionHeader = ({ label, style }: { label: string; style: typeof sectionStyles.diagnosis }) => {
+const SectionHeader = ({
+  label,
+  style,
+  variant = "classic",
+}: {
+  label: string;
+  style: typeof sectionStyles.diagnosis;
+  variant?: ReportStyle;
+}) => {
   const Icon = getSectionIcon(label);
+
+  if (variant === "dossier") {
+    return (
+      <div className="mb-3 flex items-center gap-2 border-b pb-2" style={{ borderColor: DOSSIER_PRIMARY_SOFT }}>
+        <Icon className="h-5 w-5" strokeWidth={2.25} style={{ color: DOSSIER_PRIMARY }} />
+        <h3 className="text-base font-bold uppercase tracking-wide" style={{ color: DOSSIER_PRIMARY }}>{label}</h3>
+      </div>
+    );
+  }
+
   return (
     <div className={`rounded-lg px-4 py-2.5 ${style.headerBg} mb-3 flex items-center gap-2`}>
       <Icon className={`h-5 w-5 ${style.headerText}`} strokeWidth={2.25} />
@@ -137,7 +202,11 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
   settings = [],
   settingsLoading = false,
   printMode = false,
+  reportStyle = DEFAULT_REPORT_STYLE,
 }, ref) => {
+  const overviewGridClass =
+    reportStyle === "dossier" ? "space-y-4" : "grid grid-cols-2 gap-3";
+
   const getSelected = (categoryId: string, subcategoryFilter?: string[]) => {
     return items.filter((item) => {
       if (!selectedItems.includes(item.id)) return false;
@@ -305,10 +374,10 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
                 {/* Section 1: Diagnosis */}
                 {diagnosisItems.length > 0 && (
                   <div>
-                    <SectionHeader label={sectionStyles.diagnosis.label} style={sectionStyles.diagnosis} />
-                    <div className="grid grid-cols-2 gap-3">
+                    <SectionHeader label={sectionStyles.diagnosis.label} style={sectionStyles.diagnosis} variant={reportStyle} />
+                    <div className={overviewGridClass}>
                       {diagnosisItems.map((item) => (
-                        <OverviewCard key={item.id} name={item.name} definition={item.definition} infoLink={item.infoLink} style={sectionStyles.diagnosis} />
+                        <OverviewCard key={item.id} name={item.name} definition={item.definition} infoLink={item.infoLink} style={sectionStyles.diagnosis} variant={reportStyle} />
                       ))}
                     </div>
                   </div>
@@ -317,10 +386,10 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
                 {/* Extremity Diagnosis */}
                 {extremityItems.length > 0 && (
                   <div>
-                    <SectionHeader label={sectionStyles.extremity.label} style={sectionStyles.extremity} />
-                    <div className="grid grid-cols-2 gap-3">
+                    <SectionHeader label={sectionStyles.extremity.label} style={sectionStyles.extremity} variant={reportStyle} />
+                    <div className={overviewGridClass}>
                       {extremityItems.map((item) => (
-                        <OverviewCard key={item.id} name={item.name} definition={item.definition} infoLink={item.infoLink} style={sectionStyles.extremity} />
+                        <OverviewCard key={item.id} name={item.name} definition={item.definition} infoLink={item.infoLink} style={sectionStyles.extremity} variant={reportStyle} />
                       ))}
                     </div>
                   </div>
@@ -329,10 +398,10 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
                 {/* Section 2: Treatment Modalities */}
                 {treatmentModalityItems.length > 0 && (
                   <div>
-                    <SectionHeader label={sectionStyles.treatment.label} style={sectionStyles.treatment} />
-                    <div className="grid grid-cols-2 gap-3">
+                    <SectionHeader label={sectionStyles.treatment.label} style={sectionStyles.treatment} variant={reportStyle} />
+                    <div className={overviewGridClass}>
                       {treatmentModalityItems.map((item) => (
-                        <OverviewCard key={item.id} name={item.name} definition={item.definition} infoLink={item.infoLink} style={sectionStyles.treatment} />
+                        <OverviewCard key={item.id} name={item.name} definition={item.definition} infoLink={item.infoLink} style={sectionStyles.treatment} variant={reportStyle} />
                       ))}
                     </div>
                   </div>
@@ -341,16 +410,16 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
                 {/* Section 3: Care Plan + Phase of Care + Treatment Goals */}
                 {(carePlanItems.length > 0 || phaseOfCareItems.length > 0 || treatmentGoalItems.length > 0 || customTreatmentGoals || estimatedCost) && (
                   <div>
-                    <SectionHeader label={sectionStyles.carePlan.label} style={sectionStyles.carePlan} />
-                    <div className="grid grid-cols-2 gap-3">
+                    <SectionHeader label={sectionStyles.carePlan.label} style={sectionStyles.carePlan} variant={reportStyle} />
+                    <div className={overviewGridClass}>
                       {/* Care Plan Type cards */}
                       {carePlanItems.map((item) => (
-                        <OverviewCard key={item.id} name={item.name} definition={item.definition} infoLink={item.infoLink} style={sectionStyles.carePlan} />
+                        <OverviewCard key={item.id} name={item.name} definition={item.definition} infoLink={item.infoLink} style={sectionStyles.carePlan} variant={reportStyle} />
                       ))}
 
                       {/* Phase of Care cards */}
                       {phaseOfCareItems.map((item) => (
-                        <OverviewCard key={item.id} name={item.name} definition={item.definition} infoLink={item.infoLink} style={sectionStyles.carePlan} />
+                        <OverviewCard key={item.id} name={item.name} definition={item.definition} infoLink={item.infoLink} style={sectionStyles.carePlan} variant={reportStyle} />
                       ))}
 
                       {/* Treatment Goals as bullet list card */}
@@ -391,10 +460,10 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
                 {/* Section 4: Home Care */}
                 {homecareItems.length > 0 && (
                   <div>
-                    <SectionHeader label={sectionStyles.homecare.label} style={sectionStyles.homecare} />
-                    <div className="grid grid-cols-2 gap-3">
+                    <SectionHeader label={sectionStyles.homecare.label} style={sectionStyles.homecare} variant={reportStyle} />
+                    <div className={overviewGridClass}>
                       {homecareItems.map((item) => (
-                        <OverviewCard key={item.id} name={item.name} definition={item.definition} infoLink={item.infoLink} style={sectionStyles.homecare} />
+                        <OverviewCard key={item.id} name={item.name} definition={item.definition} infoLink={item.infoLink} style={sectionStyles.homecare} variant={reportStyle} />
                       ))}
                     </div>
                   </div>
@@ -403,10 +472,10 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
                 {/* Section 5: Exercises */}
                 {exerciseItems.length > 0 && (
                   <div>
-                    <SectionHeader label={sectionStyles.exercises.label} style={sectionStyles.exercises} />
-                    <div className="grid grid-cols-2 gap-3">
+                    <SectionHeader label={sectionStyles.exercises.label} style={sectionStyles.exercises} variant={reportStyle} />
+                    <div className={overviewGridClass}>
                       {exerciseItems.map((item) => (
-                        <OverviewCard key={item.id} name={item.name} definition={item.definition} infoLink={item.infoLink} style={sectionStyles.exercises} />
+                        <OverviewCard key={item.id} name={item.name} definition={item.definition} infoLink={item.infoLink} style={sectionStyles.exercises} variant={reportStyle} />
                       ))}
                     </div>
                   </div>
