@@ -20,45 +20,45 @@ import {
 // Section color configs using HSL-based tokens
 const sectionStyles = {
   diagnosis: {
-    bg: "bg-blue-50",
-    border: "border-blue-200",
-    headerBg: "bg-blue-600",
-    headerText: "text-white",
+    bg: "bg-diagnosis-soft",
+    border: "border-diagnosis-border",
+    headerBg: "bg-diagnosis",
+    headerText: "text-primary-foreground",
     label: "Diagnosis",
   },
   extremity: {
-    bg: "bg-indigo-50",
-    border: "border-indigo-200",
-    headerBg: "bg-indigo-600",
-    headerText: "text-white",
+    bg: "bg-extremity-soft",
+    border: "border-extremity-border",
+    headerBg: "bg-extremity",
+    headerText: "text-primary-foreground",
     label: "Extremity Diagnosis",
   },
   treatment: {
-    bg: "bg-emerald-50",
-    border: "border-emerald-200",
-    headerBg: "bg-emerald-600",
-    headerText: "text-white",
+    bg: "bg-treatment-soft",
+    border: "border-treatment-border",
+    headerBg: "bg-treatment",
+    headerText: "text-primary-foreground",
     label: "Treatment Modalities",
   },
   carePlan: {
-    bg: "bg-amber-50",
-    border: "border-amber-200",
-    headerBg: "bg-amber-600",
-    headerText: "text-white",
+    bg: "bg-warning-soft",
+    border: "border-warning/30",
+    headerBg: "bg-warning",
+    headerText: "text-primary-foreground",
     label: "Care Plan",
   },
   homecare: {
-    bg: "bg-rose-50",
-    border: "border-rose-200",
-    headerBg: "bg-rose-600",
-    headerText: "text-white",
+    bg: "bg-homecare-soft",
+    border: "border-homecare-border",
+    headerBg: "bg-homecare",
+    headerText: "text-primary-foreground",
     label: "Home Care Recommendations",
   },
   exercises: {
-    bg: "bg-purple-50",
-    border: "border-purple-200",
-    headerBg: "bg-purple-600",
-    headerText: "text-white",
+    bg: "bg-exercise-soft",
+    border: "border-exercise-border",
+    headerBg: "bg-exercise",
+    headerText: "text-primary-foreground",
     label: "Therapeutic Exercises",
   },
 };
@@ -102,7 +102,7 @@ const OverviewCard = ({
           href={infoLink}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-2 inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-white shadow-sm transition-colors hover:opacity-90"
+          className="mt-2 inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-sm transition-colors hover:opacity-90"
           style={{ backgroundColor: DOSSIER_ACCENT }}
         >
           More Information
@@ -138,7 +138,7 @@ const OverviewCard = ({
           href={infoLink}
           target="_blank"
           rel="noopener noreferrer"
-          className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-white shadow-sm transition-colors hover:opacity-90 ${style.headerBg}`}
+          className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-sm transition-colors hover:opacity-90 ${style.headerBg}`}
         >
           More Information
           <svg
@@ -446,7 +446,7 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
                             <h4 className={`font-semibold text-sm ${sectionStyles.carePlan.headerText}`}>Estimated Cost</h4>
                           </div>
                           <div className="px-4 py-4 text-center">
-                            <p className="text-2xl font-bold text-amber-700">{estimatedCost}</p>
+                            <p className="text-2xl font-bold text-warning">{estimatedCost}</p>
                             <p className="text-xs italic text-muted-foreground mt-2">
                               Note: This is an estimate based on the recommended clinical care plan. Please refer to your official financial breakdown for detailed billing, insurance, and payment information.
                             </p>
@@ -485,7 +485,7 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
                 {additionalNotes && (
                   <div>
                     <div className="rounded-lg px-4 py-2.5 bg-gray-600 mb-3">
-                      <h3 className="font-bold text-base text-white">Additional Notes</h3>
+                      <h3 className="font-bold text-base text-primary-foreground">Additional Notes</h3>
                     </div>
                     <div className="rounded-lg border border-border bg-muted/50 overflow-hidden shadow-sm">
                       <div className="px-4 py-3">

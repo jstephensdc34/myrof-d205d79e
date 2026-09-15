@@ -6,11 +6,11 @@ import { getSectionIcon } from "@/utils/sectionIcons";
 import { ReportStyle, DOSSIER_PRIMARY, DOSSIER_PRIMARY_SOFT } from "./reportStyleVariants";
 
 const sectionStyles: Record<string, { bg: string; border: string; headerBg: string; headerText: string }> = {
-  diagnosis: { bg: "bg-blue-50", border: "border-blue-200", headerBg: "bg-blue-600", headerText: "text-white" },
-  extremity: { bg: "bg-indigo-50", border: "border-indigo-200", headerBg: "bg-indigo-600", headerText: "text-white" },
-  treatment: { bg: "bg-emerald-50", border: "border-emerald-200", headerBg: "bg-emerald-600", headerText: "text-white" },
-  homecare: { bg: "bg-rose-50", border: "border-rose-200", headerBg: "bg-rose-600", headerText: "text-white" },
-  exercises: { bg: "bg-purple-50", border: "border-purple-200", headerBg: "bg-purple-600", headerText: "text-white" },
+  diagnosis: { bg: "bg-diagnosis-soft", border: "border-diagnosis-border", headerBg: "bg-diagnosis", headerText: "text-primary-foreground" },
+  extremity: { bg: "bg-extremity-soft", border: "border-extremity-border", headerBg: "bg-extremity", headerText: "text-primary-foreground" },
+  treatment: { bg: "bg-treatment-soft", border: "border-treatment-border", headerBg: "bg-treatment", headerText: "text-primary-foreground" },
+  homecare: { bg: "bg-homecare-soft", border: "border-homecare-border", headerBg: "bg-homecare", headerText: "text-primary-foreground" },
+  exercises: { bg: "bg-exercise-soft", border: "border-exercise-border", headerBg: "bg-exercise", headerText: "text-primary-foreground" },
 };
 
 interface ReportCategoryProps {
@@ -108,7 +108,7 @@ export const ReportCategory = ({
               </div>
             )}
             <div className={isDossier ? "mt-1.5" : "px-4 py-4 text-center"}>
-              <p className="text-2xl font-bold text-emerald-700">{estimatedCost}</p>
+              <p className="text-2xl font-bold text-treatment">{estimatedCost}</p>
               <p className="text-xs italic text-muted-foreground mt-2">
                 Note: This is an estimate based on the recommended clinical care plan. Please refer to your official financial breakdown for detailed billing, insurance, and payment information.
               </p>
