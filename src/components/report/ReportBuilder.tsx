@@ -118,6 +118,44 @@ export const ReportBuilder = ({
     });
   };
 
+  // UI layout preview variants (client-side only)
+  const isModular = uiLayout === "ui-modular";
+  const isWorkspace = uiLayout === "ui-workspace";
+
+  const gridClass = isModular
+    ? "grid grid-cols-1 lg:grid-cols-2 gap-6 items-start"
+    : isWorkspace
+    ? "grid grid-cols-1 lg:grid-cols-3 gap-8 items-start"
+    : "grid grid-cols-1 gap-10 max-w-4xl mx-auto";
+
+  const leftColClass = isModular
+    ? "rounded-xl border bg-card p-5 shadow-sm"
+    : isWorkspace
+    ? "lg:col-span-1"
+    : "";
+
+  const rightColClass = isModular
+    ? "rounded-xl border bg-card p-5 shadow-sm"
+    : isWorkspace
+    ? "lg:col-span-2"
+    : "";
+
+  const reportItemsSelector = (
+    <ReportItemsSelector
+      items={items}
+      activeCategory={activeCategory}
+      selectedItems={selectedItems}
+      onCategoryChange={onCategoryChange}
+      onToggleItem={onToggleItem}
+      isLoading={isLoading}
+      subcategories={subcategories}
+      customTreatmentGoals={customTreatmentGoals}
+      onTreatmentGoalsChange={onTreatmentGoalsChange}
+      estimatedCost={estimatedCost}
+      onEstimatedCostChange={onEstimatedCostChange}
+    />
+  );
+
   return (
     <>
       <div className="mb-6">
