@@ -20,6 +20,7 @@ import { Link } from "lucide-react";
 import { CarePlansPanel } from "@/components/report/CarePlansPanel";
 import { useCarePlans } from "@/hooks/useCarePlans";
 import { ReportStyleToggle } from "@/components/report/ReportStyleToggle";
+import { UILayout } from "@/components/report/UILayoutSwitcher";
 import {
   ReportStyle,
   DEFAULT_REPORT_STYLE,
@@ -54,6 +55,7 @@ interface ReportBuilderProps {
   onShareUrlChange: (url: string | null) => void;
   carePlans: ReturnType<typeof useCarePlans>;
   onSettingsUpdated?: () => void;
+  uiLayout?: UILayout;
 }
 
 export const ReportBuilder = ({
@@ -83,6 +85,7 @@ export const ReportBuilder = ({
   onShareUrlChange,
   carePlans,
   onSettingsUpdated,
+  uiLayout = "ui-workspace",
 }: ReportBuilderProps) => {
   const [showShareDialog, setShowShareDialog] = useState(false);
   const [showPdfDialog, setShowPdfDialog] = useState(false);
