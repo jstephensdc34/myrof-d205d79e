@@ -20,6 +20,7 @@ import { Link } from "lucide-react";
 import { CarePlansPanel } from "@/components/report/CarePlansPanel";
 import { useCarePlans } from "@/hooks/useCarePlans";
 import { ReportStyleToggle } from "@/components/report/ReportStyleToggle";
+import { UILayout } from "@/components/report/UILayoutSwitcher";
 import {
   ReportStyle,
   DEFAULT_REPORT_STYLE,
@@ -54,6 +55,7 @@ interface ReportBuilderProps {
   onShareUrlChange: (url: string | null) => void;
   carePlans: ReturnType<typeof useCarePlans>;
   onSettingsUpdated?: () => void;
+  uiLayout?: UILayout;
 }
 
 export const ReportBuilder = ({
@@ -83,6 +85,7 @@ export const ReportBuilder = ({
   onShareUrlChange,
   carePlans,
   onSettingsUpdated,
+  uiLayout = "ui-workspace",
 }: ReportBuilderProps) => {
   const [showShareDialog, setShowShareDialog] = useState(false);
   const [showPdfDialog, setShowPdfDialog] = useState(false);
@@ -115,6 +118,44 @@ export const ReportBuilder = ({
     });
   };
 
+  // UI layout preview variants (client-side only)
+  const isModular = uiLayout === "ui-modular";
+  const isWorkspace = uiLayout === "ui-workspace";
+
+  const gridClass = isModular
+    ? "grid grid-cols-1 lg:grid-cols-2 gap-6 items-start"
+    : isWorkspace
+    ? "grid grid-cols-1 lg:grid-cols-3 gap-8 items-start"
+    : "grid grid-cols-1 gap-10 max-w-4xl mx-auto";
+
+  const leftColClass = isModular
+    ? "rounded-xl border bg-card p-5 shadow-sm"
+    : isWorkspace
+    ? "lg:col-span-1"
+    : "";
+
+  const rightColClass = isModular
+    ? "rounded-xl border bg-card p-5 shadow-sm"
+    : isWorkspace
+    ? "lg:col-span-2"
+    : "";
+
+  const reportItemsSelector = (
+    <ReportItemsSelector
+      items={items}
+      activeCategory={activeCategory}
+      selectedItems={selectedItems}
+      onCategoryChange={onCategoryChange}
+      onToggleItem={onToggleItem}
+      isLoading={isLoading}
+      subcategories={subcategories}
+      customTreatmentGoals={customTreatmentGoals}
+      onTreatmentGoalsChange={onTreatmentGoalsChange}
+      estimatedCost={estimatedCost}
+      onEstimatedCostChange={onEstimatedCostChange}
+    />
+  );
+
   return (
     <>
       <div className="mb-6">
@@ -134,13 +175,16 @@ export const ReportBuilder = ({
           hasContent={!!patient.name || selectedItems.length > 0}
         />
       </div>
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div className={gridClass}>
       {/* Left Column - Patient Info */}
-      <div className="lg:col-span-1">
+      <div className={leftColClass}>
         <PatientInfoForm 
           patient={patient}
           onPatientInfoChange={onPatientInfoChange}
         />
+
+        {!isWorkspace && <div className="mt-6">{reportItemsSelector}</div>}
+        
         
         <NotesField
           notes={additionalNotes}
@@ -189,25 +233,14 @@ export const ReportBuilder = ({
       </div>
       
       {/* Right Column - Report Items */}
-      <div className="lg:col-span-2">
-        <ReportItemsSelector
-          items={items}
-          activeCategory={activeCategory}
-          selectedItems={selectedItems}
-          onCategoryChange={onCategoryChange}
-          onToggleItem={onToggleItem}
-          isLoading={isLoading}
-          subcategories={subcategories}
-          customTreatmentGoals={customTreatmentGoals}
-          onTreatmentGoalsChange={onTreatmentGoalsChange}
-          estimatedCost={estimatedCost}
-          onEstimatedCostChange={onEstimatedCostChange}
-        />
+      <div className={rightColClass}>
+        {isWorkspace && reportItemsSelector}
+        
         
         <Tabs
           value={activeReportTab}
           onValueChange={(v) => setActiveReportTab(v as "full" | "overview")}
-          className="mt-6"
+          className={isModular ? "" : "mt-6"}
         >
           <TabsList>
             <TabsTrigger value="full">Full Report</TabsTrigger>
