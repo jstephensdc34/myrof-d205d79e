@@ -233,20 +233,9 @@ export const ReportBuilder = ({
       </div>
       
       {/* Right Column - Report Items */}
-      <div className="lg:col-span-2">
-        <ReportItemsSelector
-          items={items}
-          activeCategory={activeCategory}
-          selectedItems={selectedItems}
-          onCategoryChange={onCategoryChange}
-          onToggleItem={onToggleItem}
-          isLoading={isLoading}
-          subcategories={subcategories}
-          customTreatmentGoals={customTreatmentGoals}
-          onTreatmentGoalsChange={onTreatmentGoalsChange}
-          estimatedCost={estimatedCost}
-          onEstimatedCostChange={onEstimatedCostChange}
-        />
+      <div className={rightColClass}>
+        {isWorkspace && reportItemsSelector}
+        
         
         <Tabs
           value={activeReportTab}
