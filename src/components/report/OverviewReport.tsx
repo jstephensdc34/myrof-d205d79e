@@ -485,7 +485,7 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
                 {additionalNotes && (
                   <div>
                     <div className="rounded-lg px-4 py-2.5 bg-gray-600 mb-3">
-                      <h3 className="font-bold text-base text-white">Additional Notes</h3>
+                      <h3 className="font-bold text-base text-primary-foreground">Additional Notes</h3>
                     </div>
                     <div className="rounded-lg border border-border bg-muted/50 overflow-hidden shadow-sm">
                       <div className="px-4 py-3">
