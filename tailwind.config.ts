@@ -53,6 +53,21 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				success: {
+					DEFAULT: 'hsl(var(--success))',
+					foreground: 'hsl(var(--success-foreground))',
+					soft: 'hsl(var(--success-soft))'
+				},
+				warning: {
+					DEFAULT: 'hsl(var(--warning))',
+					foreground: 'hsl(var(--warning-foreground))',
+					soft: 'hsl(var(--warning-soft))'
+				},
+				diagnosis: { DEFAULT: 'hsl(var(--diagnosis))', soft: 'hsl(var(--diagnosis-soft))', border: 'hsl(var(--diagnosis-border))' },
+				extremity: { DEFAULT: 'hsl(var(--extremity))', soft: 'hsl(var(--extremity-soft))', border: 'hsl(var(--extremity-border))' },
+				treatment: { DEFAULT: 'hsl(var(--treatment))', soft: 'hsl(var(--treatment-soft))', border: 'hsl(var(--treatment-border))' },
+				homecare: { DEFAULT: 'hsl(var(--homecare))', soft: 'hsl(var(--homecare-soft))', border: 'hsl(var(--homecare-border))' },
+				exercise: { DEFAULT: 'hsl(var(--exercise))', soft: 'hsl(var(--exercise-soft))', border: 'hsl(var(--exercise-border))' },
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
