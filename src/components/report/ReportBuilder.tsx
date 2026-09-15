@@ -240,7 +240,7 @@ export const ReportBuilder = ({
         <Tabs
           value={activeReportTab}
           onValueChange={(v) => setActiveReportTab(v as "full" | "overview")}
-          className="mt-6"
+          className={isModular ? "" : "mt-6"}
         >
           <TabsList>
             <TabsTrigger value="full">Full Report</TabsTrigger>
