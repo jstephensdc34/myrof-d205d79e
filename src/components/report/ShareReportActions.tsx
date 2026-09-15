@@ -115,7 +115,7 @@ export const ShareReportActions = ({
   const isDisabled = disabled || pending !== null;
 
   return (
-    <div className="flex gap-2">
+    <div className="flex flex-col gap-2">
       <Button
         variant="outline"
         className="flex-1 border-medical-600 text-medical-700 hover:bg-medical-50 text-base py-6"
