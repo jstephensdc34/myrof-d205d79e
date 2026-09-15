@@ -59,7 +59,7 @@ export const ReportItem = ({ item, style, variant = "classic" }: ReportItemProps
             href={item.infoLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-2 inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-white shadow-sm transition-colors hover:opacity-90"
+            className="mt-2 inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-sm transition-colors hover:opacity-90"
             style={{ backgroundColor: DOSSIER_ACCENT }}
           >
             More Information
@@ -85,7 +85,7 @@ export const ReportItem = ({ item, style, variant = "classic" }: ReportItemProps
             href={item.infoLink}
             target="_blank"
             rel="noopener noreferrer"
-            className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-white shadow-sm transition-colors hover:opacity-90 ${style.headerBg}`}
+            className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-sm transition-colors hover:opacity-90 ${style.headerBg}`}
           >
             More Information
             <ExternalIcon />

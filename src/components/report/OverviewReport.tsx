@@ -102,7 +102,7 @@ const OverviewCard = ({
           href={infoLink}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-2 inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-white shadow-sm transition-colors hover:opacity-90"
+          className="mt-2 inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-sm transition-colors hover:opacity-90"
           style={{ backgroundColor: DOSSIER_ACCENT }}
         >
           More Information
@@ -138,7 +138,7 @@ const OverviewCard = ({
           href={infoLink}
           target="_blank"
           rel="noopener noreferrer"
-          className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-white shadow-sm transition-colors hover:opacity-90 ${style.headerBg}`}
+          className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-sm transition-colors hover:opacity-90 ${style.headerBg}`}
         >
           More Information
           <svg
@@ -446,7 +446,7 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
                             <h4 className={`font-semibold text-sm ${sectionStyles.carePlan.headerText}`}>Estimated Cost</h4>
                           </div>
                           <div className="px-4 py-4 text-center">
-                            <p className="text-2xl font-bold text-amber-700">{estimatedCost}</p>
+                            <p className="text-2xl font-bold text-warning">{estimatedCost}</p>
                             <p className="text-xs italic text-muted-foreground mt-2">
                               Note: This is an estimate based on the recommended clinical care plan. Please refer to your official financial breakdown for detailed billing, insurance, and payment information.
                             </p>
