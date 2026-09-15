@@ -108,7 +108,7 @@ export const ReportCategory = ({
               </div>
             )}
             <div className={isDossier ? "mt-1.5" : "px-4 py-4 text-center"}>
-              <p className="text-2xl font-bold text-emerald-700">{estimatedCost}</p>
+              <p className="text-2xl font-bold text-treatment">{estimatedCost}</p>
               <p className="text-xs italic text-muted-foreground mt-2">
                 Note: This is an estimate based on the recommended clinical care plan. Please refer to your official financial breakdown for detailed billing, insurance, and payment information.
               </p>
