@@ -12,7 +12,9 @@ if (!rootElement) {
 } else {
   const root = createRoot(rootElement);
   const isBackendConfigured = Boolean(
-    import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY
+    import.meta.env.VITE_SUPABASE_URL &&
+      (import.meta.env.VITE_SUPABASE_ANON_KEY ||
+        import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY)
   );
   
   // Handle potential runtime errors during initialization
