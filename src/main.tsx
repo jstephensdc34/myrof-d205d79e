@@ -1,7 +1,6 @@
 
 import { createRoot } from 'react-dom/client'
 import { StrictMode, Suspense } from 'react'
-import App from './App.tsx'
 import './index.css'
 
 // Create a more robust error handling setup
@@ -12,6 +11,9 @@ if (!rootElement) {
   document.body.innerHTML = '<div style="color: red; padding: 20px;">Failed to find the root element</div>';
 } else {
   const root = createRoot(rootElement);
+  const isBackendConfigured = Boolean(
+    import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY
+  );
   
   // Handle potential runtime errors during initialization
   window.addEventListener('error', (event) => {
@@ -34,23 +36,42 @@ if (!rootElement) {
   console.log("Base URL:", import.meta.env.BASE_URL);
   console.log("Environment:", import.meta.env.MODE);
   
-  try {
+  if (!isBackendConfigured) {
     root.render(
-      <StrictMode>
-        <Suspense fallback={<div>Loading application...</div>}>
-          <App />
-        </Suspense>
-      </StrictMode>
-    );
-    
-    console.log("App rendering started");
-  } catch (error) {
-    console.error("Error rendering the application:", error);
-    root.render(
-      <div style={{color: "red", padding: "20px"}}>
-        <h1>Error rendering the application</h1>
-        <p>{error instanceof Error ? error.message : String(error)}</p>
+      <div className="min-h-screen flex items-center justify-center bg-background p-6">
+        <div className="w-full max-w-lg rounded-lg border border-border bg-card p-6 text-card-foreground shadow-sm">
+          <h1 className="mb-2 text-xl font-semibold">Connection setup required</h1>
+          <p className="text-sm text-muted-foreground">
+            This deployment is missing its database URL or access key. Add both
+            connection values to the deployment settings, then publish again.
+          </p>
+        </div>
       </div>
     );
+  } else {
+    import('./App.tsx')
+      .then(({ default: App }) => {
+        root.render(
+          <StrictMode>
+            <Suspense fallback={<div>Loading application...</div>}>
+              <App />
+            </Suspense>
+          </StrictMode>
+        );
+        console.log("App rendering started");
+      })
+      .catch((error: unknown) => {
+        console.error("Error rendering the application:", error);
+        root.render(
+          <div className="min-h-screen flex items-center justify-center bg-background p-6">
+            <div className="w-full max-w-lg rounded-lg border border-destructive bg-card p-6 text-card-foreground shadow-sm">
+              <h1 className="mb-2 text-xl font-semibold">Error loading application</h1>
+              <p className="text-sm text-muted-foreground">
+                {error instanceof Error ? error.message : String(error)}
+              </p>
+            </div>
+          </div>
+        );
+      });
   }
 }
