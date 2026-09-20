@@ -65,9 +65,13 @@ get the latest version automatically.
 
 Buyers deploy through the one-click Vercel link, which **copies** this
 repo into the buyer's GitHub account (it is a copy, not a fork — the
-"Sync fork" button will not exist for them). The buyer's copy stays
-connected to their Vercel project, so any change merged into the
-buyer's `main` triggers an automatic Vercel redeploy. Updates use that.
+"Sync fork" button will not exist for them).
+
+> **Tested finding:** GitHub's compare-link / pull-request method does
+> NOT work for these copy-based buyers. GitHub compares only repos in
+> the same fork network, and the buyer's copy has unrelated history, so
+> the compare page reports "There isn't anything to compare." Do not
+> send compare links. Use the redeploy-fresh method below.
 
 ### Pre-release checklist (you, before announcing an update)
 
@@ -82,39 +86,29 @@ buyer's `main` triggers an automatic Vercel redeploy. Updates use that.
 - [ ] Rebuild the Welcome Kit (`npm run handoff`) and re-attach the ZIP
       to the update email **only if** `setup.sql`, `BUYER_SETUP.md`, or
       `LICENSE` changed. Code-only updates need no new ZIP.
-- [ ] Build each buyer's update link (see Primary method below).
 
-### Primary method — GitHub compare link (no command line)
+### Update method — redeploy fresh (the only method that works)
 
-For each buyer, build this link once per release and put it in the
-update email (the buyer's GitHub username/repo differ per buyer):
+Because the buyer's repo is a copy, the reliable update is a fresh
+redeploy from your repo. The buyer's database lives in their own
+Supabase project, so their data, settings, and library are untouched —
+only the app code is replaced.
 
-```
-https://github.com/BUYER-USERNAME/BUYER-REPO/compare/main...YOUR-USERNAME/YOUR-REPO:main
-```
+Buyer steps (include these in the update email):
 
-When the buyer opens it, GitHub compares their `main` against your
-public repo's `main` and offers to create a pull request. Merging that
-PR pulls your update into their repo, and Vercel redeploys
-automatically in 1–3 minutes. Their URL, Vercel project, database, and
-data are all untouched.
+1. Open your Deploy-to-Vercel link (the same one from their original
+   setup).
+2. Vercel creates a new project from the latest code. When asked, enter
+   the same two environment values as before (`VITE_SUPABASE_URL` and
+   `VITE_SUPABANE_ANON_KEY` — see their original setup guide). Using the
+   same values is what keeps all existing data.
+3. Click Deploy and wait 1–3 minutes.
+4. Open the new URL and confirm the update is visible.
 
-Buyers never edit code, so conflicts should not occur. If GitHub shows
-a conflict or the merge errors out, use the fallback below.
-
-### Fallback method — redeploy fresh
-
-Only if the compare-link merge fails:
-
-1. Buyer clicks your original Deploy-to-Vercel link again.
-2. Re-enters the same two environment variables
-   (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` — same Supabase
-   project, so all data is preserved).
-3. Deploys. This creates a **new** URL and a new copy of the repo.
-
-State the trade-offs in the email: bookmarks must be updated, and the
-old Vercel project + GitHub copy should be deleted once the new one is
-verified.
+Trade-offs to state in the email: the app lives at a new URL (bookmarks
+must be updated), and once the new deployment is verified, the buyer
+should delete the old Vercel project and the old repo copy in their
+GitHub account.
 
 ### Update email template (fill in the blanks and send)
 
