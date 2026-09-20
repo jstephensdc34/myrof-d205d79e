@@ -101,9 +101,15 @@ Buyer steps (include these in the update email):
 2. Vercel creates a new project from the latest code. When asked, enter
    the same two environment values as before (`VITE_SUPABASE_URL` and
    `VITE_SUPABASE_ANON_KEY` — see their original setup guide). Using the
-   same values is what keeps all existing data.
+    same values is what keeps all existing data.
 3. Click Deploy and wait 1–3 minutes.
 4. Open the new URL and confirm the update is visible.
+
+If login on the new deployment fails with "Failed to fetch", the
+connection values were entered incorrectly (tested: old keys from a
+previous trial project cause this — the console shows
+`ERR_NAME_NOT_RESOLVED`). Re-check both values against the buyer's
+saved setup guide and redeploy.
 
 Trade-offs to state in the email: the app lives at a new URL (bookmarks
 must be updated), and once the new deployment is verified, the buyer

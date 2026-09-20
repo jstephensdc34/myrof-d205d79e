@@ -146,6 +146,15 @@ trailing `/`, no `/rest/v1`, no `/auth`, no quotes, no spaces. Fix it
 in Vercel → Settings → Environment Variables, then redeploy from the
 Deployments tab (three-dot menu → Redeploy).
 
+**Login fails with "Failed to fetch" (browser console shows `ERR_NAME_NOT_RESOLVED`).**
+Your `VITE_SUPABASE_URL` points at a Supabase project that doesn't
+exist — usually a typo in the project ref, a leftover URL from an old
+trial project, or a project that was deleted or paused. Open Supabase
+→ Project Settings → API, copy the **Project URL** again carefully,
+correct the variable in Vercel → Settings → Environment Variables, and
+redeploy (Deployments → three-dot menu → Redeploy). If the project was
+deleted, create a new one and re-run `setup.sql` from Step 2.
+
 **I never received my confirmation email after signing up.**
 You skipped Step 3.5. Go back, toggle **Confirm email** off in Supabase,
 then either sign up with a different email or use the Emergency Admin
