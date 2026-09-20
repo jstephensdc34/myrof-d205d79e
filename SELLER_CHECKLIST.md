@@ -100,7 +100,7 @@ Buyer steps (include these in the update email):
    setup).
 2. Vercel creates a new project from the latest code. When asked, enter
    the same two environment values as before (`VITE_SUPABASE_URL` and
-   `VITE_SUPABANE_ANON_KEY` — see their original setup guide). Using the
+   `VITE_SUPABASE_ANON_KEY` — see their original setup guide). Using the
    same values is what keeps all existing data.
 3. Click Deploy and wait 1–3 minutes.
 4. Open the new URL and confirm the update is visible.
