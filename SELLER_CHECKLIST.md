@@ -123,15 +123,17 @@ This release includes:
 - [Change 1 — e.g. New report style options]
 - [Change 2]
 
-Updating takes about 2 minutes and does not touch your data,
-settings, or library:
+Updating takes about 5 minutes and does not touch your data,
+settings, or library. Your app will move to a new web address —
+just update your bookmark:
 
-1. Open this link: [compare link]
-2. GitHub will show a "Comparing changes" page. Click
-   "Create pull request".
-3. On the next screen, click "Merge pull request", then confirm.
-4. Wait 2–3 minutes — your app redeploys automatically. Refresh
-   your app tab to see the update.
+1. Open this link: [your Deploy-to-Vercel URL]
+2. Vercel builds the updated app. When asked, enter the same two
+   values as your original setup (they're in your saved setup guide):
+   VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY. Using the same
+   values is what keeps all your existing reports and data.
+3. Click Deploy and wait 1–3 minutes.
+4. Open your new app link and confirm you can see the update.
 
 [Only if setup.sql changed:] This update also includes a database
 improvement. In your Supabase project, open SQL Editor, paste the
@@ -140,9 +142,9 @@ contents of the updated setup.sql (attached), and click Run.
 [Only if ZIP re-attached:] The updated setup guide is attached
 ([welcome-kit.zip]) — replace your saved copy.
 
-[Only if a problem occurs:] If GitHub shows an error or conflict,
-reply to this email and we'll walk you through a fresh redeploy —
-your data is safe either way.
+Once you've confirmed everything works, you can delete your old
+Vercel project and the old copy of the code in your GitHub account —
+we'll point you to the right ones if you're unsure.
 
 Questions? Just reply.
 [Your name]
