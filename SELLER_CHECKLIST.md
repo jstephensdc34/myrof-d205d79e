@@ -59,6 +59,108 @@ RLS so per-user rows are included as shared starter content.
 Commit the updated CSV and re-deploy. Buyers who deploy after that point
 get the latest version automatically.
 
+---
+
+## Releasing updates to existing buyers
+
+Buyers deploy through the one-click Vercel link, which **copies** this
+repo into the buyer's GitHub account (it is a copy, not a fork — the
+"Sync fork" button will not exist for them). The buyer's copy stays
+connected to their Vercel project, so any change merged into the
+buyer's `main` triggers an automatic Vercel redeploy. Updates use that.
+
+### Pre-release checklist (you, before announcing an update)
+
+- [ ] Confirm your latest Lovable changes are on your public GitHub repo
+      (Lovable pushes automatically; spot-check a recent change on GitHub).
+- [ ] Starter library changed? Run `npm run library:export` and
+      `npm run library:check`, then commit the updated
+      `public/library-seed.csv`.
+- [ ] Did `setup.sql` change? If yes, the update email must tell buyers
+      to re-run it (Supabase → SQL Editor → paste new `setup.sql` → Run).
+      The script is safe to re-run on an existing database.
+- [ ] Rebuild the Welcome Kit (`npm run handoff`) and re-attach the ZIP
+      to the update email **only if** `setup.sql`, `BUYER_SETUP.md`, or
+      `LICENSE` changed. Code-only updates need no new ZIP.
+- [ ] Build each buyer's update link (see Primary method below).
+
+### Primary method — GitHub compare link (no command line)
+
+For each buyer, build this link once per release and put it in the
+update email (the buyer's GitHub username/repo differ per buyer):
+
+```
+https://github.com/BUYER-USERNAME/BUYER-REPO/compare/main...YOUR-USERNAME/YOUR-REPO:main
+```
+
+When the buyer opens it, GitHub compares their `main` against your
+public repo's `main` and offers to create a pull request. Merging that
+PR pulls your update into their repo, and Vercel redeploys
+automatically in 1–3 minutes. Their URL, Vercel project, database, and
+data are all untouched.
+
+Buyers never edit code, so conflicts should not occur. If GitHub shows
+a conflict or the merge errors out, use the fallback below.
+
+### Fallback method — redeploy fresh
+
+Only if the compare-link merge fails:
+
+1. Buyer clicks your original Deploy-to-Vercel link again.
+2. Re-enters the same two environment variables
+   (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` — same Supabase
+   project, so all data is preserved).
+3. Deploys. This creates a **new** URL and a new copy of the repo.
+
+State the trade-offs in the email: bookmarks must be updated, and the
+old Vercel project + GitHub copy should be deleted once the new one is
+verified.
+
+### Update email template (fill in the blanks and send)
+
+```text
+Subject: Update available for Chiropractic Patient Report Generator
+
+Hi [Buyer first name],
+
+We've shipped an update to Chiropractic Patient Report Generator.
+This release includes:
+
+- [Change 1 — e.g. New report style options]
+- [Change 2]
+
+Updating takes about 2 minutes and does not touch your data,
+settings, or library:
+
+1. Open this link: [compare link]
+2. GitHub will show a "Comparing changes" page. Click
+   "Create pull request".
+3. On the next screen, click "Merge pull request", then confirm.
+4. Wait 2–3 minutes — your app redeploys automatically. Refresh
+   your app tab to see the update.
+
+[Only if setup.sql changed:] This update also includes a database
+improvement. In your Supabase project, open SQL Editor, paste the
+contents of the updated setup.sql (attached), and click Run.
+
+[Only if ZIP re-attached:] The updated setup guide is attached
+([welcome-kit.zip]) — replace your saved copy.
+
+[Only if a problem occurs:] If GitHub shows an error or conflict,
+reply to this email and we'll walk you through a fresh redeploy —
+your data is safe either way.
+
+Questions? Just reply.
+[Your name]
+```
+
+### Post-release verification (you, on your dummy deployment)
+
+- [ ] App loads at the buyer-style URL with no setup screens
+- [ ] Sign-up / log in works
+- [ ] Latest features are visible (e.g. report style toggle, UI layout options)
+- [ ] Generate a report; PDF download works
+- [ ] Share a report; the shared link loads in a fresh browser
 
 ---
 
