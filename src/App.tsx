@@ -13,7 +13,6 @@ import NotFound from "./pages/NotFound";
 import SharedReport from "./pages/SharedReport";
 import ResetPassword from "./pages/ResetPassword";
 import SourceDownload from "./pages/SourceDownload";
-const isSupabaseConfigured = !!(import.meta.env.VITE_SUPABASE_URL && (import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY));
 import { useDatabaseReady } from "@/hooks/useDatabaseReady";
 import { SetupRequired } from "@/components/SetupRequired";
 
@@ -64,28 +63,6 @@ const DatabaseGuard = ({ children }: { children: React.ReactNode }) => {
 const App = () => {
   // Log the app initialization for debugging
   console.log("App initializing with base path:", getBasename());
-
-  if (!isSupabaseConfigured) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background p-6">
-        <div className="max-w-lg w-full border border-border rounded-lg p-6 bg-card text-card-foreground shadow-sm">
-          <h1 className="text-xl font-semibold mb-2">Configuration required</h1>
-          <p className="text-sm text-muted-foreground mb-4">
-            This app needs two environment variables to connect to its backend:
-          </p>
-          <pre className="text-xs bg-muted p-3 rounded mb-4 overflow-x-auto">
-VITE_SUPABASE_URL="https://YOUR-PROJECT.supabase.co"
-VITE_SUPABASE_ANON_KEY="your-anon-key"
-          </pre>
-          <p className="text-sm text-muted-foreground">
-            Add them to a local <code>.env</code> file (for development) or to your
-            hosting provider's environment variables (e.g. Vercel → Project Settings
-            → Environment Variables), then redeploy.
-          </p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <ErrorBoundary>
