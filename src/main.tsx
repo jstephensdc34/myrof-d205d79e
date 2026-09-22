@@ -11,11 +11,6 @@ if (!rootElement) {
   document.body.innerHTML = '<div style="color: red; padding: 20px;">Failed to find the root element</div>';
 } else {
   const root = createRoot(rootElement);
-  const isBackendConfigured = Boolean(
-    import.meta.env.VITE_SUPABASE_URL &&
-      (import.meta.env.VITE_SUPABASE_ANON_KEY ||
-        import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY)
-  );
   
   // Handle potential runtime errors during initialization
   window.addEventListener('error', (event) => {
@@ -38,20 +33,7 @@ if (!rootElement) {
   console.log("Base URL:", import.meta.env.BASE_URL);
   console.log("Environment:", import.meta.env.MODE);
   
-  if (!isBackendConfigured) {
-    root.render(
-      <div className="min-h-screen flex items-center justify-center bg-background p-6">
-        <div className="w-full max-w-lg rounded-lg border border-border bg-card p-6 text-card-foreground shadow-sm">
-          <h1 className="mb-2 text-xl font-semibold">Connection setup required</h1>
-          <p className="text-sm text-muted-foreground">
-            This deployment is missing its database URL or access key. Add both
-            connection values to the deployment settings, then publish again.
-          </p>
-        </div>
-      </div>
-    );
-  } else {
-    import('./App.tsx')
+  import('./App.tsx')
       .then(({ default: App }) => {
         root.render(
           <StrictMode>
@@ -75,5 +57,4 @@ if (!rootElement) {
           </div>
         );
       });
-  }
 }
