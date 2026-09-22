@@ -101,6 +101,7 @@ export interface RenderReportParams {
   estimatedCost?: string;
   settings: ReportSetting[];
   subcategories: any[];
+  reportStyle?: ReportStyle;
   format: "full" | "overview";
 }
 
