@@ -296,7 +296,7 @@ export const ReportBuilder = ({
         onOpenChange={setShowShareDialog}
         shareUrl={shareUrl}
         isLoading={isSharing}
-        onShare={(format) => onShareReport(format)}
+        onShare={(format) => onShareReport(format, reportStyle)}
       />
 
       <PdfFormatDialog
