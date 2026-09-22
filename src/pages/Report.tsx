@@ -100,7 +100,7 @@ const Report = () => {
               onTreatmentGoalsChange={setCustomTreatmentGoals}
               onEstimatedCostChange={setEstimatedCost}
               onGeneratePDF={handleGenerateReport}
-              onShareReport={(format) => handleShareReport(format)}
+              onShareReport={(format, reportStyle) => handleShareReport(format, reportStyle)}
               onShareUrlChange={setShareUrl}
               carePlans={carePlans}
             />
