@@ -24,6 +24,29 @@ const CSS_VARS = `
   --input: 214.3 31.8% 91.4%;
   --ring: 222.2 84% 4.9%;
   --radius: 0.5rem;
+  --success: 160 84% 30%;
+  --success-foreground: 0 0% 100%;
+  --success-soft: 152 81% 96%;
+  --warning: 32 95% 35%;
+  --warning-foreground: 0 0% 100%;
+  --warning-soft: 48 96% 96%;
+  --diagnosis: 221 83% 53%;
+  --diagnosis-soft: 214 100% 97%;
+  --diagnosis-border: 213 97% 87%;
+  --extremity: 239 84% 67%;
+  --extremity-soft: 226 100% 97%;
+  --extremity-border: 228 96% 89%;
+  --treatment: 160 84% 30%;
+  --treatment-soft: 152 81% 96%;
+  --treatment-border: 152 69% 81%;
+  --homecare: 347 77% 50%;
+  --homecare-soft: 356 100% 97%;
+  --homecare-border: 353 96% 90%;
+  --exercise: 271 81% 56%;
+  --exercise-soft: 270 100% 98%;
+  --exercise-border: 269 100% 92%;
+  --report-primary: 205 100% 27%;
+  --report-accent: 211 92% 44%;
 }
 html, body { margin: 0; padding: 0; background: #f3f4f6; font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: hsl(var(--foreground)); }
 .printable-report-wrapper { padding: 24px 16px; }
