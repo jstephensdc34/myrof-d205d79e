@@ -51,7 +51,7 @@ interface ReportBuilderProps {
   onTreatmentGoalsChange: (goals: string) => void;
   onEstimatedCostChange: (cost: string) => void;
   onGeneratePDF: (element: HTMLElement | null) => void;
-  onShareReport: (format: ShareReportFormat) => void;
+  onShareReport: (format: ShareReportFormat, reportStyle?: ReportStyle) => void;
   onShareUrlChange: (url: string | null) => void;
   carePlans: ReturnType<typeof useCarePlans>;
   onSettingsUpdated?: () => void;
