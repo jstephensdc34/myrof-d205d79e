@@ -36,7 +36,7 @@ export const createSetting = async (name: string, value: string): Promise<Report
   
   const { data, error } = await supabase
     .from("report_settings")
-    .insert({ name, value })
+    .insert({ name, value, user_id: sessionData.session.user.id })
     .select()
     .single();
 
