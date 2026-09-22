@@ -79,7 +79,7 @@ export const updateSetting = async (nameOrId: string, value: string): Promise<Re
     
     const { data, error } = await supabase
       .from("report_settings")
-      .update({ value })
+      .update({ value, user_id: sessionData.session.user.id })
       .eq("id", settingId)
       .select()
       .single();
@@ -101,7 +101,7 @@ export const updateSetting = async (nameOrId: string, value: string): Promise<Re
     // If not found by name, try to update by ID (in case nameOrId is actually an ID)
     const { data, error } = await supabase
       .from("report_settings")
-      .update({ value })
+      .update({ value, user_id: sessionData.session.user.id })
       .eq("id", nameOrId)
       .select()
       .single();
