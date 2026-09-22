@@ -5,6 +5,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { generatePDF, RenderPdfProgress } from "@/utils/pdf";
 import { ReportSetting } from "@/services/reportSettingsService";
 import { shareReport, ShareReportFormat } from "@/utils/shareReport";
+import { ReportStyle } from "@/components/report/reportStyleVariants";
 
 export const useReportGeneration = (
   items: ReportItem[],
@@ -97,7 +98,10 @@ export const useReportGeneration = (
     }
   };
 
-  const handleShareReport = async (format: ShareReportFormat = "full") => {
+  const handleShareReport = async (
+    format: ShareReportFormat = "full",
+    reportStyle?: ReportStyle
+  ) => {
     if (!patient.name) {
       toast({ title: "Missing Information", description: "Please enter the patient's name.", variant: "destructive" });
       return;
@@ -118,6 +122,7 @@ export const useReportGeneration = (
         estimatedCost,
         settings,
         subcategories,
+        reportStyle,
         format,
       });
       setShareUrl(url);
