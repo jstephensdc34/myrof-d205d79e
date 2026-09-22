@@ -3,6 +3,7 @@ import { PatientInfo, ReportItem } from "@/types";
 import { ReportSetting } from "@/services/reportSettingsService";
 import { ReportPreview } from "@/components/report/ReportPreview";
 import { OverviewReport } from "@/components/report/OverviewReport";
+import { ReportStyle, DEFAULT_REPORT_STYLE } from "@/components/report/reportStyleVariants";
 
 const CSS_VARS = `
 :root {
@@ -101,6 +102,7 @@ export interface RenderReportParams {
   estimatedCost?: string;
   settings: ReportSetting[];
   subcategories: any[];
+  reportStyle?: ReportStyle;
   format: "full" | "overview";
 }
 
@@ -114,6 +116,7 @@ export const renderReportToHtml = (params: RenderReportParams): string => {
     estimatedCost: params.estimatedCost,
     subcategories: params.subcategories,
     settings: params.settings,
+    reportStyle: params.reportStyle ?? DEFAULT_REPORT_STYLE,
     printMode: true as const,
   };
 

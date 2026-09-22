@@ -213,6 +213,7 @@ export const ReportBuilder = ({
             estimatedCost={estimatedCost}
             settings={settings}
             subcategories={subcategories}
+            reportStyle={reportStyle}
             disabled={isGeneratingPDF || !patient.name || selectedItems.length === 0}
           />
 

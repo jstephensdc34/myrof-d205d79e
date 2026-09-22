@@ -2,6 +2,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { PatientInfo, ReportItem } from "@/types";
 import { ReportSetting } from "@/services/reportSettingsService";
 import { renderReportToHtml } from "./renderReportToHtml";
+import { ReportStyle } from "@/components/report/reportStyleVariants";
 
 export type ShareReportFormat = "full" | "overview";
 
@@ -13,6 +14,7 @@ interface ShareReportParams {
   estimatedCost?: string;
   settings: ReportSetting[];
   subcategories: any[];
+  reportStyle?: ReportStyle;
   format?: ShareReportFormat;
 }
 

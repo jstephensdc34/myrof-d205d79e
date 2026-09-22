@@ -6,6 +6,7 @@ import { PatientInfo, ReportItem, Subcategory, ReportSetting } from "@/types";
 import { shareReport } from "@/utils/shareReport";
 import { composeReportEmail, buildMailtoUrl } from "@/utils/composeReportEmail";
 import { EMAIL_TEMPLATE_SETTING_KEYS } from "@/utils/emailTemplateDefaults";
+import { ReportStyle, DEFAULT_REPORT_STYLE } from "@/components/report/reportStyleVariants";
 
 interface ShareReportActionsProps {
   patient: PatientInfo;
@@ -16,6 +17,7 @@ interface ShareReportActionsProps {
   estimatedCost: string;
   settings: ReportSetting[];
   subcategories: Subcategory[];
+  reportStyle?: ReportStyle;
   disabled?: boolean;
 }
 
@@ -30,6 +32,7 @@ export const ShareReportActions = ({
   estimatedCost,
   settings,
   subcategories,
+  reportStyle = DEFAULT_REPORT_STYLE,
   disabled,
 }: ShareReportActionsProps) => {
   const [pending, setPending] = useState<PendingAction>(null);
@@ -47,6 +50,7 @@ export const ShareReportActions = ({
       estimatedCost,
       settings,
       subcategories,
+      reportStyle,
     };
 
     const [fullReportUrl, overviewReportUrl] = await Promise.all([
