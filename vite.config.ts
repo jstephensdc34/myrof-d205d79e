@@ -6,8 +6,6 @@ import { componentTagger } from "lovable-tagger";
 
 const hostedCloudUrl = "https://evvjturddlywfbcpwqsb.supabase.co";
 const hostedCloudPublishableKey = "sb_publishable_8Q8Gnbc8cWybsBA7FaHJXg_WO814c2q";
-const onPublishedLovableSite = (value: string) =>
-  `(typeof window !== "undefined" && window.location.hostname === "myrof.lovable.app" ? ${JSON.stringify(value)} : "")`;
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -18,7 +16,7 @@ export default defineConfig(({ mode }) => ({
     'import.meta.env.VITE_SUPABASE_URL': process.env.VITE_SUPABASE_URL ||
       process.env.SUPABASE_URL
       ? JSON.stringify(process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL)
-      : onPublishedLovableSite(hostedCloudUrl),
+      : JSON.stringify(hostedCloudUrl),
     'import.meta.env.VITE_SUPABASE_ANON_KEY': process.env.VITE_SUPABASE_ANON_KEY ||
       process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
       process.env.SUPABASE_PUBLISHABLE_KEY
@@ -27,7 +25,7 @@ export default defineConfig(({ mode }) => ({
             process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
             process.env.SUPABASE_PUBLISHABLE_KEY
         )
-      : onPublishedLovableSite(hostedCloudPublishableKey),
+      : JSON.stringify(hostedCloudPublishableKey),
     'import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY': process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
       process.env.VITE_SUPABASE_ANON_KEY ||
       process.env.SUPABASE_PUBLISHABLE_KEY
@@ -36,7 +34,7 @@ export default defineConfig(({ mode }) => ({
             process.env.VITE_SUPABASE_ANON_KEY ||
             process.env.SUPABASE_PUBLISHABLE_KEY
         )
-      : onPublishedLovableSite(hostedCloudPublishableKey),
+      : JSON.stringify(hostedCloudPublishableKey),
   },
   server: {
     host: "::",
