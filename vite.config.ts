@@ -15,21 +15,28 @@ export default defineConfig(({ mode }) => ({
   // while direct Vercel installs use the documented VITE_* names. Define the
   // browser-safe aliases explicitly so both deployment paths remain valid.
   define: {
-    'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(
-      process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL || onPublishedLovableSite(hostedCloudUrl)
-    ),
-    'import.meta.env.VITE_SUPABASE_ANON_KEY': JSON.stringify(
-      process.env.VITE_SUPABASE_ANON_KEY ||
-        process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
-        process.env.SUPABASE_PUBLISHABLE_KEY ||
-        onPublishedLovableSite(hostedCloudPublishableKey)
-    ),
-    'import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY': JSON.stringify(
+    'import.meta.env.VITE_SUPABASE_URL': process.env.VITE_SUPABASE_URL ||
+      process.env.SUPABASE_URL
+      ? JSON.stringify(process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL)
+      : onPublishedLovableSite(hostedCloudUrl),
+    'import.meta.env.VITE_SUPABASE_ANON_KEY': process.env.VITE_SUPABASE_ANON_KEY ||
       process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
-        process.env.VITE_SUPABASE_ANON_KEY ||
-        process.env.SUPABASE_PUBLISHABLE_KEY ||
-        onPublishedLovableSite(hostedCloudPublishableKey)
-    ),
+      process.env.SUPABASE_PUBLISHABLE_KEY
+      ? JSON.stringify(
+          process.env.VITE_SUPABASE_ANON_KEY ||
+            process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
+            process.env.SUPABASE_PUBLISHABLE_KEY
+        )
+      : onPublishedLovableSite(hostedCloudPublishableKey),
+    'import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY': process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
+      process.env.VITE_SUPABASE_ANON_KEY ||
+      process.env.SUPABASE_PUBLISHABLE_KEY
+      ? JSON.stringify(
+          process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
+            process.env.VITE_SUPABASE_ANON_KEY ||
+            process.env.SUPABASE_PUBLISHABLE_KEY
+        )
+      : onPublishedLovableSite(hostedCloudPublishableKey),
   },
   server: {
     host: "::",
