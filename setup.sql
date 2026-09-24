@@ -106,13 +106,16 @@ CREATE TRIGGER library_items_set_updated_at
 -- ============================================================
 CREATE TABLE IF NOT EXISTS public.report_settings (
   id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  name       text NOT NULL UNIQUE,
+  name       text NOT NULL,
   value      text,
   user_id    uuid,
   created_at timestamptz NOT NULL DEFAULT now()
 );
 
 ALTER TABLE public.report_settings ADD COLUMN IF NOT EXISTS user_id uuid;
+ALTER TABLE public.report_settings DROP CONSTRAINT IF EXISTS report_settings_name_key;
+CREATE UNIQUE INDEX IF NOT EXISTS report_settings_owner_name_key
+  ON public.report_settings (COALESCE(user_id, '00000000-0000-0000-0000-000000000000'::uuid), name);
 
 INSERT INTO public.report_settings (name, value) VALUES
   ('clinic_name', ''),
@@ -121,7 +124,7 @@ INSERT INTO public.report_settings (name, value) VALUES
   ('email',       ''),
   ('website',     ''),
   ('logo_url',    '')
-ON CONFLICT (name) DO NOTHING;
+ON CONFLICT DO NOTHING;
 
 -- ============================================================
 -- 4. Care plans (saved per-user)
@@ -281,6 +284,7 @@ DROP POLICY IF EXISTS "Authenticated can delete report settings" ON public.repor
 DROP POLICY IF EXISTS "Users read own or shared report settings"   ON public.report_settings;
 DROP POLICY IF EXISTS "Users insert own report settings"           ON public.report_settings;
 DROP POLICY IF EXISTS "Users update own or shared report settings" ON public.report_settings;
+DROP POLICY IF EXISTS "Users update own report settings"           ON public.report_settings;
 DROP POLICY IF EXISTS "Users delete own report settings"           ON public.report_settings;
 
 CREATE POLICY "Users read own or shared report settings"
@@ -289,9 +293,9 @@ CREATE POLICY "Users read own or shared report settings"
 CREATE POLICY "Users insert own report settings"
   ON public.report_settings FOR INSERT TO authenticated
   WITH CHECK (user_id = auth.uid());
-CREATE POLICY "Users update own or shared report settings"
+CREATE POLICY "Users update own report settings"
   ON public.report_settings FOR UPDATE TO authenticated
-  USING (user_id = auth.uid() OR user_id IS NULL)
+  USING (user_id = auth.uid())
   WITH CHECK (user_id = auth.uid());
 CREATE POLICY "Users delete own report settings"
   ON public.report_settings FOR DELETE TO authenticated

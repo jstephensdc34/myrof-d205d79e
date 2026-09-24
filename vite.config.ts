@@ -1,40 +1,29 @@
 
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 
+// Fallback used only for this project's own hosted build (it ships without
+// VITE_* values). Any other deployment must supply its own connection values.
 const hostedCloudUrl = "https://evvjturddlywfbcpwqsb.supabase.co";
 const hostedCloudPublishableKey = "sb_publishable_8Q8Gnbc8cWybsBA7FaHJXg_WO814c2q";
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
-  // Lovable Cloud exposes unprefixed connection values to production builds,
-  // while direct Vercel installs use the documented VITE_* names. Define the
-  // browser-safe aliases explicitly so both deployment paths remain valid.
+export default defineConfig(({ mode }) => {
+  // Merge .env files with the shell so local .env values are honoured.
+  const env = { ...loadEnv(mode, process.cwd(), ""), ...process.env };
+  const url = env.VITE_SUPABASE_URL || env.SUPABASE_URL || hostedCloudUrl;
+  const key =
+    env.VITE_SUPABASE_ANON_KEY ||
+    env.VITE_SUPABASE_PUBLISHABLE_KEY ||
+    env.SUPABASE_PUBLISHABLE_KEY ||
+    hostedCloudPublishableKey;
+  return {
   define: {
-    'import.meta.env.VITE_SUPABASE_URL': process.env.VITE_SUPABASE_URL ||
-      process.env.SUPABASE_URL
-      ? JSON.stringify(process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL)
-      : JSON.stringify(hostedCloudUrl),
-    'import.meta.env.VITE_SUPABASE_ANON_KEY': process.env.VITE_SUPABASE_ANON_KEY ||
-      process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
-      process.env.SUPABASE_PUBLISHABLE_KEY
-      ? JSON.stringify(
-          process.env.VITE_SUPABASE_ANON_KEY ||
-            process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
-            process.env.SUPABASE_PUBLISHABLE_KEY
-        )
-      : JSON.stringify(hostedCloudPublishableKey),
-    'import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY': process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
-      process.env.VITE_SUPABASE_ANON_KEY ||
-      process.env.SUPABASE_PUBLISHABLE_KEY
-      ? JSON.stringify(
-          process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
-            process.env.VITE_SUPABASE_ANON_KEY ||
-            process.env.SUPABASE_PUBLISHABLE_KEY
-        )
-      : JSON.stringify(hostedCloudPublishableKey),
+    'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(url),
+    'import.meta.env.VITE_SUPABASE_ANON_KEY': JSON.stringify(key),
+    'import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY': JSON.stringify(key),
   },
   server: {
     host: "::",
@@ -92,4 +81,5 @@ export default defineConfig(({ mode }) => ({
   },
   // Ensure the app works with any base path by setting this to '/'
   base: '/',
-}));
+};
+});

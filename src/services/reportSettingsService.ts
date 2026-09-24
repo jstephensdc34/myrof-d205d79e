@@ -8,18 +8,25 @@ export interface ReportSetting {
   created_at: string;
 }
 
-export const fetchSettings = async (): Promise<ReportSetting[]> => {
-  const { data, error } = await supabase
-    .from("report_settings")
-    .select("*")
-    .order("name");
+const currentUserId = async (): Promise<string> => {
+  const { data } = await supabase.auth.getSession();
+  if (!data.session) throw new Error("Authentication required to save settings");
+  return data.session.user.id;
+};
 
+// Returns one row per setting name: the user's own row wins over the shared default.
+export const fetchSettings = async (): Promise<ReportSetting[]> => {
+  const { data, error } = await supabase.from("report_settings").select("*").order("name");
   if (error) {
     console.error("Error fetching report settings:", error);
     throw new Error(error.message);
   }
-
-  return data || [];
+  const byName = new Map<string, any>();
+  for (const row of data || []) {
+    const existing = byName.get(row.name);
+    if (!existing || (existing.user_id === null && row.user_id !== null)) byName.set(row.name, row);
+  }
+  return Array.from(byName.values());
 };
 
 export const createSetting = async (name: string, value: string): Promise<ReportSetting> => {
@@ -55,71 +62,27 @@ export const createSetting = async (name: string, value: string): Promise<Report
   return data;
 };
 
+// Saves a setting for the signed-in user. Accepts a setting name or a row id.
+// Shared defaults are never modified; the user gets their own copy instead.
 export const updateSetting = async (nameOrId: string, value: string): Promise<ReportSetting> => {
-  // Validate inputs
-  if (!nameOrId.trim()) {
-    throw new Error("Setting name or ID cannot be empty");
-  }
-  
-  // Check authentication before attempting to update
-  const { data: sessionData } = await supabase.auth.getSession();
-  if (!sessionData.session) {
-    throw new Error("Authentication required to update settings");
-  }
-  
-  // First, try to get the setting by name
-  const { data: existingSettings } = await supabase
-    .from("report_settings")
-    .select("*")
-    .eq("name", nameOrId);
-    
-  if (existingSettings && existingSettings.length > 0) {
-    // If found by name, update using the ID
-    const settingId = existingSettings[0].id;
-    
+  if (!nameOrId.trim()) throw new Error("Setting name or ID cannot be empty");
+  const userId = await currentUserId();
+
+  let name = nameOrId;
+  const { data: byId } = await supabase
+    .from("report_settings").select("name").eq("id", nameOrId).maybeSingle();
+  if (byId?.name) name = byId.name;
+
+  const { data: own } = await supabase
+    .from("report_settings").select("id").eq("name", name).eq("user_id", userId).maybeSingle();
+
+  if (own?.id) {
     const { data, error } = await supabase
-      .from("report_settings")
-      .update({ value, user_id: sessionData.session.user.id })
-      .eq("id", settingId)
-      .select()
-      .single();
-
-    if (error) {
-      console.error("Error updating report setting:", error);
-      if (error.code === "PGRST301" || error.code === "42501") {
-        throw new Error("Authentication required to update settings");
-      }
-      throw new Error(error.message);
-    }
-
-    if (!data) {
-      throw new Error("Failed to update setting: No data returned");
-    }
-
-    return data;
-  } else {
-    // If not found by name, try to update by ID (in case nameOrId is actually an ID)
-    const { data, error } = await supabase
-      .from("report_settings")
-      .update({ value, user_id: sessionData.session.user.id })
-      .eq("id", nameOrId)
-      .select()
-      .single();
-
-    if (error) {
-      console.error("Error updating report setting:", error);
-      if (error.code === "PGRST301" || error.code === "42501") {
-        throw new Error("Authentication required to update settings");
-      }
-      throw new Error(`Setting with name or ID "${nameOrId}" not found`);
-    }
-
-    if (!data) {
-      throw new Error("Failed to update setting: No data returned");
-    }
-
+      .from("report_settings").update({ value }).eq("id", own.id).select().single();
+    if (error || !data) throw new Error(error?.message || "Failed to update setting");
     return data;
   }
+  return createSetting(name, value);
 };
 
 export const deleteSetting = async (id: string): Promise<void> => {
@@ -147,29 +110,8 @@ export const deleteSetting = async (id: string): Promise<void> => {
   }
 };
 
-// Upsert by name: updates if a row with that name exists, otherwise creates it.
-export const upsertSettingByName = async (
-  name: string,
-  value: string
-): Promise<ReportSetting> => {
-  if (!name.trim()) {
-    throw new Error("Setting name cannot be empty");
-  }
-
-  const { data: sessionData } = await supabase.auth.getSession();
-  if (!sessionData.session) {
-    throw new Error("Authentication required to save settings");
-  }
-
-  const { data: existing } = await supabase
-    .from("report_settings")
-    .select("id")
-    .eq("name", name)
-    .maybeSingle();
-
-  if (existing?.id) {
-    return updateSetting(existing.id, value);
-  }
-
-  return createSetting(name, value);
+// Upsert by name for the signed-in user.
+export const upsertSettingByName = async (name: string, value: string): Promise<ReportSetting> => {
+  if (!name.trim()) throw new Error("Setting name cannot be empty");
+  return updateSetting(name, value);
 };
