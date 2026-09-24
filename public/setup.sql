@@ -1,5 +1,5 @@
 -- ============================================================
--- MyROF Report — Database Setup (single-file, from-scratch)
+-- Chiropractic Patient Report Generator — Database Setup (single-file, from-scratch)
 -- ============================================================
 -- Paste this entire file into your Supabase SQL Editor and click Run.
 -- Safe to re-run on the same project (uses IF NOT EXISTS / ON CONFLICT).
@@ -106,10 +106,16 @@ CREATE TRIGGER library_items_set_updated_at
 -- ============================================================
 CREATE TABLE IF NOT EXISTS public.report_settings (
   id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  name       text NOT NULL UNIQUE,
+  name       text NOT NULL,
   value      text,
+  user_id    uuid,
   created_at timestamptz NOT NULL DEFAULT now()
 );
+
+ALTER TABLE public.report_settings ADD COLUMN IF NOT EXISTS user_id uuid;
+ALTER TABLE public.report_settings DROP CONSTRAINT IF EXISTS report_settings_name_key;
+CREATE UNIQUE INDEX IF NOT EXISTS report_settings_owner_name_key
+  ON public.report_settings (COALESCE(user_id, '00000000-0000-0000-0000-000000000000'::uuid), name);
 
 INSERT INTO public.report_settings (name, value) VALUES
   ('clinic_name', ''),
@@ -118,7 +124,7 @@ INSERT INTO public.report_settings (name, value) VALUES
   ('email',       ''),
   ('website',     ''),
   ('logo_url',    '')
-ON CONFLICT (name) DO NOTHING;
+ON CONFLICT DO NOTHING;
 
 -- ============================================================
 -- 4. Care plans (saved per-user)
@@ -200,8 +206,8 @@ GRANT  EXECUTE ON FUNCTION public.claim_and_update_library_item(uuid, uuid, text
 -- ============================================================
 -- 6. GRANTs (REST API access via PostgREST)
 -- ============================================================
-GRANT SELECT ON public.library_categories    TO anon, authenticated;
-GRANT SELECT ON public.library_subcategories TO anon, authenticated;
+GRANT SELECT ON public.library_categories    TO authenticated;
+GRANT SELECT ON public.library_subcategories TO authenticated;
 GRANT ALL    ON public.library_categories    TO service_role;
 GRANT ALL    ON public.library_subcategories TO service_role;
 
@@ -223,18 +229,20 @@ ALTER TABLE public.library_items         ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.report_settings       ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.care_plans            ENABLE ROW LEVEL SECURITY;
 
--- library_categories (reference data; readable by all)
+-- library_categories (reference data; readable by signed-in users only)
 DROP POLICY IF EXISTS "Anyone can read categories" ON public.library_categories;
-CREATE POLICY "Anyone can read categories"
+DROP POLICY IF EXISTS "Signed-in users read categories" ON public.library_categories;
+CREATE POLICY "Signed-in users read categories"
   ON public.library_categories FOR SELECT
-  TO authenticated, anon
+  TO authenticated
   USING (true);
 
--- library_subcategories (reference data; readable by all)
+-- library_subcategories (reference data; readable by signed-in users only)
 DROP POLICY IF EXISTS "Anyone can read subcategories" ON public.library_subcategories;
-CREATE POLICY "Anyone can read subcategories"
+DROP POLICY IF EXISTS "Signed-in users read subcategories" ON public.library_subcategories;
+CREATE POLICY "Signed-in users read subcategories"
   ON public.library_subcategories FOR SELECT
-  TO authenticated, anon
+  TO authenticated
   USING (true);
 
 -- library_items
@@ -268,21 +276,29 @@ CREATE POLICY "Users delete own or shared library items"
   TO authenticated
   USING (user_id = auth.uid() OR user_id IS NULL);
 
--- report_settings (single-clinic app: all authenticated users share)
+-- report_settings (owned by the signed-in user; legacy unowned rows stay shared)
 DROP POLICY IF EXISTS "Authenticated can read report settings"   ON public.report_settings;
 DROP POLICY IF EXISTS "Authenticated can insert report settings" ON public.report_settings;
 DROP POLICY IF EXISTS "Authenticated can update report settings" ON public.report_settings;
 DROP POLICY IF EXISTS "Authenticated can delete report settings" ON public.report_settings;
+DROP POLICY IF EXISTS "Users read own or shared report settings"   ON public.report_settings;
+DROP POLICY IF EXISTS "Users insert own report settings"           ON public.report_settings;
+DROP POLICY IF EXISTS "Users update own or shared report settings" ON public.report_settings;
+DROP POLICY IF EXISTS "Users delete own report settings"           ON public.report_settings;
 
-CREATE POLICY "Authenticated can read report settings"
-  ON public.report_settings FOR SELECT TO authenticated USING (true);
-CREATE POLICY "Authenticated can insert report settings"
-  ON public.report_settings FOR INSERT TO authenticated WITH CHECK (auth.uid() IS NOT NULL);
-CREATE POLICY "Authenticated can update report settings"
+CREATE POLICY "Users read own or shared report settings"
+  ON public.report_settings FOR SELECT TO authenticated
+  USING (user_id = auth.uid() OR user_id IS NULL);
+CREATE POLICY "Users insert own report settings"
+  ON public.report_settings FOR INSERT TO authenticated
+  WITH CHECK (user_id = auth.uid());
+CREATE POLICY "Users update own or shared report settings"
   ON public.report_settings FOR UPDATE TO authenticated
-  USING (auth.uid() IS NOT NULL) WITH CHECK (auth.uid() IS NOT NULL);
-CREATE POLICY "Authenticated can delete report settings"
-  ON public.report_settings FOR DELETE TO authenticated USING (auth.uid() IS NOT NULL);
+  USING (user_id = auth.uid() OR user_id IS NULL)
+  WITH CHECK (user_id = auth.uid());
+CREATE POLICY "Users delete own report settings"
+  ON public.report_settings FOR DELETE TO authenticated
+  USING (user_id = auth.uid());
 
 -- care_plans (per-user)
 DROP POLICY IF EXISTS "Users read own care plans"   ON public.care_plans;
