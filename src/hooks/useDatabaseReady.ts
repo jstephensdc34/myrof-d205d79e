@@ -19,6 +19,13 @@ export function useDatabaseReady(): {
     let cancelled = false;
     (async () => {
       try {
+        // Library tables are signed-in only; skip the probe for visitors.
+        const { data: sessionData } = await supabase.auth.getSession();
+        if (cancelled) return;
+        if (!sessionData.session) {
+          setState("ready");
+          return;
+        }
         const { error } = await supabase
           .from("library_categories")
           .select("id", { count: "exact", head: true });
