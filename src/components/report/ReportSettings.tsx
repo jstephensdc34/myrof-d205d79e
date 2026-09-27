@@ -17,7 +17,12 @@ export const ReportSettings = ({ onSettingsUpdated }: ReportSettingsProps) => {
   const { settings, loading, error, setSettings, reloadSettings } = useReportSettings(connectionStatus);
 
   const handleSettingUpdated = (updatedSetting: ReportSetting) => {
-    setSettings(prev => prev.map(s => s.id === updatedSetting.id ? updatedSetting : s));
+    // Match by name: a first save creates the user's own row with a new id.
+    setSettings(prev =>
+      prev.some(s => s.name === updatedSetting.name)
+        ? prev.map(s => (s.name === updatedSetting.name ? updatedSetting : s))
+        : [...prev, updatedSetting]
+    );
     if (onSettingsUpdated) onSettingsUpdated();
   };
 
