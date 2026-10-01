@@ -426,3 +426,6 @@ SELECT cron.schedule(
 
 -- ============================================================
 SELECT 'Setup complete' AS status;
+
+-- Refresh the API's schema cache so new columns are recognised immediately.
+NOTIFY pgrst, 'reload schema';

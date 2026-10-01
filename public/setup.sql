@@ -174,6 +174,10 @@ DECLARE
   _owner_id uuid;
   _new_id   uuid;
 BEGIN
+  IF auth.uid() IS NULL OR _user_id IS DISTINCT FROM auth.uid() THEN
+    RAISE EXCEPTION 'not authorized';
+  END IF;
+
   SELECT user_id INTO _owner_id FROM library_items WHERE id = _item_id;
 
   IF _owner_id IS NULL OR _owner_id = _user_id THEN
@@ -422,3 +426,6 @@ SELECT cron.schedule(
 
 -- ============================================================
 SELECT 'Setup complete' AS status;
+
+-- Refresh the API's schema cache so new columns are recognised immediately.
+NOTIFY pgrst, 'reload schema';
