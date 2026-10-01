@@ -234,7 +234,6 @@ ALTER TABLE public.report_settings       ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.care_plans            ENABLE ROW LEVEL SECURITY;
 
 -- library_categories (reference data; readable by signed-in users only)
-DROP POLICY IF EXISTS "Anyone can read categories" ON public.library_categories;
 DROP POLICY IF EXISTS "Signed-in users read categories" ON public.library_categories;
 CREATE POLICY "Signed-in users read categories"
   ON public.library_categories FOR SELECT
@@ -242,7 +241,6 @@ CREATE POLICY "Signed-in users read categories"
   USING (true);
 
 -- library_subcategories (reference data; readable by signed-in users only)
-DROP POLICY IF EXISTS "Anyone can read subcategories" ON public.library_subcategories;
 DROP POLICY IF EXISTS "Signed-in users read subcategories" ON public.library_subcategories;
 CREATE POLICY "Signed-in users read subcategories"
   ON public.library_subcategories FOR SELECT
@@ -252,72 +250,65 @@ CREATE POLICY "Signed-in users read subcategories"
 -- library_items
 -- Shared starter rows (user_id IS NULL) are visible and editable to every
 -- signed-in clinic user. Per-user rows are private to their owner.
-DROP POLICY IF EXISTS "Users read own or shared library items"   ON public.library_items;
-DROP POLICY IF EXISTS "Users insert own library items"           ON public.library_items;
-DROP POLICY IF EXISTS "Users update own library items"           ON public.library_items;
-DROP POLICY IF EXISTS "Users delete own library items"           ON public.library_items;
-DROP POLICY IF EXISTS "Users update own or shared library items" ON public.library_items;
-DROP POLICY IF EXISTS "Users delete own or shared library items" ON public.library_items;
 
+DROP POLICY IF EXISTS "Users read own or shared library items" ON public.library_items;
 CREATE POLICY "Users read own or shared library items"
   ON public.library_items FOR SELECT
   TO authenticated
   USING (user_id = auth.uid() OR user_id IS NULL);
 
+DROP POLICY IF EXISTS "Users insert library items" ON public.library_items;
 CREATE POLICY "Users insert library items"
   ON public.library_items FOR INSERT
   TO authenticated
   WITH CHECK (user_id = auth.uid() OR user_id IS NULL);
 
+DROP POLICY IF EXISTS "Users update own or shared library items" ON public.library_items;
 CREATE POLICY "Users update own or shared library items"
   ON public.library_items FOR UPDATE
   TO authenticated
   USING      (user_id = auth.uid() OR user_id IS NULL)
   WITH CHECK (user_id = auth.uid() OR user_id IS NULL);
 
+DROP POLICY IF EXISTS "Users delete own or shared library items" ON public.library_items;
 CREATE POLICY "Users delete own or shared library items"
   ON public.library_items FOR DELETE
   TO authenticated
   USING (user_id = auth.uid() OR user_id IS NULL);
 
 -- report_settings (owned by the signed-in user; legacy unowned rows stay shared)
-DROP POLICY IF EXISTS "Authenticated can read report settings"   ON public.report_settings;
-DROP POLICY IF EXISTS "Authenticated can insert report settings" ON public.report_settings;
-DROP POLICY IF EXISTS "Authenticated can update report settings" ON public.report_settings;
-DROP POLICY IF EXISTS "Authenticated can delete report settings" ON public.report_settings;
-DROP POLICY IF EXISTS "Users read own or shared report settings"   ON public.report_settings;
-DROP POLICY IF EXISTS "Users insert own report settings"           ON public.report_settings;
-DROP POLICY IF EXISTS "Users update own or shared report settings" ON public.report_settings;
-DROP POLICY IF EXISTS "Users update own report settings"           ON public.report_settings;
-DROP POLICY IF EXISTS "Users delete own report settings"           ON public.report_settings;
 
+DROP POLICY IF EXISTS "Users read own or shared report settings" ON public.report_settings;
 CREATE POLICY "Users read own or shared report settings"
   ON public.report_settings FOR SELECT TO authenticated
   USING (user_id = auth.uid() OR user_id IS NULL);
+DROP POLICY IF EXISTS "Users insert own report settings" ON public.report_settings;
 CREATE POLICY "Users insert own report settings"
   ON public.report_settings FOR INSERT TO authenticated
   WITH CHECK (user_id = auth.uid());
+DROP POLICY IF EXISTS "Users update own report settings" ON public.report_settings;
 CREATE POLICY "Users update own report settings"
   ON public.report_settings FOR UPDATE TO authenticated
   USING (user_id = auth.uid())
   WITH CHECK (user_id = auth.uid());
+DROP POLICY IF EXISTS "Users delete own report settings" ON public.report_settings;
 CREATE POLICY "Users delete own report settings"
   ON public.report_settings FOR DELETE TO authenticated
   USING (user_id = auth.uid());
 
 -- care_plans (per-user)
-DROP POLICY IF EXISTS "Users read own care plans"   ON public.care_plans;
-DROP POLICY IF EXISTS "Users insert own care plans" ON public.care_plans;
-DROP POLICY IF EXISTS "Users update own care plans" ON public.care_plans;
-DROP POLICY IF EXISTS "Users delete own care plans" ON public.care_plans;
 
+DROP POLICY IF EXISTS "Users read own care plans" ON public.care_plans;
 CREATE POLICY "Users read own care plans"
   ON public.care_plans FOR SELECT TO authenticated USING (user_id = auth.uid());
+DROP POLICY IF EXISTS "Users insert own care plans" ON public.care_plans;
 CREATE POLICY "Users insert own care plans"
   ON public.care_plans FOR INSERT TO authenticated WITH CHECK (user_id = auth.uid());
+DROP POLICY IF EXISTS "Users update own care plans" ON public.care_plans;
 CREATE POLICY "Users update own care plans"
   ON public.care_plans FOR UPDATE TO authenticated
   USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid());
+DROP POLICY IF EXISTS "Users delete own care plans" ON public.care_plans;
 CREATE POLICY "Users delete own care plans"
   ON public.care_plans FOR DELETE TO authenticated USING (user_id = auth.uid());
 
@@ -330,24 +321,24 @@ INSERT INTO storage.buckets (id, name, public)
 VALUES ('clinic-assets', 'clinic-assets', true)
 ON CONFLICT (id) DO UPDATE SET public = true;
 
-DROP POLICY IF EXISTS "clinic_assets_public_read"  ON storage.objects;
-DROP POLICY IF EXISTS "clinic_assets_auth_insert"  ON storage.objects;
-DROP POLICY IF EXISTS "clinic_assets_owner_update" ON storage.objects;
-DROP POLICY IF EXISTS "clinic_assets_owner_delete" ON storage.objects;
 
+DROP POLICY IF EXISTS "clinic_assets_public_read" ON storage.objects;
 CREATE POLICY "clinic_assets_public_read"
   ON storage.objects FOR SELECT TO anon, authenticated
   USING (bucket_id = 'clinic-assets');
 
+DROP POLICY IF EXISTS "clinic_assets_auth_insert" ON storage.objects;
 CREATE POLICY "clinic_assets_auth_insert"
   ON storage.objects FOR INSERT TO authenticated
   WITH CHECK (bucket_id = 'clinic-assets');
 
+DROP POLICY IF EXISTS "clinic_assets_owner_update" ON storage.objects;
 CREATE POLICY "clinic_assets_owner_update"
   ON storage.objects FOR UPDATE TO authenticated
   USING      (bucket_id = 'clinic-assets' AND owner = auth.uid())
   WITH CHECK (bucket_id = 'clinic-assets' AND owner = auth.uid());
 
+DROP POLICY IF EXISTS "clinic_assets_owner_delete" ON storage.objects;
 CREATE POLICY "clinic_assets_owner_delete"
   ON storage.objects FOR DELETE TO authenticated
   USING (bucket_id = 'clinic-assets' AND owner = auth.uid());
@@ -357,24 +348,24 @@ INSERT INTO storage.buckets (id, name, public)
 VALUES ('shared-reports', 'shared-reports', true)
 ON CONFLICT (id) DO UPDATE SET public = true;
 
-DROP POLICY IF EXISTS "shared_reports_public_read"  ON storage.objects;
-DROP POLICY IF EXISTS "shared_reports_auth_insert"  ON storage.objects;
-DROP POLICY IF EXISTS "shared_reports_owner_update" ON storage.objects;
-DROP POLICY IF EXISTS "shared_reports_owner_delete" ON storage.objects;
 
+DROP POLICY IF EXISTS "shared_reports_public_read" ON storage.objects;
 CREATE POLICY "shared_reports_public_read"
   ON storage.objects FOR SELECT TO anon, authenticated
   USING (bucket_id = 'shared-reports');
 
+DROP POLICY IF EXISTS "shared_reports_auth_insert" ON storage.objects;
 CREATE POLICY "shared_reports_auth_insert"
   ON storage.objects FOR INSERT TO authenticated
   WITH CHECK (bucket_id = 'shared-reports');
 
+DROP POLICY IF EXISTS "shared_reports_owner_update" ON storage.objects;
 CREATE POLICY "shared_reports_owner_update"
   ON storage.objects FOR UPDATE TO authenticated
   USING      (bucket_id = 'shared-reports' AND owner = auth.uid())
   WITH CHECK (bucket_id = 'shared-reports' AND owner = auth.uid());
 
+DROP POLICY IF EXISTS "shared_reports_owner_delete" ON storage.objects;
 CREATE POLICY "shared_reports_owner_delete"
   ON storage.objects FOR DELETE TO authenticated
   USING (bucket_id = 'shared-reports' AND owner = auth.uid());
