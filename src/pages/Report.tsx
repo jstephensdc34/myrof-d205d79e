@@ -22,6 +22,9 @@ const Report = () => {
     additionalNotes,
     customTreatmentGoals,
     estimatedCost,
+    schedule,
+    setSchedule,
+    treatmentSchedule,
     activeCategory,
     isGeneratingPDF,
     pdfProgress,
@@ -83,6 +86,9 @@ const Report = () => {
               additionalNotes={additionalNotes}
               customTreatmentGoals={customTreatmentGoals}
               estimatedCost={estimatedCost}
+              schedule={schedule}
+              treatmentSchedule={treatmentSchedule}
+              onScheduleChange={setSchedule}
               settings={settings}
               settingsLoading={settingsLoading}
               onSettingsUpdated={reloadSettings}

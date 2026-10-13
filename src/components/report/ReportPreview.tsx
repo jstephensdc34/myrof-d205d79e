@@ -24,6 +24,7 @@ interface ReportPreviewProps {
   additionalNotes: string;
   customTreatmentGoals?: string;
   estimatedCost?: string;
+  treatmentSchedule?: string;
   subcategories: any[];
   settings?: ReportSetting[];
   settingsLoading?: boolean;
@@ -38,6 +39,7 @@ export const ReportPreview = forwardRef<HTMLDivElement, ReportPreviewProps>(({
   additionalNotes,
   customTreatmentGoals = "",
   estimatedCost = "",
+  treatmentSchedule = "",
   subcategories = [],
   settings = [],
   settingsLoading = false,
@@ -141,7 +143,7 @@ export const ReportPreview = forwardRef<HTMLDivElement, ReportPreviewProps>(({
               
               <div className="space-y-8">
                 {/* Render categories in the same order as MAIN_CATEGORIES */}
-                {MAIN_CATEGORIES.filter(category => hasSelectedItemsInCategory(category) || (category === "treatment" && (customTreatmentGoals || estimatedCost))).map((category) => (
+                {MAIN_CATEGORIES.filter(category => hasSelectedItemsInCategory(category) || (category === "treatment" && (customTreatmentGoals || estimatedCost || treatmentSchedule))).map((category) => (
                   <ReportCategory
                     key={category}
                     categoryId={category}
@@ -151,6 +153,7 @@ export const ReportPreview = forwardRef<HTMLDivElement, ReportPreviewProps>(({
                     getSubcategoryName={getSubcategoryName}
                     customTreatmentGoals={category === "treatment" ? customTreatmentGoals : undefined}
                     estimatedCost={category === "treatment" ? estimatedCost : undefined}
+                    treatmentSchedule={category === "treatment" ? treatmentSchedule : undefined}
                     variant={reportStyle}
                   />
                 ))}
