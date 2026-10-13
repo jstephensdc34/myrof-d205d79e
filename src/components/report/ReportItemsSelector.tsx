@@ -10,6 +10,8 @@ import { ReportItemList } from "./ReportItemList";
 import { ReportLoadingState } from "./ReportLoadingState";
 import { categoryNames, getDefaultSubcategory } from "@/utils/categoryUtils";
 import { Search } from "lucide-react";
+import { TreatmentScheduleForm } from "./TreatmentScheduleForm";
+import { TreatmentScheduleParts } from "@/utils/treatmentSchedule";
 
 interface ReportItemsSelectorProps {
   items: ReportItem[];
@@ -23,6 +25,8 @@ interface ReportItemsSelectorProps {
   onTreatmentGoalsChange?: (goals: string) => void;
   estimatedCost?: string;
   onEstimatedCostChange?: (cost: string) => void;
+  schedule?: TreatmentScheduleParts;
+  onScheduleChange?: (schedule: TreatmentScheduleParts) => void;
 }
 
 export const ReportItemsSelector = ({
@@ -37,6 +41,8 @@ export const ReportItemsSelector = ({
   onTreatmentGoalsChange,
   estimatedCost = "",
   onEstimatedCostChange,
+  schedule,
+  onScheduleChange,
 }: ReportItemsSelectorProps) => {
   const [activeSubcategory, setActiveSubcategory] = useState<string | null>(
     getDefaultSubcategory(activeCategory)
@@ -132,6 +138,19 @@ export const ReportItemsSelector = ({
                     />
                   </div>
                 </div>
+
+                {category === "treatment" && activeSubcategory === "care_plan_type" && schedule && onScheduleChange && (
+                  <TreatmentScheduleForm
+                    visitsPerPeriod={schedule.visitsPerPeriod || ""}
+                    periodUnit={schedule.periodUnit || "week"}
+                    duration={schedule.duration || ""}
+                    durationUnit={schedule.durationUnit || "weeks"}
+                    onVisitsPerPeriodChange={(v) => onScheduleChange({ ...schedule, visitsPerPeriod: v })}
+                    onPeriodUnitChange={(v) => onScheduleChange({ ...schedule, periodUnit: v })}
+                    onDurationChange={(v) => onScheduleChange({ ...schedule, duration: v })}
+                    onDurationUnitChange={(v) => onScheduleChange({ ...schedule, durationUnit: v })}
+                  />
+                )}
 
                 <ReportItemList
                   items={getSearchedItems(getFilteredItems(category))}

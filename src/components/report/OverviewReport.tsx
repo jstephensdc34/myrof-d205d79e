@@ -69,6 +69,7 @@ interface OverviewReportProps {
   selectedItems: string[];
   customTreatmentGoals?: string;
   estimatedCost?: string;
+  treatmentSchedule?: string;
   additionalNotes?: string;
   subcategories: any[];
   settings?: ReportSetting[];
@@ -197,6 +198,7 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
   selectedItems,
   customTreatmentGoals = "",
   estimatedCost = "",
+  treatmentSchedule = "",
   additionalNotes = "",
   subcategories = [],
   settings = [],
@@ -303,6 +305,7 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
     treatmentGoalItems.length > 0 ||
     customTreatmentGoals ||
     estimatedCost ||
+    treatmentSchedule ||
     homecareItems.length > 0 ||
     exerciseItems.length > 0 ||
     !!additionalNotes;
@@ -408,7 +411,7 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
                 )}
 
                 {/* Section 3: Care Plan + Phase of Care + Treatment Goals */}
-                {(carePlanItems.length > 0 || phaseOfCareItems.length > 0 || treatmentGoalItems.length > 0 || customTreatmentGoals || estimatedCost) && (
+                {(carePlanItems.length > 0 || phaseOfCareItems.length > 0 || treatmentGoalItems.length > 0 || customTreatmentGoals || estimatedCost || treatmentSchedule) && (
                   <div>
                     <SectionHeader label={sectionStyles.carePlan.label} style={sectionStyles.carePlan} variant={reportStyle} />
                     <div className={overviewGridClass}>
@@ -435,6 +438,18 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
                               ))}
                               {customTreatmentGoals && <li>{customTreatmentGoals}</li>}
                             </ul>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Treatment Frequency & Duration card - spans full width */}
+                      {treatmentSchedule && (
+                        <div className={`col-span-2 rounded-lg border ${sectionStyles.carePlan.border} ${sectionStyles.carePlan.bg} overflow-hidden shadow-sm`}>
+                          <div className={`px-4 py-2 ${sectionStyles.carePlan.headerBg}`}>
+                            <h4 className={`font-semibold text-sm ${sectionStyles.carePlan.headerText}`}>Treatment Frequency & Duration</h4>
+                          </div>
+                          <div className="px-4 py-4 text-center">
+                            <p className="text-2xl font-bold text-treatment">{treatmentSchedule}</p>
                           </div>
                         </div>
                       )}

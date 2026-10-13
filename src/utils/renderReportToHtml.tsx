@@ -100,6 +100,7 @@ export interface RenderReportParams {
   notes: string;
   customTreatmentGoals?: string;
   estimatedCost?: string;
+  treatmentSchedule?: string;
   settings: ReportSetting[];
   subcategories: any[];
   reportStyle?: ReportStyle;
@@ -114,6 +115,7 @@ export const renderReportToHtml = (params: RenderReportParams): string => {
     selectedItems: selectedIds,
     customTreatmentGoals: params.customTreatmentGoals,
     estimatedCost: params.estimatedCost,
+    treatmentSchedule: params.treatmentSchedule,
     subcategories: params.subcategories,
     settings: params.settings,
     reportStyle: params.reportStyle ?? DEFAULT_REPORT_STYLE,

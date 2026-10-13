@@ -15,6 +15,7 @@ interface ShareReportActionsProps {
   additionalNotes: string;
   customTreatmentGoals: string;
   estimatedCost: string;
+  treatmentSchedule?: string;
   settings: ReportSetting[];
   subcategories: Subcategory[];
   reportStyle?: ReportStyle;
@@ -30,6 +31,7 @@ export const ShareReportActions = ({
   additionalNotes,
   customTreatmentGoals,
   estimatedCost,
+  treatmentSchedule,
   settings,
   subcategories,
   reportStyle = DEFAULT_REPORT_STYLE,
@@ -48,6 +50,7 @@ export const ShareReportActions = ({
       notes: additionalNotes,
       customTreatmentGoals,
       estimatedCost,
+      treatmentSchedule,
       settings,
       subcategories,
       reportStyle,

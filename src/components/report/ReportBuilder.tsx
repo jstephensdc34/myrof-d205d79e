@@ -1,3 +1,4 @@
+import { TreatmentScheduleParts } from "@/utils/treatmentSchedule";
 
 
 import { useState, useRef, useEffect } from "react";
@@ -35,6 +36,9 @@ interface ReportBuilderProps {
   additionalNotes: string;
   customTreatmentGoals: string;
   estimatedCost: string;
+  schedule: TreatmentScheduleParts;
+  treatmentSchedule: string;
+  onScheduleChange: (schedule: TreatmentScheduleParts) => void;
   settings: ReportSetting[];
   settingsLoading: boolean;
   isLoading: boolean;
@@ -65,6 +69,9 @@ export const ReportBuilder = ({
   additionalNotes,
   customTreatmentGoals,
   estimatedCost,
+  schedule,
+  treatmentSchedule,
+  onScheduleChange,
   settings,
   settingsLoading,
   isLoading,
@@ -153,6 +160,8 @@ export const ReportBuilder = ({
       onTreatmentGoalsChange={onTreatmentGoalsChange}
       estimatedCost={estimatedCost}
       onEstimatedCostChange={onEstimatedCostChange}
+      schedule={schedule}
+      onScheduleChange={onScheduleChange}
     />
   );
 
@@ -211,6 +220,7 @@ export const ReportBuilder = ({
             additionalNotes={additionalNotes}
             customTreatmentGoals={customTreatmentGoals}
             estimatedCost={estimatedCost}
+            treatmentSchedule={treatmentSchedule}
             settings={settings}
             subcategories={subcategories}
             reportStyle={reportStyle}
@@ -264,6 +274,7 @@ export const ReportBuilder = ({
               additionalNotes={additionalNotes}
               customTreatmentGoals={customTreatmentGoals}
               estimatedCost={estimatedCost}
+              treatmentSchedule={treatmentSchedule}
               subcategories={subcategories}
               settings={settings}
               settingsLoading={settingsLoading}
@@ -278,6 +289,7 @@ export const ReportBuilder = ({
               selectedItems={selectedItems}
               customTreatmentGoals={customTreatmentGoals}
               estimatedCost={estimatedCost}
+              treatmentSchedule={treatmentSchedule}
               additionalNotes={additionalNotes}
               subcategories={subcategories}
               settings={settings}

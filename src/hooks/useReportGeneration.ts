@@ -1,3 +1,4 @@
+import { composeTreatmentSchedule, TreatmentScheduleParts } from "@/utils/treatmentSchedule";
 
 import { useState } from "react";
 import { CategoryType, PatientInfo, ReportItem } from "@/types";
@@ -23,6 +24,8 @@ export const useReportGeneration = (
   const [additionalNotes, setAdditionalNotes] = useState<string>("");
   const [customTreatmentGoals, setCustomTreatmentGoals] = useState<string>("");
   const [estimatedCost, setEstimatedCost] = useState<string>("");
+  const [schedule, setSchedule] = useState<TreatmentScheduleParts>({ visitsPerPeriod: "", periodUnit: "week", duration: "", durationUnit: "weeks" });
+  const treatmentSchedule = composeTreatmentSchedule(schedule);
   const [activeCategory, setActiveCategory] = useState<CategoryType>("diagnosis");
   const [isGeneratingPDF, setIsGeneratingPDF] = useState<boolean>(false);
   const [pdfProgress, setPdfProgress] = useState<RenderPdfProgress>({ status: 'preparing', percentage: 0 });
@@ -120,6 +123,7 @@ export const useReportGeneration = (
         notes: additionalNotes,
         customTreatmentGoals,
         estimatedCost,
+        treatmentSchedule,
         settings,
         subcategories,
         reportStyle,
@@ -141,6 +145,9 @@ export const useReportGeneration = (
     additionalNotes,
     customTreatmentGoals,
     estimatedCost,
+    schedule,
+    setSchedule,
+    treatmentSchedule,
     activeCategory,
     isGeneratingPDF,
     pdfProgress,
