@@ -1,4 +1,4 @@
-interface TreatmentScheduleParts {
+export interface TreatmentScheduleParts {
   visitsPerPeriod?: string;
   periodUnit?: "week" | "month";
   duration?: string;

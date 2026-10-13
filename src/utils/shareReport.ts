@@ -12,6 +12,7 @@ interface ShareReportParams {
   notes: string;
   customTreatmentGoals?: string;
   estimatedCost?: string;
+  treatmentSchedule?: string;
   settings: ReportSetting[];
   subcategories: any[];
   reportStyle?: ReportStyle;
