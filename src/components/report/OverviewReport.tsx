@@ -415,6 +415,18 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
                   <div>
                     <SectionHeader label={sectionStyles.carePlan.label} style={sectionStyles.carePlan} variant={reportStyle} />
                     <div className={overviewGridClass}>
+                      {/* Treatment Frequency & Duration card - spans full width */}
+                      {treatmentSchedule && (
+                        <div className={`col-span-2 rounded-lg border ${sectionStyles.carePlan.border} ${sectionStyles.carePlan.bg} overflow-hidden shadow-sm`}>
+                          <div className={`px-4 py-2 ${sectionStyles.carePlan.headerBg}`}>
+                            <h4 className={`font-semibold text-sm ${sectionStyles.carePlan.headerText}`}>Treatment Frequency & Duration</h4>
+                          </div>
+                          <div className="px-4 py-4 text-center">
+                            <p className="text-2xl font-bold text-treatment">{treatmentSchedule}</p>
+                          </div>
+                        </div>
+                      )}
+
                       {/* Care Plan Type cards */}
                       {carePlanItems.map((item) => (
                         <OverviewCard key={item.id} name={item.name} definition={item.definition} infoLink={item.infoLink} style={sectionStyles.carePlan} variant={reportStyle} />
@@ -442,17 +454,6 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
                         </div>
                       )}
 
-                      {/* Treatment Frequency & Duration card - spans full width */}
-                      {treatmentSchedule && (
-                        <div className={`col-span-2 rounded-lg border ${sectionStyles.carePlan.border} ${sectionStyles.carePlan.bg} overflow-hidden shadow-sm`}>
-                          <div className={`px-4 py-2 ${sectionStyles.carePlan.headerBg}`}>
-                            <h4 className={`font-semibold text-sm ${sectionStyles.carePlan.headerText}`}>Treatment Frequency & Duration</h4>
-                          </div>
-                          <div className="px-4 py-4 text-center">
-                            <p className="text-2xl font-bold text-treatment">{treatmentSchedule}</p>
-                          </div>
-                        </div>
-                      )}
 
                       {/* Estimated Cost card - spans full width */}
                       {estimatedCost && (
