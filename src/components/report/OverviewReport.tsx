@@ -442,17 +442,6 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
                         </div>
                       )}
 
-                      {/* Treatment Frequency & Duration card - spans full width */}
-                      {treatmentSchedule && (
-                        <div className={`col-span-2 rounded-lg border ${sectionStyles.carePlan.border} ${sectionStyles.carePlan.bg} overflow-hidden shadow-sm`}>
-                          <div className={`px-4 py-2 ${sectionStyles.carePlan.headerBg}`}>
-                            <h4 className={`font-semibold text-sm ${sectionStyles.carePlan.headerText}`}>Treatment Frequency & Duration</h4>
-                          </div>
-                          <div className="px-4 py-4 text-center">
-                            <p className="text-2xl font-bold text-treatment">{treatmentSchedule}</p>
-                          </div>
-                        </div>
-                      )}
 
                       {/* Estimated Cost card - spans full width */}
                       {estimatedCost && (
