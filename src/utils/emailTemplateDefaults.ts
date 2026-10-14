@@ -13,13 +13,11 @@ export const DEFAULT_EMAIL_BODY = [
   "— {{clinic_name}}",
 ].join("\n");
 
-export const DEFAULT_FULL_BUTTON_LABEL = "View Full Report";
 export const DEFAULT_OVERVIEW_BUTTON_LABEL = "View Report";
 
 export const EMAIL_TEMPLATE_SETTING_KEYS = {
   subject: "email_subject_template",
   body: "email_body_template",
-  fullButton: "email_button_label_full",
   overviewButton: "email_button_label_overview",
 } as const;
 

@@ -12,7 +12,6 @@ import {
 import {
   DEFAULT_EMAIL_BODY,
   DEFAULT_EMAIL_SUBJECT,
-  DEFAULT_FULL_BUTTON_LABEL,
   DEFAULT_OVERVIEW_BUTTON_LABEL,
   EMAIL_TEMPLATE_SETTING_KEYS,
   EMAIL_TEMPLATE_TOKENS,
@@ -39,7 +38,6 @@ export const EmailTemplateForm = ({
   const [form, setForm] = useState({
     subject: DEFAULT_EMAIL_SUBJECT,
     body: DEFAULT_EMAIL_BODY,
-    fullButton: DEFAULT_FULL_BUTTON_LABEL,
     overviewButton: DEFAULT_OVERVIEW_BUTTON_LABEL,
   });
 
@@ -47,7 +45,6 @@ export const EmailTemplateForm = ({
     setForm({
       subject: getValue(settings, EMAIL_TEMPLATE_SETTING_KEYS.subject, DEFAULT_EMAIL_SUBJECT),
       body: getValue(settings, EMAIL_TEMPLATE_SETTING_KEYS.body, DEFAULT_EMAIL_BODY),
-      fullButton: getValue(settings, EMAIL_TEMPLATE_SETTING_KEYS.fullButton, DEFAULT_FULL_BUTTON_LABEL),
       overviewButton: getValue(settings, EMAIL_TEMPLATE_SETTING_KEYS.overviewButton, DEFAULT_OVERVIEW_BUTTON_LABEL),
     });
   }, [settings]);
@@ -59,7 +56,6 @@ export const EmailTemplateForm = ({
     setForm({
       subject: DEFAULT_EMAIL_SUBJECT,
       body: DEFAULT_EMAIL_BODY,
-      fullButton: DEFAULT_FULL_BUTTON_LABEL,
       overviewButton: DEFAULT_OVERVIEW_BUTTON_LABEL,
     });
     toast({
