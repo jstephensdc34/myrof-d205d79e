@@ -526,7 +526,7 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
     </div>
   ) : (
     <div className="p-8 text-center text-muted-foreground">
-      <p>Select items from the categories above to build your overview report.</p>
+      <p>Select items from the categories above to build your report.</p>
     </div>
   );
 
@@ -538,7 +538,7 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
     <ReportDisclosureProvider items={items.filter((item) => selectedItems.includes(item.id))}>
     <Card className="mt-6">
       <CardHeader className="bg-muted border-b">
-        <CardTitle className="text-foreground text-lg">Overview Report Preview</CardTitle>
+        <CardTitle className="text-foreground text-lg">Report Preview</CardTitle>
       </CardHeader>
       <CardContent className="pt-6">
         {innerContent}

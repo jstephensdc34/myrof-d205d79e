@@ -52,7 +52,7 @@ export const ShareReportDialog = ({
           <div className="flex flex-col gap-3">
             <Button onClick={() => onShare("overview")} variant="outline" className="w-full border-medical-600 text-medical-700 hover:bg-medical-50">
               <Link className="mr-2 h-4 w-4" />
-              Share Overview Report
+              Share Report
             </Button>
           </div>
         )}

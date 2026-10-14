@@ -14,7 +14,7 @@ export const DEFAULT_EMAIL_BODY = [
 ].join("\n");
 
 export const DEFAULT_FULL_BUTTON_LABEL = "View Full Report";
-export const DEFAULT_OVERVIEW_BUTTON_LABEL = "View Overview";
+export const DEFAULT_OVERVIEW_BUTTON_LABEL = "View Report";
 
 export const EMAIL_TEMPLATE_SETTING_KEYS = {
   subject: "email_subject_template",
@@ -26,8 +26,8 @@ export const EMAIL_TEMPLATE_SETTING_KEYS = {
 export const EMAIL_TEMPLATE_TOKENS: { token: string; description: string }[] = [
   { token: "{{patient_name}}", description: "Patient's name" },
   { token: "{{clinic_name}}", description: "Your clinic name" },
-  { token: "{{overview_report_url}}", description: "Link to the overview report" },
-  { token: "{{overview_button_label}}", description: "Label of the overview button (body only)" },
+  { token: "{{overview_report_url}}", description: "Link to the report" },
+  { token: "{{overview_button_label}}", description: "Label of the report button (body only)" },
 ];
 
 export const applyTokens = (

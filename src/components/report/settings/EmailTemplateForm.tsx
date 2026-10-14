@@ -147,7 +147,7 @@ export const EmailTemplateForm = ({
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <Label htmlFor="overviewButton">"Overview" button label</Label>
+            <Label htmlFor="overviewButton">Report button label</Label>
             <Input
               id="overviewButton"
               value={form.overviewButton}
