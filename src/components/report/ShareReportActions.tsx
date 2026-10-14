@@ -118,7 +118,7 @@ export const ShareReportActions = ({
   const isDisabled = disabled || pending !== null;
 
   return (
-    <div className="flex flex-col gap-2">
+    <>
       <ExportStyleMenu
         currentStyle={reportStyle}
         onSelect={handleCopy}
@@ -126,16 +126,16 @@ export const ShareReportActions = ({
         trigger={
           <Button
             variant="outline"
-            className="w-full border-medical-600 text-medical-700 hover:bg-medical-50 text-base py-6"
+            className="border-medical-600 text-medical-700 hover:bg-medical-50"
             disabled={isDisabled}
           >
             {pending === "copy" ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
-              <Copy className="mr-2 h-4 w-4" />
+              <Copy className="h-4 w-4" />
             )}
             Copy Email to Clipboard
-            <ChevronDown className="ml-2 h-4 w-4" />
+            <ChevronDown className="h-4 w-4" />
           </Button>
         }
       />
@@ -146,19 +146,19 @@ export const ShareReportActions = ({
         trigger={
           <Button
             variant="outline"
-            className="w-full border-medical-600 text-medical-700 hover:bg-medical-50 text-base py-6"
+            className="border-medical-600 text-medical-700 hover:bg-medical-50"
             disabled={isDisabled}
           >
             {pending === "draft" ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
-              <Mail className="mr-2 h-4 w-4" />
+              <Mail className="h-4 w-4" />
             )}
             Draft Email
-            <ChevronDown className="ml-2 h-4 w-4" />
+            <ChevronDown className="h-4 w-4" />
           </Button>
         }
       />
-    </div>
+    </>
   );
 };
