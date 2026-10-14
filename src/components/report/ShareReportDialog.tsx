@@ -44,16 +44,12 @@ export const ShareReportDialog = ({
         <DialogHeader>
           <DialogTitle>Share Report</DialogTitle>
           <DialogDescription>
-            Choose a report format and generate a shareable link.
+            Generate a shareable link to the patient report.
           </DialogDescription>
         </DialogHeader>
 
         {!shareUrl && !isLoading && (
           <div className="flex flex-col gap-3">
-            <Button onClick={() => onShare("full")} className="w-full bg-medical-700 hover:bg-medical-800">
-              <Link className="mr-2 h-4 w-4" />
-              Share Full Report
-            </Button>
             <Button onClick={() => onShare("overview")} variant="outline" className="w-full border-medical-600 text-medical-700 hover:bg-medical-50">
               <Link className="mr-2 h-4 w-4" />
               Share Overview Report

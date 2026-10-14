@@ -7,16 +7,13 @@ import { PatientInfo, ReportItem, CategoryType } from "@/types";
 import { PatientInfoForm } from "@/components/report/PatientInfoForm";
 import { NotesField } from "@/components/report/NotesField";
 import { ReportItemsSelector } from "@/components/report/ReportItemsSelector";
-import { ReportPreview } from "@/components/report/ReportPreview";
 import { OverviewReport } from "@/components/report/OverviewReport";
 import { ReportSetting } from "@/services/reportSettingsService";
 import { PDFGenerationProgress } from "@/components/report/PDFGenerationProgress";
 import { ShareReportDialog } from "@/components/report/ShareReportDialog";
-import { PdfFormatDialog, PdfFormat } from "@/components/report/PdfFormatDialog";
 import { ShareReportFormat } from "@/utils/shareReport";
 import { RenderPdfProgress } from "@/utils/pdf";
 import { ShareReportActions } from "@/components/report/ShareReportActions";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Link } from "lucide-react";
 import { CarePlansPanel } from "@/components/report/CarePlansPanel";
 import { useCarePlans } from "@/hooks/useCarePlans";
@@ -95,11 +92,8 @@ export const ReportBuilder = ({
   uiLayout = "ui-workspace",
 }: ReportBuilderProps) => {
   const [showShareDialog, setShowShareDialog] = useState(false);
-  const [showPdfDialog, setShowPdfDialog] = useState(false);
-  const [activeReportTab, setActiveReportTab] = useState<"full" | "overview">("full");
   const [reportStyle, setReportStyle] = useState<ReportStyle>(DEFAULT_REPORT_STYLE);
   const [styleInitialized, setStyleInitialized] = useState(false);
-  const reportPreviewRef = useRef<HTMLDivElement>(null);
   const overviewReportRef = useRef<HTMLDivElement>(null);
 
   // Initialize the layout from the saved default
@@ -109,21 +103,6 @@ export const ReportBuilder = ({
     setReportStyle(isReportStyle(saved) ? saved : DEFAULT_REPORT_STYLE);
     setStyleInitialized(true);
   }, [settings, settingsLoading, styleInitialized]);
-
-  const handlePdfFormatSelect = (format: PdfFormat) => {
-    setShowPdfDialog(false);
-    const tabValue = format === "overview" ? "overview" : "full";
-    // Ensure the target tab is visible so html2canvas can measure it.
-    setActiveReportTab(tabValue);
-    // Wait two frames for Radix to unhide the TabsContent before capturing.
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        const target =
-          format === "overview" ? overviewReportRef.current : reportPreviewRef.current;
-        onGeneratePDF(target);
-      });
-    });
-  };
 
   // UI layout preview variants (client-side only)
   const isModular = uiLayout === "ui-modular";
@@ -206,10 +185,10 @@ export const ReportBuilder = ({
           ) : (
             <Button 
               className="w-full bg-medical-700 hover:bg-medical-800 text-lg py-6"
-              onClick={() => setShowPdfDialog(true)}
+              onClick={() => onGeneratePDF(overviewReportRef.current)}
               disabled={isGeneratingPDF || !patient.name || selectedItems.length === 0}
             >
-              Generate PDF Report
+              Download PDF
             </Button>
           )}
           
@@ -248,16 +227,7 @@ export const ReportBuilder = ({
         {isWorkspace && reportItemsSelector}
         
         
-        <Tabs
-          value={activeReportTab}
-          onValueChange={(v) => setActiveReportTab(v as "full" | "overview")}
-          className={isModular ? "" : "mt-6"}
-        >
-          <TabsList>
-            <TabsTrigger value="full">Full Report</TabsTrigger>
-            <TabsTrigger value="overview">Overview Report</TabsTrigger>
-          </TabsList>
-
+        <div className={isModular ? "" : "mt-6"}>
           <ReportStyleToggle
             value={reportStyle}
             onChange={setReportStyle}
@@ -265,23 +235,6 @@ export const ReportBuilder = ({
             onSaved={onSettingsUpdated}
           />
 
-          <TabsContent value="full" forceMount className="data-[state=inactive]:hidden">
-            <ReportPreview
-              ref={reportPreviewRef}
-              patient={patient}
-              items={items}
-              selectedItems={selectedItems}
-              additionalNotes={additionalNotes}
-              customTreatmentGoals={customTreatmentGoals}
-              estimatedCost={estimatedCost}
-              treatmentSchedule={treatmentSchedule}
-              subcategories={subcategories}
-              settings={settings}
-              settingsLoading={settingsLoading}
-              reportStyle={reportStyle}
-            />
-          </TabsContent>
-          <TabsContent value="overview" forceMount className="data-[state=inactive]:hidden">
             <OverviewReport
               ref={overviewReportRef}
               patient={patient}
@@ -296,8 +249,7 @@ export const ReportBuilder = ({
               settingsLoading={settingsLoading}
               reportStyle={reportStyle}
             />
-          </TabsContent>
-        </Tabs>
+        </div>
       </div>
 
 
@@ -311,11 +263,6 @@ export const ReportBuilder = ({
         onShare={(format) => onShareReport(format, reportStyle)}
       />
 
-      <PdfFormatDialog
-        open={showPdfDialog}
-        onOpenChange={setShowPdfDialog}
-        onSelect={handlePdfFormatSelect}
-      />
     </div>
     </>
   );

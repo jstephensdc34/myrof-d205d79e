@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { expandDescriptions, toggleDescription } from "./reportDisclosure";
+import { expandDescriptions, toggleDescription } from "../src/utils/reportDisclosure";
 
 describe("report description state", () => {
   it("starts collapsed and expands only the selected item", () => {

@@ -1,7 +1,6 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { PatientInfo, ReportItem } from "@/types";
 import { ReportSetting } from "@/services/reportSettingsService";
-import { ReportPreview } from "@/components/report/ReportPreview";
 import { OverviewReport } from "@/components/report/OverviewReport";
 import { ReportStyle, DEFAULT_REPORT_STYLE } from "@/components/report/reportStyleVariants";
 
@@ -104,7 +103,7 @@ export interface RenderReportParams {
   settings: ReportSetting[];
   subcategories: any[];
   reportStyle?: ReportStyle;
-  format: "full" | "overview";
+  format: "overview";
 }
 
 export const renderReportToHtml = (params: RenderReportParams): string => {
@@ -122,14 +121,9 @@ export const renderReportToHtml = (params: RenderReportParams): string => {
     printMode: true as const,
   };
 
-  const body =
-    params.format === "overview"
-      ? renderToStaticMarkup(
-          <OverviewReport {...shared} additionalNotes={params.notes} />
-        )
-      : renderToStaticMarkup(
-          <ReportPreview {...shared} additionalNotes={params.notes} />
-        );
+  const body = renderToStaticMarkup(
+    <OverviewReport {...shared} additionalNotes={params.notes} />
+  );
 
   const title = `Patient Report - ${params.patient.name || "Patient"}`;
 
@@ -138,7 +132,7 @@ export const renderReportToHtml = (params: RenderReportParams): string => {
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>${title}</title>
+<title>${title.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>${TW_CONFIG}</script>
 <style>${CSS_VARS}</style>

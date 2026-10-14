@@ -56,20 +56,15 @@ export const ShareReportActions = ({
       reportStyle,
     };
 
-    const [fullReportUrl, overviewReportUrl] = await Promise.all([
-      shareReport({ ...baseParams, format: "full" }),
-      shareReport({ ...baseParams, format: "overview" }),
-    ]);
+    const overviewReportUrl = await shareReport({ ...baseParams, format: "overview" });
 
     return composeReportEmail({
       patientName: patient.name,
       clinicName: getSetting("clinic_name", "Your Clinic"),
-      fullReportUrl,
       overviewReportUrl,
       templates: {
         subject: getSetting(EMAIL_TEMPLATE_SETTING_KEYS.subject),
         body: getSetting(EMAIL_TEMPLATE_SETTING_KEYS.body),
-        fullButtonLabel: getSetting(EMAIL_TEMPLATE_SETTING_KEYS.fullButton),
         overviewButtonLabel: getSetting(EMAIL_TEMPLATE_SETTING_KEYS.overviewButton),
       },
     });
