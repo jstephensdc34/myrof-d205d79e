@@ -52,6 +52,12 @@ html, body { margin: 0; padding: 0; background: #f3f4f6; font-family: ui-sans-se
 .printable-report-wrapper { padding: 24px 16px; }
 .printable-report-wrapper > div { background: #ffffff; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
 [hidden] { display: none !important; }
+[data-description] { line-height: 1.6; }
+[data-description] p { margin: 0 0 0.75em; }
+[data-description] ul, [data-description] ol { padding-left: 1.5em; margin: 0.75em 0; }
+[data-description] ul { list-style: disc; }
+[data-description] ol { list-style: decimal; }
+[data-description] li { margin: 0.4em 0; }
 @media print {
   body { background: #fff; }
   .printable-report-wrapper { padding: 0; }

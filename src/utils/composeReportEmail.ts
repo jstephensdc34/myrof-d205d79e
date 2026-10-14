@@ -1,7 +1,6 @@
 import {
   DEFAULT_EMAIL_BODY,
   DEFAULT_EMAIL_SUBJECT,
-  DEFAULT_FULL_BUTTON_LABEL,
   DEFAULT_OVERVIEW_BUTTON_LABEL,
   applyTokens,
 } from "./emailTemplateDefaults";
@@ -32,8 +31,6 @@ export const composeReportEmail = ({
   overviewReportUrl,
   templates,
 }: ComposeReportEmailParams): ComposedEmail => {
-  const fullButtonLabel =
-    (templates?.fullButtonLabel?.trim() || DEFAULT_FULL_BUTTON_LABEL);
   const overviewButtonLabel =
     (templates?.overviewButtonLabel?.trim() || DEFAULT_OVERVIEW_BUTTON_LABEL);
 
