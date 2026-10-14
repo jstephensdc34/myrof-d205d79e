@@ -8,7 +8,6 @@ import {
 export interface EmailTemplateOverrides {
   subject?: string;
   body?: string;
-  fullButtonLabel?: string;
   overviewButtonLabel?: string;
 }
 
