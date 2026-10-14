@@ -190,7 +190,14 @@ export const ReportBuilder = ({
           onChange={onNotesChange}
         />
         
-        <div className="space-y-3 mt-6">
+      </div>
+      
+      {/* Right Column - Report Items */}
+      <div className={rightColClass}>
+        {isWorkspace && reportItemsSelector}
+        
+        
+        <div className="space-y-3 mb-6">
           {isGeneratingPDF ? (
             <PDFGenerationProgress progress={pdfProgress} />
           ) : (
@@ -209,7 +216,7 @@ export const ReportBuilder = ({
               }
             />
           )}
-          
+
           <ShareReportActions
             patient={patient}
             items={items}
@@ -224,7 +231,6 @@ export const ReportBuilder = ({
             disabled={isGeneratingPDF || !patient.name || selectedItems.length === 0}
           />
 
-          
           <ExportStyleMenu
             currentStyle={reportStyle}
             disabled={exportDisabled}
@@ -246,14 +252,8 @@ export const ReportBuilder = ({
             }
           />
         </div>
-      </div>
-      
-      {/* Right Column - Report Items */}
-      <div className={rightColClass}>
-        {isWorkspace && reportItemsSelector}
-        
-        
         <div className={isModular ? "" : "mt-6"}>
+
           <ReportStyleToggle
             value={reportStyle}
             onChange={setReportStyle}
