@@ -119,30 +119,46 @@ export const ShareReportActions = ({
 
   return (
     <div className="flex flex-col gap-2">
-      <Button
-        variant="outline"
-        className="flex-1 border-medical-600 text-medical-700 hover:bg-medical-50 text-base py-6"
+      <ExportStyleMenu
+        currentStyle={reportStyle}
+        onSelect={handleCopy}
         disabled={isDisabled}
-      >
-        {pending === "copy" ? (
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-        ) : (
-          <Copy className="mr-2 h-4 w-4" />
-        )}
-        Copy Email to Clipboard
-      </Button>
-      <Button
-        variant="outline"
-        className="flex-1 border-medical-600 text-medical-700 hover:bg-medical-50 text-base py-6"
+        trigger={
+          <Button
+            variant="outline"
+            className="w-full border-medical-600 text-medical-700 hover:bg-medical-50 text-base py-6"
+            disabled={isDisabled}
+          >
+            {pending === "copy" ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <Copy className="mr-2 h-4 w-4" />
+            )}
+            Copy Email to Clipboard
+            <ChevronDown className="ml-2 h-4 w-4" />
+          </Button>
+        }
+      />
+      <ExportStyleMenu
+        currentStyle={reportStyle}
+        onSelect={handleDraft}
         disabled={isDisabled}
-      >
-        {pending === "draft" ? (
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-        ) : (
-          <Mail className="mr-2 h-4 w-4" />
-        )}
-        Draft Email
-      </Button>
+        trigger={
+          <Button
+            variant="outline"
+            className="w-full border-medical-600 text-medical-700 hover:bg-medical-50 text-base py-6"
+            disabled={isDisabled}
+          >
+            {pending === "draft" ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <Mail className="mr-2 h-4 w-4" />
+            )}
+            Draft Email
+            <ChevronDown className="ml-2 h-4 w-4" />
+          </Button>
+        }
+      />
     </div>
   );
 };
