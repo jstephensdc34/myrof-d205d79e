@@ -5,3 +5,4 @@
 
 ## Export actions
 - [x] Place export buttons directly above the Report Style bar in every layout.
+- [x] Lay the four export buttons side by side like the Report Style options.
