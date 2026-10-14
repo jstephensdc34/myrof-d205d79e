@@ -102,7 +102,7 @@ export const useReportGeneration = (
   };
 
   const handleShareReport = async (
-    format: ShareReportFormat = "full",
+    format: ShareReportFormat = "overview",
     reportStyle?: ReportStyle
   ) => {
     if (!patient.name) {

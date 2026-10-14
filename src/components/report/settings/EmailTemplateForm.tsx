@@ -96,7 +96,6 @@ export const EmailTemplateForm = ({
       const results = await Promise.all([
         upsertSettingByName(EMAIL_TEMPLATE_SETTING_KEYS.subject, form.subject),
         upsertSettingByName(EMAIL_TEMPLATE_SETTING_KEYS.body, form.body),
-        upsertSettingByName(EMAIL_TEMPLATE_SETTING_KEYS.fullButton, form.fullButton),
         upsertSettingByName(EMAIL_TEMPLATE_SETTING_KEYS.overviewButton, form.overviewButton),
       ]);
       results.forEach(onSettingUpdated);
@@ -147,15 +146,6 @@ export const EmailTemplateForm = ({
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <Label htmlFor="fullButton">"Full Report" button label</Label>
-            <Input
-              id="fullButton"
-              value={form.fullButton}
-              onChange={(e) => handleChange("fullButton", e.target.value)}
-              disabled={disabled}
-            />
-          </div>
           <div>
             <Label htmlFor="overviewButton">"Overview" button label</Label>
             <Input

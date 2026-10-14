@@ -5,6 +5,7 @@ import { ReportItem, TREATMENT_SUBCATEGORIES } from "@/types";
 import { ReportHeader } from "./ReportHeader";
 import { PatientInfoDisplay } from "./PatientInfoDisplay";
 import { InfoLink } from "./InfoLink";
+import { ReportDescription, ReportDisclosureProvider, ReportExpansionControls } from "./ReportDescription";
 import { PatientInfo } from "@/types";
 import { ReportSetting } from "@/services/reportSettingsService";
 import { getSectionIcon } from "@/utils/sectionIcons";
@@ -79,14 +80,18 @@ interface OverviewReportProps {
 }
 
 const OverviewCard = ({
+  itemId,
   name,
   definition,
+  description,
   infoLink,
   style,
   variant = "classic",
 }: {
+  itemId: string;
   name: string;
   definition?: string;
+  description?: string;
   infoLink?: string;
   style: typeof sectionStyles.diagnosis;
   variant?: ReportStyle;
@@ -97,7 +102,7 @@ const OverviewCard = ({
         <h4 className="text-sm font-semibold tracking-tight" style={{ color: DOSSIER_ACCENT }}>{name}</h4>
         {infoLink && <InfoLink link={infoLink} />}
       </div>
-      <p className="mt-1.5 text-sm text-foreground/80">{definition || "No definition provided."}</p>
+      <div className="mt-1.5"><ReportDescription itemId={itemId} definition={definition} description={description} /></div>
       {infoLink && (
         <a
           href={infoLink}
@@ -133,7 +138,7 @@ const OverviewCard = ({
       {infoLink && <InfoLink link={infoLink} />}
     </div>
     <div className="px-4 py-3 space-y-2">
-      <p className="text-sm text-foreground/80">{definition || "No definition provided."}</p>
+      <ReportDescription itemId={itemId} definition={definition} description={description} />
       {infoLink && (
         <a
           href={infoLink}
@@ -207,7 +212,7 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
   reportStyle = DEFAULT_REPORT_STYLE,
 }, ref) => {
   const overviewGridClass =
-    reportStyle === "dossier" ? "space-y-4" : "grid grid-cols-2 gap-3";
+    reportStyle === "dossier" ? "space-y-4" : "grid grid-cols-1 sm:grid-cols-2 gap-3";
 
   const getSelected = (categoryId: string, subcategoryFilter?: string[]) => {
     return items.filter((item) => {
@@ -311,7 +316,8 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
     !!additionalNotes;
 
   const innerContent = hasContent ? (
-    <div ref={ref} className="space-y-6 max-w-[210mm] mx-auto bg-white">
+    <div ref={ref} className="space-y-6 max-w-[210mm] mx-auto bg-white" data-report-document>
+      <ReportExpansionControls />
 
             {/* Cover Page */}
             {(() => {
@@ -380,7 +386,7 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
                     <SectionHeader label={sectionStyles.diagnosis.label} style={sectionStyles.diagnosis} variant={reportStyle} />
                     <div className={overviewGridClass}>
                       {diagnosisItems.map((item) => (
-                        <OverviewCard key={item.id} name={item.name} definition={item.definition} infoLink={item.infoLink} style={sectionStyles.diagnosis} variant={reportStyle} />
+                        <OverviewCard key={item.id} itemId={item.id} name={item.name} definition={item.definition} description={item.description} infoLink={item.infoLink} style={sectionStyles.diagnosis} variant={reportStyle} />
                       ))}
                     </div>
                   </div>
@@ -392,7 +398,7 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
                     <SectionHeader label={sectionStyles.extremity.label} style={sectionStyles.extremity} variant={reportStyle} />
                     <div className={overviewGridClass}>
                       {extremityItems.map((item) => (
-                        <OverviewCard key={item.id} name={item.name} definition={item.definition} infoLink={item.infoLink} style={sectionStyles.extremity} variant={reportStyle} />
+                        <OverviewCard key={item.id} itemId={item.id} name={item.name} definition={item.definition} description={item.description} infoLink={item.infoLink} style={sectionStyles.extremity} variant={reportStyle} />
                       ))}
                     </div>
                   </div>
@@ -404,7 +410,7 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
                     <SectionHeader label={sectionStyles.treatment.label} style={sectionStyles.treatment} variant={reportStyle} />
                     <div className={overviewGridClass}>
                       {treatmentModalityItems.map((item) => (
-                        <OverviewCard key={item.id} name={item.name} definition={item.definition} infoLink={item.infoLink} style={sectionStyles.treatment} variant={reportStyle} />
+                        <OverviewCard key={item.id} itemId={item.id} name={item.name} definition={item.definition} description={item.description} infoLink={item.infoLink} style={sectionStyles.treatment} variant={reportStyle} />
                       ))}
                     </div>
                   </div>
@@ -417,7 +423,7 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
                     <div className={overviewGridClass}>
                       {/* Treatment Frequency & Duration card - spans full width */}
                       {treatmentSchedule && (
-                        <div className={`col-span-2 rounded-lg border ${sectionStyles.carePlan.border} ${sectionStyles.carePlan.bg} overflow-hidden shadow-sm`}>
+                        <div className={`sm:col-span-2 rounded-lg border ${sectionStyles.carePlan.border} ${sectionStyles.carePlan.bg} overflow-hidden shadow-sm`}>
                           <div className={`px-4 py-2 ${sectionStyles.carePlan.headerBg}`}>
                             <h4 className={`font-semibold text-sm ${sectionStyles.carePlan.headerText}`}>Treatment Frequency & Duration</h4>
                           </div>
@@ -429,12 +435,12 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
 
                       {/* Care Plan Type cards */}
                       {carePlanItems.map((item) => (
-                        <OverviewCard key={item.id} name={item.name} definition={item.definition} infoLink={item.infoLink} style={sectionStyles.carePlan} variant={reportStyle} />
+                        <OverviewCard key={item.id} itemId={item.id} name={item.name} definition={item.definition} description={item.description} infoLink={item.infoLink} style={sectionStyles.carePlan} variant={reportStyle} />
                       ))}
 
                       {/* Phase of Care cards */}
                       {phaseOfCareItems.map((item) => (
-                        <OverviewCard key={item.id} name={item.name} definition={item.definition} infoLink={item.infoLink} style={sectionStyles.carePlan} variant={reportStyle} />
+                        <OverviewCard key={item.id} itemId={item.id} name={item.name} definition={item.definition} description={item.description} infoLink={item.infoLink} style={sectionStyles.carePlan} variant={reportStyle} />
                       ))}
 
                       {/* Treatment Goals as bullet list card */}
@@ -446,7 +452,10 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
                           <div className="px-4 py-3">
                             <ul className="list-disc list-inside space-y-1 text-sm text-foreground/80">
                               {treatmentGoalItems.map((item) => (
-                                <li key={item.id}>{item.name}</li>
+                                <li key={item.id} className="space-y-1">
+                                  <span className="font-semibold">{item.name}</span>
+                                  <ReportDescription itemId={item.id} definition={item.definition} description={item.description} />
+                                </li>
                               ))}
                               {customTreatmentGoals && <li>{customTreatmentGoals}</li>}
                             </ul>
@@ -457,7 +466,7 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
 
                       {/* Estimated Cost card - spans full width */}
                       {estimatedCost && (
-                        <div className={`col-span-2 rounded-lg border ${sectionStyles.carePlan.border} ${sectionStyles.carePlan.bg} overflow-hidden shadow-sm`}>
+                        <div className={`sm:col-span-2 rounded-lg border ${sectionStyles.carePlan.border} ${sectionStyles.carePlan.bg} overflow-hidden shadow-sm`}>
                           <div className={`px-4 py-2 ${sectionStyles.carePlan.headerBg}`}>
                             <h4 className={`font-semibold text-sm ${sectionStyles.carePlan.headerText}`}>Estimated Cost</h4>
                           </div>
@@ -479,7 +488,7 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
                     <SectionHeader label={sectionStyles.homecare.label} style={sectionStyles.homecare} variant={reportStyle} />
                     <div className={overviewGridClass}>
                       {homecareItems.map((item) => (
-                        <OverviewCard key={item.id} name={item.name} definition={item.definition} infoLink={item.infoLink} style={sectionStyles.homecare} variant={reportStyle} />
+                        <OverviewCard key={item.id} itemId={item.id} name={item.name} definition={item.definition} description={item.description} infoLink={item.infoLink} style={sectionStyles.homecare} variant={reportStyle} />
                       ))}
                     </div>
                   </div>
@@ -491,7 +500,7 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
                     <SectionHeader label={sectionStyles.exercises.label} style={sectionStyles.exercises} variant={reportStyle} />
                     <div className={overviewGridClass}>
                       {exerciseItems.map((item) => (
-                        <OverviewCard key={item.id} name={item.name} definition={item.definition} infoLink={item.infoLink} style={sectionStyles.exercises} variant={reportStyle} />
+                        <OverviewCard key={item.id} itemId={item.id} name={item.name} definition={item.definition} description={item.description} infoLink={item.infoLink} style={sectionStyles.exercises} variant={reportStyle} />
                       ))}
                     </div>
                   </div>
@@ -522,10 +531,11 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
   );
 
   if (printMode) {
-    return innerContent;
+    return <ReportDisclosureProvider items={items.filter((item) => selectedItems.includes(item.id))}>{innerContent}</ReportDisclosureProvider>;
   }
 
   return (
+    <ReportDisclosureProvider items={items.filter((item) => selectedItems.includes(item.id))}>
     <Card className="mt-6">
       <CardHeader className="bg-muted border-b">
         <CardTitle className="text-foreground text-lg">Overview Report Preview</CardTitle>
@@ -534,6 +544,7 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
         {innerContent}
       </CardContent>
     </Card>
+    </ReportDisclosureProvider>
   );
 });
 

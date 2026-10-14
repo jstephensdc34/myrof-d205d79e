@@ -4,7 +4,7 @@ import { ReportSetting } from "@/services/reportSettingsService";
 import { renderReportToHtml } from "./renderReportToHtml";
 import { ReportStyle } from "@/components/report/reportStyleVariants";
 
-export type ShareReportFormat = "full" | "overview";
+export type ShareReportFormat = "overview";
 
 interface ShareReportParams {
   patient: PatientInfo;
@@ -20,7 +20,7 @@ interface ShareReportParams {
 }
 
 export const shareReport = async (params: ShareReportParams): Promise<string> => {
-  const format: ShareReportFormat = params.format ?? "full";
+  const format: ShareReportFormat = params.format ?? "overview";
   const html = renderReportToHtml({ ...params, format });
 
   const timestamp = Date.now();
