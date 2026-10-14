@@ -14,7 +14,8 @@ import { ShareReportDialog } from "@/components/report/ShareReportDialog";
 import { ShareReportFormat } from "@/utils/shareReport";
 import { RenderPdfProgress } from "@/utils/pdf";
 import { ShareReportActions } from "@/components/report/ShareReportActions";
-import { Link } from "lucide-react";
+import { Link, ChevronDown } from "lucide-react";
+import { ExportStyleMenu } from "@/components/report/ExportStyleMenu";
 import { CarePlansPanel } from "@/components/report/CarePlansPanel";
 import { useCarePlans } from "@/hooks/useCarePlans";
 import { ReportStyleToggle } from "@/components/report/ReportStyleToggle";
@@ -95,6 +96,16 @@ export const ReportBuilder = ({
   const [reportStyle, setReportStyle] = useState<ReportStyle>(DEFAULT_REPORT_STYLE);
   const [styleInitialized, setStyleInitialized] = useState(false);
   const overviewReportRef = useRef<HTMLDivElement>(null);
+  const [shareStyle, setShareStyle] = useState<ReportStyle>(DEFAULT_REPORT_STYLE);
+  const exportDisabled = isGeneratingPDF || !patient.name || selectedItems.length === 0;
+
+  // PDF snapshots the preview, so switch the preview to the chosen style first.
+  const handlePdfWithStyle = (style: ReportStyle) => {
+    setReportStyle(style);
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => setTimeout(() => onGeneratePDF(overviewReportRef.current), 50))
+    );
+  };
 
   // Initialize the layout from the saved default
   useEffect(() => {
@@ -183,13 +194,20 @@ export const ReportBuilder = ({
           {isGeneratingPDF ? (
             <PDFGenerationProgress progress={pdfProgress} />
           ) : (
-            <Button 
-              className="w-full bg-medical-700 hover:bg-medical-800 text-lg py-6"
-              onClick={() => onGeneratePDF(overviewReportRef.current)}
-              disabled={isGeneratingPDF || !patient.name || selectedItems.length === 0}
-            >
-              Download PDF
-            </Button>
+            <ExportStyleMenu
+              currentStyle={reportStyle}
+              onSelect={handlePdfWithStyle}
+              disabled={exportDisabled}
+              trigger={
+                <Button
+                  className="w-full bg-medical-700 hover:bg-medical-800 text-lg py-6"
+                  disabled={exportDisabled}
+                >
+                  Download PDF
+                  <ChevronDown className="ml-2 h-4 w-4" />
+                </Button>
+              }
+            />
           )}
           
           <ShareReportActions
@@ -207,18 +225,26 @@ export const ReportBuilder = ({
           />
 
           
-          <Button 
-            variant="outline"
-            className="w-full border-medical-600 text-medical-700 hover:bg-medical-50 text-lg py-6"
-            onClick={() => {
+          <ExportStyleMenu
+            currentStyle={reportStyle}
+            disabled={exportDisabled}
+            onSelect={(style) => {
+              setShareStyle(style);
               onShareUrlChange(null);
               setShowShareDialog(true);
             }}
-            disabled={isGeneratingPDF || !patient.name || selectedItems.length === 0}
-          >
-            <Link className="mr-2 h-4 w-4" />
-            Share Report Link
-          </Button>
+            trigger={
+              <Button
+                variant="outline"
+                className="w-full border-medical-600 text-medical-700 hover:bg-medical-50 text-lg py-6"
+                disabled={exportDisabled}
+              >
+                <Link className="mr-2 h-4 w-4" />
+                Share Report Link
+                <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            }
+          />
         </div>
       </div>
       
@@ -260,7 +286,7 @@ export const ReportBuilder = ({
         onOpenChange={setShowShareDialog}
         shareUrl={shareUrl}
         isLoading={isSharing}
-        onShare={(format) => onShareReport(format, reportStyle)}
+        onShare={(format) => onShareReport(format, shareStyle)}
       />
 
     </div>

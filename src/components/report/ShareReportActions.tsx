@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Copy, Mail, Loader2 } from "lucide-react";
+import { Copy, Mail, Loader2, ChevronDown } from "lucide-react";
+import { ExportStyleMenu } from "@/components/report/ExportStyleMenu";
 import { toast } from "sonner";
 import { PatientInfo, ReportItem, Subcategory, ReportSetting } from "@/types";
 import { shareReport } from "@/utils/shareReport";
@@ -39,7 +40,7 @@ export const ShareReportActions = ({
 }: ShareReportActionsProps) => {
   const [pending, setPending] = useState<PendingAction>(null);
 
-  const buildEmail = async () => {
+  const buildEmail = async (chosenStyle: ReportStyle) => {
     const selectedItemsData = items.filter((item) => selectedItems.includes(item.id));
     const getSetting = (n: string, f = "") =>
       settings.find((s) => s.name === n)?.value || f;
@@ -53,7 +54,7 @@ export const ShareReportActions = ({
       treatmentSchedule,
       settings,
       subcategories,
-      reportStyle,
+      reportStyle: chosenStyle,
     };
 
     const overviewReportUrl = await shareReport({ ...baseParams, format: "overview" });
@@ -70,10 +71,10 @@ export const ShareReportActions = ({
     });
   };
 
-  const handleCopy = async () => {
+  const handleCopy = async (style: ReportStyle) => {
     setPending("copy");
     try {
-      const { subject, body, html } = await buildEmail();
+      const { subject, body, html } = await buildEmail(style);
       const text = `Subject: ${subject}\n\n${body}`;
       const richHtml = `<p><strong>Subject:</strong> ${subject}</p>${html}`;
 
@@ -101,10 +102,10 @@ export const ShareReportActions = ({
     }
   };
 
-  const handleDraft = async () => {
+  const handleDraft = async (style: ReportStyle) => {
     setPending("draft");
     try {
-      const composed = await buildEmail();
+      const composed = await buildEmail(style);
       window.location.href = buildMailtoUrl(composed);
     } catch (err) {
       console.error(err);
@@ -121,7 +122,6 @@ export const ShareReportActions = ({
       <Button
         variant="outline"
         className="flex-1 border-medical-600 text-medical-700 hover:bg-medical-50 text-base py-6"
-        onClick={handleCopy}
         disabled={isDisabled}
       >
         {pending === "copy" ? (
@@ -134,7 +134,6 @@ export const ShareReportActions = ({
       <Button
         variant="outline"
         className="flex-1 border-medical-600 text-medical-700 hover:bg-medical-50 text-base py-6"
-        onClick={handleDraft}
         disabled={isDisabled}
       >
         {pending === "draft" ? (
