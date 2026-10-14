@@ -51,10 +51,12 @@ const CSS_VARS = `
 html, body { margin: 0; padding: 0; background: #f3f4f6; font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: hsl(var(--foreground)); }
 .printable-report-wrapper { padding: 24px 16px; }
 .printable-report-wrapper > div { background: #ffffff; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+[hidden] { display: none !important; }
 @media print {
   body { background: #fff; }
   .printable-report-wrapper { padding: 0; }
   .printable-report-wrapper > div { box-shadow: none; }
+  [data-report-controls], [data-description-toggle] { display: none !important; }
 }
 `;
 
@@ -139,6 +141,37 @@ export const renderReportToHtml = (params: RenderReportParams): string => {
 </head>
 <body>
 <div class="printable-report-wrapper">${body}</div>
+<script>
+(() => {
+  const setExpanded = (button, expanded) => {
+    const content = document.getElementById(button.getAttribute('aria-controls'));
+    if (!content) return;
+    content.hidden = !expanded;
+    button.setAttribute('aria-expanded', String(expanded));
+    button.querySelector('[data-disclosure-label]').textContent = expanded ? 'Show Less' : 'Read More';
+    button.querySelector('[data-chevron-down]').classList.toggle('hidden', expanded);
+    button.querySelector('[data-chevron-up]').classList.toggle('hidden', !expanded);
+  };
+  const updateAll = () => {
+    const buttons = [...document.querySelectorAll('[data-description-toggle]')];
+    const allExpanded = buttons.length > 0 && buttons.every(button => button.getAttribute('aria-expanded') === 'true');
+    document.querySelectorAll('[data-expand-all]').forEach(button => {
+      button.setAttribute('aria-expanded', String(allExpanded));
+      button.querySelector('[data-expand-label]').textContent = allExpanded ? 'Collapse All' : 'Expand All';
+      button.querySelector('[data-expand-down]').classList.toggle('hidden', allExpanded);
+      button.querySelector('[data-expand-up]').classList.toggle('hidden', !allExpanded);
+    });
+  };
+  document.addEventListener('click', event => {
+    if (!(event.target instanceof Element)) return;
+    const itemButton = event.target.closest('[data-description-toggle]');
+    const allButton = event.target.closest('[data-expand-all]');
+    if (itemButton) setExpanded(itemButton, itemButton.getAttribute('aria-expanded') !== 'true');
+    if (allButton) document.querySelectorAll('[data-description-toggle]').forEach(button => setExpanded(button, allButton.getAttribute('aria-expanded') !== 'true'));
+    updateAll();
+  });
+})();
+</script>
 </body>
 </html>`;
 };

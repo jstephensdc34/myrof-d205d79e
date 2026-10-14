@@ -16,7 +16,6 @@ export interface EmailTemplateOverrides {
 export interface ComposeReportEmailParams {
   patientName: string;
   clinicName: string;
-  fullReportUrl: string;
   overviewReportUrl: string;
   templates?: EmailTemplateOverrides;
 }
@@ -30,7 +29,6 @@ export interface ComposedEmail {
 export const composeReportEmail = ({
   patientName,
   clinicName,
-  fullReportUrl,
   overviewReportUrl,
   templates,
 }: ComposeReportEmailParams): ComposedEmail => {
@@ -42,18 +40,24 @@ export const composeReportEmail = ({
   const vars: Record<string, string> = {
     patient_name: patientName || "",
     clinic_name: clinicName || "",
-    full_report_url: fullReportUrl,
+    full_report_url: overviewReportUrl,
     overview_report_url: overviewReportUrl,
-    full_button_label: fullButtonLabel,
+    full_button_label: overviewButtonLabel,
     overview_button_label: overviewButtonLabel,
   };
 
   const subjectTemplate = templates?.subject?.trim()
     ? templates.subject
     : DEFAULT_EMAIL_SUBJECT;
-  const bodyTemplate = templates?.body?.trim()
+  const rawBodyTemplate = templates?.body?.trim()
     ? templates.body
     : DEFAULT_EMAIL_BODY;
+  // Older saved templates contain both links. Keep one Overview link without
+  // requiring a settings migration or changing the user's other paragraphs.
+  const hasOverviewToken = rawBodyTemplate.includes("overview_report_url");
+  const bodyTemplate = rawBodyTemplate.split("\n")
+    .filter((line) => !(hasOverviewToken && line.includes("full_report_url")))
+    .join("\n");
 
   const subject = applyTokens(subjectTemplate, vars).trim();
   const body = applyTokens(bodyTemplate, vars);
@@ -82,13 +86,9 @@ export const composeReportEmail = ({
       flush();
       continue;
     }
-    if (line.includes(fullReportUrl) || line.includes(overviewReportUrl)) {
+    if (line.includes(overviewReportUrl)) {
       flush();
-      const isFull = line.includes(fullReportUrl);
-      const url = isFull ? fullReportUrl : overviewReportUrl;
-      const label = isFull ? fullButtonLabel : overviewButtonLabel;
-      const color = isFull ? "#096dd9" : "#059669";
-      paragraphs.push(`<p>${button(url, label, color)}</p>`);
+      paragraphs.push(`<p>${button(overviewReportUrl, escape(overviewButtonLabel), "#059669")}</p>`);
       continue;
     }
     buffer.push(escape(line));
