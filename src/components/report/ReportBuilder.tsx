@@ -213,7 +213,7 @@ export const ReportBuilder = ({
                   disabled={exportDisabled}
                 >
                   Download PDF
-                  <ChevronDown className="ml-2 h-4 w-4" />
+                  <ChevronDown className="h-4 w-4" />
                 </Button>
               }
             />
@@ -247,9 +247,9 @@ export const ReportBuilder = ({
                 className="border-medical-600 text-medical-700 hover:bg-medical-50"
                 disabled={exportDisabled}
               >
-                <Link className="mr-2 h-4 w-4" />
+                <Link className="h-4 w-4" />
                 Share Report Link
-                <ChevronDown className="ml-2 h-4 w-4" />
+                <ChevronDown className="h-4 w-4" />
               </Button>
             }
           />

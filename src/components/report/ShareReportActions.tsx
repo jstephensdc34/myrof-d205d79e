@@ -130,12 +130,12 @@ export const ShareReportActions = ({
             disabled={isDisabled}
           >
             {pending === "copy" ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
-              <Copy className="mr-2 h-4 w-4" />
+              <Copy className="h-4 w-4" />
             )}
             Copy Email to Clipboard
-            <ChevronDown className="ml-2 h-4 w-4" />
+            <ChevronDown className="h-4 w-4" />
           </Button>
         }
       />
@@ -150,12 +150,12 @@ export const ShareReportActions = ({
             disabled={isDisabled}
           >
             {pending === "draft" ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
-              <Mail className="mr-2 h-4 w-4" />
+              <Mail className="h-4 w-4" />
             )}
             Draft Email
-            <ChevronDown className="ml-2 h-4 w-4" />
+            <ChevronDown className="h-4 w-4" />
           </Button>
         }
       />
