@@ -197,9 +197,11 @@ export const ReportBuilder = ({
         {isWorkspace && reportItemsSelector}
         
         
-        <div className="space-y-3 mb-6">
+        <div className="mb-6 flex flex-wrap items-center gap-2">
           {isGeneratingPDF ? (
-            <PDFGenerationProgress progress={pdfProgress} />
+            <div className="w-full">
+              <PDFGenerationProgress progress={pdfProgress} />
+            </div>
           ) : (
             <ExportStyleMenu
               currentStyle={reportStyle}
@@ -207,7 +209,7 @@ export const ReportBuilder = ({
               disabled={exportDisabled}
               trigger={
                 <Button
-                  className="w-full bg-medical-700 hover:bg-medical-800 text-lg py-6"
+                  className="bg-medical-700 hover:bg-medical-800"
                   disabled={exportDisabled}
                 >
                   Download PDF
@@ -242,7 +244,7 @@ export const ReportBuilder = ({
             trigger={
               <Button
                 variant="outline"
-                className="w-full border-medical-600 text-medical-700 hover:bg-medical-50 text-lg py-6"
+                className="border-medical-600 text-medical-700 hover:bg-medical-50"
                 disabled={exportDisabled}
               >
                 <Link className="mr-2 h-4 w-4" />

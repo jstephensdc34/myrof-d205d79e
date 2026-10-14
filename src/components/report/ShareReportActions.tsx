@@ -118,7 +118,7 @@ export const ShareReportActions = ({
   const isDisabled = disabled || pending !== null;
 
   return (
-    <div className="flex flex-col gap-2">
+    <>
       <ExportStyleMenu
         currentStyle={reportStyle}
         onSelect={handleCopy}
@@ -126,7 +126,7 @@ export const ShareReportActions = ({
         trigger={
           <Button
             variant="outline"
-            className="w-full border-medical-600 text-medical-700 hover:bg-medical-50 text-base py-6"
+            className="border-medical-600 text-medical-700 hover:bg-medical-50"
             disabled={isDisabled}
           >
             {pending === "copy" ? (
@@ -146,7 +146,7 @@ export const ShareReportActions = ({
         trigger={
           <Button
             variant="outline"
-            className="w-full border-medical-600 text-medical-700 hover:bg-medical-50 text-base py-6"
+            className="border-medical-600 text-medical-700 hover:bg-medical-50"
             disabled={isDisabled}
           >
             {pending === "draft" ? (
@@ -159,6 +159,6 @@ export const ShareReportActions = ({
           </Button>
         }
       />
-    </div>
+    </>
   );
 };
