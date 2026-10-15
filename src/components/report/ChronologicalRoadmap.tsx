@@ -40,7 +40,11 @@ const Divider = () => <div className="roadmap-divider" aria-hidden="true"><Arrow
 export const ChronologicalRoadmap = ({ patient, items, settings, treatmentSchedule, customTreatmentGoals, estimatedCost, additionalNotes }: RoadmapProps) => {
   const getSetting = (name: string, fallback = "") => settings.find((setting) => setting.name === name)?.value || fallback;
   const clinicName = getSetting("clinic_name", "Your Clinic Name");
-  const groups = (section: RoadmapSection) => items.filter((item) => getRoadmapSection(item) === section);
+  const planOrder = ["care_plan_type", "phase_of_care", "treatment_goals"];
+  const groups = (section: RoadmapSection) => items.filter((item) => getRoadmapSection(item) === section)
+    .sort((a, b) => section === "plan"
+      ? (planOrder.indexOf(a.subcategoryId || "") + 1 || 4) - (planOrder.indexOf(b.subcategoryId || "") + 1 || 4)
+      : 0);
   const hasProblem = groups("problem").length > 0;
   const hasPlan = groups("plan").length > 0 || !!treatmentSchedule || !!customTreatmentGoals || !!estimatedCost;
   const hasClinic = groups("clinic").length > 0;
