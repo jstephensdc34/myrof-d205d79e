@@ -71,7 +71,7 @@ export const ChronologicalRoadmap = ({ patient, items, settings, treatmentSchedu
   );
 
   return <>
-    <style>{ROADMAP_CSS}</style>
+    <style dangerouslySetInnerHTML={{ __html: ROADMAP_CSS }} />
     <div className="roadmap-document">
       <header className="roadmap-header">
         <Map className="pointer-events-none absolute -right-8 -top-8 h-64 w-64 opacity-10" aria-hidden="true" />
