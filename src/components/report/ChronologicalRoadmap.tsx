@@ -1,4 +1,4 @@
-import { ArrowDownCircle, Calendar, Map, PlayCircle, User } from "lucide-react";
+import { ArrowDownCircle, Calendar, Map, PlayCircle, Target, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { PatientInfo, ReportItem } from "@/types";
 import type { ReportSetting } from "@/services/reportSettingsService";
@@ -45,6 +45,8 @@ export const ChronologicalRoadmap = ({ patient, items, settings, treatmentSchedu
     .sort((a, b) => section === "plan"
       ? (planOrder.indexOf(a.subcategoryId || "") + 1 || 4) - (planOrder.indexOf(b.subcategoryId || "") + 1 || 4)
       : 0);
+  const goalItems = groups("plan").filter((item) => item.subcategoryId === "treatment_goals");
+  const hasGoals = goalItems.length > 0 || !!customTreatmentGoals;
   const hasProblem = groups("problem").length > 0;
   const hasPlan = groups("plan").length > 0 || !!treatmentSchedule || !!customTreatmentGoals || !!estimatedCost;
   const hasClinic = groups("clinic").length > 0;
@@ -60,12 +62,21 @@ export const ChronologicalRoadmap = ({ patient, items, settings, treatmentSchedu
         <p className="text-xl font-bold text-treatment">{treatmentSchedule}</p>
       </article>}
       <div className={`roadmap-grid ${gridClass}`}>
-        {groups(section).map((item) => <RoadmapCard key={item.id} item={item} />)}
-        {section === "plan" && customTreatmentGoals && <article className="roadmap-card">
-          <div className="roadmap-card-top"><h3>Additional Treatment Goals</h3></div>
-          <ul className="list-disc pl-5 text-sm font-bold"><li className="whitespace-pre-wrap">{customTreatmentGoals}</li></ul>
-        </article>}
+        {groups(section).filter((item) => section !== "plan" || item.subcategoryId !== "treatment_goals").map((item) => <RoadmapCard key={item.id} item={item} />)}
       </div>
+      {section === "plan" && hasGoals && <div className="roadmap-goals">
+        <div className="roadmap-subheading">
+          <span className="roadmap-subheading-icon"><Target className="h-4 w-4" aria-hidden="true" /></span>
+          <h3>Treatment Goals</h3>
+        </div>
+        <div className="roadmap-grid roadmap-goal-grid">
+          {goalItems.map((item) => <RoadmapCard key={item.id} item={item} />)}
+          {customTreatmentGoals && <article className="roadmap-card">
+            <div className="roadmap-card-top"><h3>Additional Treatment Goals</h3></div>
+            <ul className="list-disc pl-5 text-sm font-bold"><li className="whitespace-pre-wrap">{customTreatmentGoals}</li></ul>
+          </article>}
+        </div>
+      </div>}
       {section === "plan" && estimatedCost && <article className="roadmap-card mt-6">
         <div className="roadmap-card-top"><h3>Estimated Cost</h3></div>
         <p className="text-xl font-bold text-treatment">{estimatedCost}</p>
