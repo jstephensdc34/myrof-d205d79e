@@ -61,8 +61,16 @@ export const composeReportEmail = ({
   const escape = (s: string) =>
     s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
+  // Outlook desktop (Word rendering engine) ignores CSS backgrounds on <a>
+  // tags, which left white text on a white background. Wrapping the link in a
+  // table cell with a bgcolor attribute makes the button render in Outlook,
+  // while Gmail and other clients keep the styled anchor.
   const button = (href: string, label: string, bg: string) => `
-    <a href="${escape(href)}" style="display:inline-block;background:${bg};color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:6px;font-weight:600;font-family:Arial,Helvetica,sans-serif;font-size:14px;margin:4px 8px 4px 0;">${label}</a>`;
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="display:inline-block;margin:4px 8px 4px 0;">
+      <tr><td align="center" bgcolor="${bg}" style="border-radius:6px;background:${bg};">
+        <a href="${escape(href)}" target="_blank" style="display:inline-block;color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:6px;font-weight:600;font-family:Arial,Helvetica,sans-serif;font-size:14px;">${label}</a>
+      </td></tr>
+    </table>`;
 
   // Build HTML from the (token-resolved) plain-text body so customization
   // flows through. Lines containing the report URLs become styled buttons.
