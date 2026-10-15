@@ -29,7 +29,7 @@ export const ExternalIcon = () => (
   </svg>
 );
 
-export const ReportItem = ({ item, style, variant = "classic" }: ReportItemProps) => {
+export const ReportItem = ({ item, style, variant = "dashboard" }: ReportItemProps) => {
   const body = (
     <>
       {item.definition && (
