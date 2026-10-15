@@ -30,7 +30,7 @@ const RoadmapCard = ({ item }: { item: ReportItem }) => (
     </div>
     <ReportDescription itemId={item.id} definition={item.definition} description={item.description} />
     {item.infoLink && <Button asChild variant="ghost" className="roadmap-demo">
-      <a href={item.infoLink} target="_blank" rel="noopener noreferrer"><PlayCircle className="h-4 w-4" />Watch Demo</a>
+      <a href={item.infoLink} target="_blank" rel="noopener noreferrer"><PlayCircle className="h-4 w-4" />Learn More</a>
     </Button>}
   </article>
 );
