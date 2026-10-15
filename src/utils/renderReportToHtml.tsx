@@ -59,7 +59,7 @@ const CSS_VARS = `
   --roadmap-plan-bg: 166 76% 99%;
   --roadmap-home-border: 34 100% 92%;
   --roadmap-home-bg: 33 100% 99%;
-  --roadmap-gold: 40 92% 32%;
+  --roadmap-gold: 40 92% 28%;
   --roadmap-goal-border: 42 96% 82%;
   --roadmap-goal-bg: 48 100% 96%;
   --roadmap-footer: 210 33% 98%;
