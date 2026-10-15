@@ -10,3 +10,12 @@ it("sends only the Overview URL when an older saved template has both versions",
   expect(result.html.match(/href="https:\/\/example.com\/overview"/g)?.length).toBe(1);
   expect(result.body.includes("Full Report")).toBe(false);
 });
+
+it("renders the report button as a table with bgcolor so Outlook shows it", () => {
+  const result = composeReportEmail({
+    patientName: "Test", clinicName: "Clinic", overviewReportUrl: "https://example.com/overview",
+  });
+  expect(result.html.includes('bgcolor="#059669"')).toBe(true);
+  expect(result.html.includes("<table")).toBe(true);
+  expect(result.html.match(/href="https:\/\/example.com\/overview"/g)?.length).toBe(1);
+});
