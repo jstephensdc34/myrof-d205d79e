@@ -76,7 +76,7 @@ export const ChronologicalRoadmap = ({ patient, items, settings, treatmentSchedu
       <header className="roadmap-header">
         <Map className="pointer-events-none absolute -right-8 -top-8 h-64 w-64 opacity-10" aria-hidden="true" />
         <div className="roadmap-header-layout">
-          <div className="min-w-0 flex-1">
+          <div className="min-w-0 w-full">
             <span className="roadmap-eyebrow">Your Personal Recovery Roadmap</span>
             <h1 className="mb-3 text-3xl font-black break-words">Clinical Report of Findings</h1>
             <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">

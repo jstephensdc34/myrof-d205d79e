@@ -8,5 +8,5 @@
 - [x] Lay the four export buttons side by side like the Report Style options.
 
 ## Chronological Roadmap
-- [ ] Add the uploaded roadmap style and uniform cards with the requested section mapping.
-- [ ] Verify expansion, saved default and style choices across preview and exports without schema changes.
+- [x] Add the uploaded roadmap style and uniform cards with the requested section mapping.
+- [x] Verify expansion, saved default and style choices across preview and exports without schema changes.
