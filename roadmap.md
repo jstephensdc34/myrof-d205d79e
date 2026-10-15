@@ -11,3 +11,4 @@
 - [x] Add the uploaded roadmap style and uniform cards with the requested section mapping.
 - [x] Verify expansion, saved default and style choices across preview and exports without schema changes.
 - [x] Separate treatment goals inside The Plan with a subheading and its own card colour, verified in preview and the shared link.
+- [x] Stack The Problem diagnosis cards full width, one per row, verified in preview.
