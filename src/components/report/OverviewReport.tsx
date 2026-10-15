@@ -6,6 +6,7 @@ import { ReportHeader } from "./ReportHeader";
 import { PatientInfoDisplay } from "./PatientInfoDisplay";
 import { InfoLink } from "./InfoLink";
 import { ReportDescription, ReportDisclosureProvider, ReportExpansionControls } from "./ReportDescription";
+import { ChronologicalRoadmap } from "./ChronologicalRoadmap";
 import { PatientInfo } from "@/types";
 import { ReportSetting } from "@/services/reportSettingsService";
 import { getSectionIcon } from "@/utils/sectionIcons";
@@ -315,7 +316,14 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
     exerciseItems.length > 0 ||
     !!additionalNotes;
 
-  const innerContent = hasContent ? (
+  const innerContent = hasContent && reportStyle === "roadmap" ? (
+    <div ref={ref} className="max-w-[210mm] mx-auto space-y-4" data-report-document>
+      <ReportExpansionControls />
+      <ChronologicalRoadmap patient={patient} items={items.filter((item) => selectedItems.includes(item.id))}
+        settings={settings} treatmentSchedule={treatmentSchedule} customTreatmentGoals={customTreatmentGoals}
+        estimatedCost={estimatedCost} additionalNotes={additionalNotes} />
+    </div>
+  ) : hasContent ? (
     <div ref={ref} className="space-y-6 max-w-[210mm] mx-auto bg-white" data-report-document>
       <ReportExpansionControls />
 
