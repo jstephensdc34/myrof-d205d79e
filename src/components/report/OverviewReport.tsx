@@ -87,7 +87,7 @@ const OverviewCard = ({
   description,
   infoLink,
   style,
-  variant = "classic",
+  variant = "dashboard",
 }: {
   itemId: string;
   name: string;
@@ -173,7 +173,7 @@ const OverviewCard = ({
 const SectionHeader = ({
   label,
   style,
-  variant = "classic",
+  variant = "dashboard",
 }: {
   label: string;
   style: typeof sectionStyles.diagnosis;

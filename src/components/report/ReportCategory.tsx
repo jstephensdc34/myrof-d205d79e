@@ -34,7 +34,7 @@ export const ReportCategory = ({
   customTreatmentGoals,
   estimatedCost,
   treatmentSchedule,
-  variant = "classic",
+  variant = "dashboard",
 }: ReportCategoryProps) => {
   const style = sectionStyles[categoryId] || sectionStyles.diagnosis;
   const isDossier = variant === "dossier";

@@ -10,7 +10,7 @@ interface ReportSubcategoryProps {
   variant?: ReportStyle;
 }
 
-export const ReportSubcategory = ({ title, items, style, variant = "classic" }: ReportSubcategoryProps) => {
+export const ReportSubcategory = ({ title, items, style, variant = "dashboard" }: ReportSubcategoryProps) => {
   if (items.length === 0) return null;
 
   const containerClass =
