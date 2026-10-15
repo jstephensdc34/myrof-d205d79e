@@ -47,6 +47,19 @@ const CSS_VARS = `
   --exercise-border: 269 100% 92%;
   --report-primary: 205 100% 27%;
   --report-accent: 211 92% 44%;
+  --roadmap-deep: 188 56% 23%;
+  --roadmap-teal: 176 56% 55%;
+  --roadmap-coral: 0 100% 71%;
+  --roadmap-blue: 217 91% 60%;
+  --roadmap-paper: 0 0% 100%;
+  --roadmap-ink: 221 39% 11%;
+  --roadmap-body: 215 14% 34%;
+  --roadmap-border: 220 14% 96%;
+  --roadmap-plan-border: 167 85% 89%;
+  --roadmap-plan-bg: 166 76% 99%;
+  --roadmap-home-border: 34 100% 92%;
+  --roadmap-home-bg: 33 100% 99%;
+  --roadmap-footer: 210 33% 98%;
 }
 html, body { margin: 0; padding: 0; background: #f3f4f6; font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: hsl(var(--foreground)); }
 .printable-report-wrapper { padding: 24px 16px; }
