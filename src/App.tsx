@@ -12,7 +12,6 @@ import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import SharedReport from "./pages/SharedReport";
 import ResetPassword from "./pages/ResetPassword";
-import SourceDownload from "./pages/SourceDownload";
 import { useDatabaseReady } from "@/hooks/useDatabaseReady";
 import { SetupRequired } from "@/components/SetupRequired";
 
@@ -81,7 +80,6 @@ const App = () => {
                     <Route path="/library" element={<Library />} />
                     <Route path="/auth" element={<Auth />} />
                     <Route path="/reset-password" element={<ResetPassword />} />
-                    <Route path="/source-download" element={<SourceDownload />} />
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                     <Route path="*" element={<NotFound />} />
                   </Routes>
