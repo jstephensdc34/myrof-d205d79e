@@ -175,9 +175,13 @@ npm install        # one time
 npm run handoff
 ```
 
-Output: `dist-handoff/chiropractic-patient-report-generator-welcome-kit.zip` — attach this single file to
+Output: `/tmp/myrof-handoff/chiropractic-patient-report-generator-welcome-kit.zip` — attach this single file to
 the buyer handoff email. It contains: `BUYER_SETUP.md`, `setup.sql`,
 `LICENSE`.
+
+The app no longer serves source or Welcome Kit ZIPs. Upload the Welcome Kit to
+Lemon Squeezy or attach it to the buyer email; the GitHub/Vercel deploy link is unchanged.
+The GitHub repository remains public, so removing app downloads does not make the source private.
 
 Buyers receive only this Welcome Kit plus your Deploy-to-Vercel URL. They
 never clone the source repo, and they never need a GitHub account — the
@@ -198,7 +202,7 @@ the in-app "Load Starter Library" button.
   - [ ] Buyer's full legal business entity name (for license record)
   - [ ] Primary contact email
 - [ ] Email the buyer:
-  - [ ] The Welcome Kit ZIP (`dist-handoff/chiropractic-patient-report-generator-welcome-kit.zip`)
+  - [ ] The Welcome Kit ZIP (`/tmp/myrof-handoff/chiropractic-patient-report-generator-welcome-kit.zip`)
   - [ ] Your custom Deploy-to-Vercel URL
   - [ ] Their license record (entity name + sale date)
 - [ ] Log the sale in your records: entity name, sale date, version sold.

@@ -2,7 +2,7 @@
 /**
  * Chiropractic Patient Report Generator — Source code bundler
  *
- * Creates a deployable source ZIP in public/ that the seller can download
+ * Creates a deployable source ZIP outside the app that the seller can use
  * and push to the public GitHub repository used by the Vercel clone link.
  *
  * Usage:
@@ -11,6 +11,7 @@
 import { existsSync, mkdirSync, readdirSync, statSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { tmpdir } from "node:os";
 import AdmZip from "adm-zip";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -47,7 +48,7 @@ const EXCLUDED_PATTERNS = [
   /\.sln$/,
 ];
 
-const OUT_DIR = join(repoRoot, "public");
+const OUT_DIR = join(tmpdir(), "myrof-handoff");
 const OUT_FILE = join(OUT_DIR, "chiropractic-patient-report-generator-source.zip");
 
 function shouldInclude(entryPath, entryName) {
@@ -99,5 +100,4 @@ const sizeKb = (statSync(OUT_FILE).size / 1024).toFixed(1);
 console.log("✅ Source bundle created");
 console.log("   Path:  " + OUT_FILE);
 console.log("   Size:  " + sizeKb + " KB");
-console.log("\nDownload URL:");
-console.log("   /chiropractic-patient-report-generator-source.zip");
+console.log("   Private packaging output only; not served by the app.");
