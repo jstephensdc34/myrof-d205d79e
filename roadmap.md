@@ -14,5 +14,5 @@
 - [x] Stack The Problem diagnosis cards full width, one per row, verified in preview.
 
 ## Buyer delivery
-- [ ] Remove app-hosted source and Welcome Kit downloads while preserving the supplied GitHub/Vercel deploy link.
-- [ ] Verify packaging cannot restore public archives and the download page is unavailable.
+- [x] Remove app-hosted source and Welcome Kit downloads while preserving the supplied GitHub/Vercel deploy link.
+- [x] Verify packaging cannot restore public archives and the download page is unavailable.
