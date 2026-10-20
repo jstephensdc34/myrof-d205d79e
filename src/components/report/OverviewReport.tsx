@@ -2,7 +2,7 @@
 import { forwardRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ReportItem, TREATMENT_SUBCATEGORIES } from "@/types";
-import { ReportHeader } from "./ReportHeader";
+import { ClinicalReportHeading } from "./ClinicalReportHeading";
 import { PatientInfoDisplay } from "./PatientInfoDisplay";
 import { InfoLink } from "./InfoLink";
 import { ReportDescription, ReportDisclosureProvider, ReportExpansionControls } from "./ReportDescription";
@@ -327,66 +327,8 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
     <div ref={ref} className="space-y-6 max-w-[210mm] mx-auto bg-white" data-report-document>
       <ReportExpansionControls />
 
-            {/* Cover Page */}
-            {(() => {
-              const getSetting = (n: string, f = "") => settings.find((s) => s.name === n)?.value || f;
-              const clinic = {
-                name: getSetting("clinic_name", "Your Clinic Name"),
-                address: getSetting("clinic_address"),
-                phone: getSetting("clinic_phone"),
-                email: getSetting("clinic_email"),
-                website: getSetting("clinic_website"),
-                logoUrl: getSetting("logo_url"),
-              };
-              return (
-                <div
-                  className="bg-white border border-border shadow-sm mx-auto flex flex-col items-center justify-between text-center break-after-page max-h-[10.5in]"
-                  style={{
-                    padding: "20mm 15mm",
-                    boxSizing: "border-box",
-                    height: "10in",
-                    pageBreakAfter: "always",
-                    breakAfter: "page",
-                  }}
-                >
-                  <div />
-                  <div className="flex flex-col items-center gap-8 w-full">
-                    {clinic.logoUrl ? (
-                      <img src={clinic.logoUrl} alt={`${clinic.name} Logo`} className="h-48 w-auto max-w-md object-contain" />
-                    ) : (
-                      <div className="h-48 w-48 bg-gray-100 flex items-center justify-center rounded">
-                        <span className="text-sm text-gray-400">Clinic Logo</span>
-                      </div>
-                    )}
-                    <h1 className="text-4xl font-bold text-gray-900 tracking-tight px-4">
-                      Clinical Report of Findings &amp; Care Plan
-                    </h1>
-                    <div className="h-px w-24 bg-gray-300" />
-                    {patient.name && (
-                      <div className="text-gray-700 space-y-1">
-                        <p className="text-lg">
-                          <span className="font-semibold">Patient ID:</span> {patient.name}
-                        </p>
-                        <p className="text-lg">
-                          <span className="font-semibold">Date:</span> {new Date(patient.date).toLocaleDateString()}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                  <div className="text-sm text-gray-600 space-y-1 pt-8">
-                    <p className="text-base font-semibold text-gray-800">{clinic.name}</p>
-                    {clinic.address && <p>{clinic.address}</p>}
-                    <p className="flex flex-wrap justify-center gap-x-4">
-                      {clinic.phone && <span>{clinic.phone}</span>}
-                      {clinic.website && <span>{clinic.website}</span>}
-                      {clinic.email && <span>{clinic.email}</span>}
-                    </p>
-                  </div>
-                </div>
-              );
-            })()}
-
-            <div className="bg-white p-6 border border-border shadow-sm mx-auto" style={{ padding: "15mm", boxSizing: "border-box" }}>
+            <div className="bg-background p-6 border border-border shadow-sm mx-auto" style={{ padding: "15mm 15mm 20mm", boxSizing: "border-box" }}>
+              <ClinicalReportHeading patient={patient} settings={settings} reportStyle={reportStyle} />
               <div className="space-y-8">
                 {/* Section 1: Diagnosis */}
                 {diagnosisItems.length > 0 && (
