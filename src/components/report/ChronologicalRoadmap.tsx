@@ -93,7 +93,7 @@ export const ChronologicalRoadmap = ({ patient, items, settings, treatmentSchedu
         <div className="roadmap-header-layout">
           <div className="min-w-0 w-full">
             <span className="roadmap-eyebrow">Your Personal Recovery Roadmap</span>
-            <h1 className="mb-3 text-3xl font-black break-words">Clinical Report of Findings</h1>
+            <h1 className="mb-3 text-3xl font-black break-words">Clinical Report</h1>
             <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">
               <span className="flex items-center gap-1.5"><User className="h-4 w-4 shrink-0" />Patient: {patient.name}</span>
               <span className="flex items-center gap-1.5"><Calendar className="h-4 w-4 shrink-0" />Date: {new Date(patient.date).toLocaleDateString()}</span>

@@ -1,4 +1,5 @@
 ## Report navigation
+- [ ] Replace Dossier and Dashboard covers with style-matched headings and title all styles Clinical Report; verify preview and exports.
 - [x] Offer Overview only in previews, PDF downloads, HTML sharing and emails.
 - [x] Add independent description expansion and Expand All across report styles.
 - [x] Verify preview, shared HTML and PDF capture without database schema changes.
