@@ -319,6 +319,7 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
     treatmentSchedule ||
     homecareItems.length > 0 ||
     exerciseItems.length > 0 ||
+    !!safeExerciseLink ||
     !!additionalNotes;
 
   const innerContent = hasContent && reportStyle === "roadmap" ? (

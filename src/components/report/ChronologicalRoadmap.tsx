@@ -5,6 +5,7 @@ import type { ReportSetting } from "@/services/reportSettingsService";
 import { getRoadmapSection, type RoadmapSection } from "@/utils/roadmapSections";
 import { ReportDescription } from "./ReportDescription";
 import { ROADMAP_CSS } from "./roadmapStyles";
+import { getExerciseLink } from "@/utils/exerciseLink";
 
 interface RoadmapProps {
   patient: PatientInfo;
@@ -13,6 +14,7 @@ interface RoadmapProps {
   treatmentSchedule: string;
   customTreatmentGoals: string;
   estimatedCost: string;
+  exerciseInfoLink: string;
   additionalNotes: string;
 }
 
@@ -37,9 +39,10 @@ const RoadmapCard = ({ item }: { item: ReportItem }) => (
 
 const Divider = () => <div className="roadmap-divider" aria-hidden="true"><ArrowDownCircle className="h-6 w-6 shrink-0" /></div>;
 
-export const ChronologicalRoadmap = ({ patient, items, settings, treatmentSchedule, customTreatmentGoals, estimatedCost, additionalNotes }: RoadmapProps) => {
+export const ChronologicalRoadmap = ({ patient, items, settings, treatmentSchedule, customTreatmentGoals, estimatedCost, exerciseInfoLink, additionalNotes }: RoadmapProps) => {
   const getSetting = (name: string, fallback = "") => settings.find((setting) => setting.name === name)?.value || fallback;
   const clinicName = getSetting("clinic_name", "Your Clinic Name");
+  const exerciseLink = getExerciseLink(exerciseInfoLink);
   const planOrder = ["care_plan_type", "phase_of_care", "treatment_goals"];
   const groups = (section: RoadmapSection) => items.filter((item) => getRoadmapSection(item) === section)
     .sort((a, b) => section === "plan"
@@ -50,7 +53,7 @@ export const ChronologicalRoadmap = ({ patient, items, settings, treatmentSchedu
   const hasProblem = groups("problem").length > 0;
   const hasPlan = groups("plan").length > 0 || !!treatmentSchedule || !!customTreatmentGoals || !!estimatedCost;
   const hasClinic = groups("clinic").length > 0;
-  const hasHome = groups("home").length > 0;
+  const hasHome = groups("home").length > 0 || !!exerciseLink;
   const renderSection = (section: RoadmapSection, number: number, title: string, gridClass = "") => (
     <section className={`roadmap-section roadmap-${section}`}>
       <div className="mb-6 flex items-center gap-4">
@@ -64,6 +67,13 @@ export const ChronologicalRoadmap = ({ patient, items, settings, treatmentSchedu
       <div className={`roadmap-grid ${gridClass}`}>
         {groups(section).filter((item) => section !== "plan" || item.subcategoryId !== "treatment_goals").map((item) => <RoadmapCard key={item.id} item={item} />)}
       </div>
+      {section === "home" && exerciseLink && <article className="roadmap-card mt-6">
+        <div className="roadmap-card-top"><h3>Exercise Instructions</h3></div>
+        <p className="text-sm">Open your complete exercise instructions for step-by-step guidance.</p>
+        <Button asChild variant="ghost" className="roadmap-demo">
+          <a href={exerciseLink} target="_blank" rel="noopener noreferrer"><PlayCircle className="h-4 w-4" />View Instructions</a>
+        </Button>
+      </article>}
       {section === "plan" && hasGoals && <div className="roadmap-goals">
         <div className="roadmap-subheading">
           <span className="roadmap-subheading-icon"><Target className="h-4 w-4" aria-hidden="true" /></span>
