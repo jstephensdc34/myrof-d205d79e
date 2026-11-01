@@ -110,7 +110,7 @@ export const ChronologicalRoadmap = ({ patient, items, settings, treatmentSchedu
       <div className="roadmap-body">
         {hasProblem && renderSection("problem", 1, "The Problem (Diagnosis)", "roadmap-problem-grid")}
         {hasProblem && (hasPlan || hasClinic || hasHome) && <Divider />}
-        {hasPlan && renderSection("plan", 2, "The Plan", "roadmap-plan-grid")}
+        {hasPlan && renderSection("plan", 2, "The Plan", "roadmap-grid")}
         {hasPlan && (hasClinic || hasHome) && <Divider />}
         <div className="roadmap-split">
           {hasClinic && renderSection("clinic", 3, "In-Clinic Plan")}
