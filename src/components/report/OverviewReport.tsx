@@ -5,6 +5,8 @@ import { ReportItem, TREATMENT_SUBCATEGORIES } from "@/types";
 import { ClinicalReportHeading } from "./ClinicalReportHeading";
 import { PatientInfoDisplay } from "./PatientInfoDisplay";
 import { InfoLink } from "./InfoLink";
+import { ExternalIcon } from "./ReportItem";
+import { getExerciseLink } from "@/utils/exerciseLink";
 import { ReportDescription, ReportDisclosureProvider, ReportExpansionControls } from "./ReportDescription";
 import { ChronologicalRoadmap } from "./ChronologicalRoadmap";
 import { PatientInfo } from "@/types";
@@ -71,6 +73,7 @@ interface OverviewReportProps {
   selectedItems: string[];
   customTreatmentGoals?: string;
   estimatedCost?: string;
+  exerciseInfoLink?: string;
   treatmentSchedule?: string;
   additionalNotes?: string;
   subcategories: any[];
@@ -204,6 +207,7 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
   selectedItems,
   customTreatmentGoals = "",
   estimatedCost = "",
+  exerciseInfoLink = "",
   treatmentSchedule = "",
   additionalNotes = "",
   subcategories = [],
@@ -301,6 +305,7 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
   const exerciseItems = items.filter(
     (item) => selectedItems.includes(item.id) && item.categoryId === "exercises"
   );
+  const safeExerciseLink = getExerciseLink(exerciseInfoLink);
 
   const hasContent =
     diagnosisItems.length > 0 ||
@@ -321,7 +326,7 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
       <ReportExpansionControls />
       <ChronologicalRoadmap patient={patient} items={items.filter((item) => selectedItems.includes(item.id))}
         settings={settings} treatmentSchedule={treatmentSchedule} customTreatmentGoals={customTreatmentGoals}
-        estimatedCost={estimatedCost} additionalNotes={additionalNotes} />
+        estimatedCost={estimatedCost} exerciseInfoLink={exerciseInfoLink} additionalNotes={additionalNotes} />
     </div>
   ) : hasContent ? (
     <div ref={ref} className="space-y-6 max-w-[210mm] mx-auto bg-white" data-report-document>
@@ -445,13 +450,48 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
                 )}
 
                 {/* Section 5: Exercises */}
-                {exerciseItems.length > 0 && (
+                {(exerciseItems.length > 0 || !!safeExerciseLink) && (
                   <div>
                     <SectionHeader label={sectionStyles.exercises.label} style={sectionStyles.exercises} variant={reportStyle} />
                     <div className={overviewGridClass}>
                       {exerciseItems.map((item) => (
                         <OverviewCard key={item.id} itemId={item.id} name={item.name} definition={item.definition} description={item.description} infoLink={item.infoLink} style={sectionStyles.exercises} variant={reportStyle} />
                       ))}
+                      {safeExerciseLink && (
+                        reportStyle === "dossier" ? (
+                          <div className="pl-4 py-1" style={{ borderLeft: `2px solid ${DOSSIER_ACCENT_SOFT}` }}>
+                            <h4 className="text-sm font-semibold tracking-tight" style={{ color: DOSSIER_ACCENT }}>Exercise Instructions</h4>
+                            <a
+                              href={safeExerciseLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="mt-2 inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-sm transition-colors hover:opacity-90"
+                              style={{ backgroundColor: DOSSIER_ACCENT }}
+                            >
+                              View Instructions
+                              <ExternalIcon />
+                            </a>
+                          </div>
+                        ) : (
+                          <div className={`sm:col-span-2 rounded-lg border ${sectionStyles.exercises.border} ${sectionStyles.exercises.bg} overflow-hidden shadow-sm`}>
+                            <div className={`px-4 py-2 ${sectionStyles.exercises.headerBg}`}>
+                              <h4 className={`font-semibold text-sm ${sectionStyles.exercises.headerText}`}>Exercise Instructions</h4>
+                            </div>
+                            <div className="px-4 py-3 flex flex-wrap items-center justify-between gap-2">
+                              <p className="text-sm text-foreground/80">Open your complete exercise instructions for step-by-step guidance.</p>
+                              <a
+                                href={safeExerciseLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-sm transition-colors hover:opacity-90 ${sectionStyles.exercises.headerBg}`}
+                              >
+                                View Instructions
+                                <ExternalIcon />
+                              </a>
+                            </div>
+                          </div>
+                        )
+                      )}
                     </div>
                   </div>
                 )}
