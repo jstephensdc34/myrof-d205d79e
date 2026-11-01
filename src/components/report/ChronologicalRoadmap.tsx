@@ -69,7 +69,7 @@ export const ChronologicalRoadmap = ({ patient, items, settings, treatmentSchedu
           <span className="roadmap-subheading-icon"><Target className="h-4 w-4" aria-hidden="true" /></span>
           <h3>Treatment Goals</h3>
         </div>
-        <div className="roadmap-grid roadmap-goal-grid">
+        <div className="roadmap-grid">
           {goalItems.map((item) => <RoadmapCard key={item.id} item={item} />)}
           {customTreatmentGoals && <article className="roadmap-card">
             <div className="roadmap-card-top"><h3>Additional Treatment Goals</h3></div>
@@ -110,7 +110,7 @@ export const ChronologicalRoadmap = ({ patient, items, settings, treatmentSchedu
       <div className="roadmap-body">
         {hasProblem && renderSection("problem", 1, "The Problem (Diagnosis)", "roadmap-problem-grid")}
         {hasProblem && (hasPlan || hasClinic || hasHome) && <Divider />}
-        {hasPlan && renderSection("plan", 2, "The Plan", "roadmap-plan-grid")}
+        {hasPlan && renderSection("plan", 2, "The Plan", "roadmap-grid")}
         {hasPlan && (hasClinic || hasHome) && <Divider />}
         <div className="roadmap-split">
           {hasClinic && renderSection("clinic", 3, "In-Clinic Plan")}
