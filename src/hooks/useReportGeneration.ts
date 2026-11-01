@@ -24,6 +24,7 @@ export const useReportGeneration = (
   const [additionalNotes, setAdditionalNotes] = useState<string>("");
   const [customTreatmentGoals, setCustomTreatmentGoals] = useState<string>("");
   const [estimatedCost, setEstimatedCost] = useState<string>("");
+  const [exerciseInfoLink, setExerciseInfoLink] = useState<string>("");
   const [schedule, setSchedule] = useState<TreatmentScheduleParts>({ visitsPerPeriod: "", periodUnit: "week", duration: "", durationUnit: "weeks" });
   const treatmentSchedule = composeTreatmentSchedule(schedule);
   const [activeCategory, setActiveCategory] = useState<CategoryType>("diagnosis");
@@ -123,6 +124,7 @@ export const useReportGeneration = (
         notes: additionalNotes,
         customTreatmentGoals,
         estimatedCost,
+        exerciseInfoLink,
         treatmentSchedule,
         settings,
         subcategories,
@@ -145,6 +147,7 @@ export const useReportGeneration = (
     additionalNotes,
     customTreatmentGoals,
     estimatedCost,
+    exerciseInfoLink,
     schedule,
     setSchedule,
     treatmentSchedule,
@@ -160,6 +163,7 @@ export const useReportGeneration = (
     setAdditionalNotes,
     setCustomTreatmentGoals,
     setEstimatedCost,
+    setExerciseInfoLink,
     setActiveCategory,
     setShareUrl,
     setPatient,

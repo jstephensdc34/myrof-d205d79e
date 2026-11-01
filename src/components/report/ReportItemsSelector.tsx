@@ -25,6 +25,8 @@ interface ReportItemsSelectorProps {
   onTreatmentGoalsChange?: (goals: string) => void;
   estimatedCost?: string;
   onEstimatedCostChange?: (cost: string) => void;
+  exerciseInfoLink?: string;
+  onExerciseInfoLinkChange?: (link: string) => void;
   schedule?: TreatmentScheduleParts;
   onScheduleChange?: (schedule: TreatmentScheduleParts) => void;
 }
@@ -41,6 +43,8 @@ export const ReportItemsSelector = ({
   onTreatmentGoalsChange,
   estimatedCost = "",
   onEstimatedCostChange,
+  exerciseInfoLink = "",
+  onExerciseInfoLinkChange,
   schedule,
   onScheduleChange,
 }: ReportItemsSelectorProps) => {
@@ -157,6 +161,23 @@ export const ReportItemsSelector = ({
                   selectedItems={selectedItems}
                   onToggleItem={onToggleItem}
                 />
+
+                {category === "exercises" && onExerciseInfoLinkChange && (
+                  <div className="mt-4">
+                    <label className="text-sm font-medium text-foreground mb-2 block">
+                      Exercise Instructions Link (Optional)
+                    </label>
+                    <Input
+                      placeholder="https://www.example.com/exercise-instructions"
+                      value={exerciseInfoLink}
+                      onChange={(e) => onExerciseInfoLinkChange(e.target.value)}
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Shown under Therapeutic Exercises as a button patients can click to open their full exercise instructions.
+                    </p>
+                  </div>
+                )}
+
                 
                 {category === "treatment" && activeSubcategory === "treatment_goals" && onTreatmentGoalsChange && (
                   <div className="mt-4">

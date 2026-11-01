@@ -123,6 +123,7 @@ export interface RenderReportParams {
   notes: string;
   customTreatmentGoals?: string;
   estimatedCost?: string;
+  exerciseInfoLink?: string;
   treatmentSchedule?: string;
   settings: ReportSetting[];
   subcategories: any[];
@@ -138,6 +139,7 @@ export const renderReportToHtml = (params: RenderReportParams): string => {
     selectedItems: selectedIds,
     customTreatmentGoals: params.customTreatmentGoals,
     estimatedCost: params.estimatedCost,
+    exerciseInfoLink: params.exerciseInfoLink,
     treatmentSchedule: params.treatmentSchedule,
     subcategories: params.subcategories,
     settings: params.settings,
