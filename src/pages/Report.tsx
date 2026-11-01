@@ -22,6 +22,7 @@ const Report = () => {
     additionalNotes,
     customTreatmentGoals,
     estimatedCost,
+    exerciseInfoLink,
     schedule,
     setSchedule,
     treatmentSchedule,
@@ -37,6 +38,7 @@ const Report = () => {
     setAdditionalNotes,
     setCustomTreatmentGoals,
     setEstimatedCost,
+    setExerciseInfoLink,
     setActiveCategory,
     setShareUrl,
     setPatient,
@@ -86,6 +88,8 @@ const Report = () => {
               additionalNotes={additionalNotes}
               customTreatmentGoals={customTreatmentGoals}
               estimatedCost={estimatedCost}
+              exerciseInfoLink={exerciseInfoLink}
+              onExerciseInfoLinkChange={setExerciseInfoLink}
               schedule={schedule}
               treatmentSchedule={treatmentSchedule}
               onScheduleChange={setSchedule}

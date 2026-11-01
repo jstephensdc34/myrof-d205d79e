@@ -34,6 +34,8 @@ interface ReportBuilderProps {
   additionalNotes: string;
   customTreatmentGoals: string;
   estimatedCost: string;
+  exerciseInfoLink: string;
+  onExerciseInfoLinkChange: (link: string) => void;
   schedule: TreatmentScheduleParts;
   treatmentSchedule: string;
   onScheduleChange: (schedule: TreatmentScheduleParts) => void;
@@ -67,6 +69,8 @@ export const ReportBuilder = ({
   additionalNotes,
   customTreatmentGoals,
   estimatedCost,
+  exerciseInfoLink,
+  onExerciseInfoLinkChange,
   schedule,
   treatmentSchedule,
   onScheduleChange,
@@ -150,6 +154,8 @@ export const ReportBuilder = ({
       onTreatmentGoalsChange={onTreatmentGoalsChange}
       estimatedCost={estimatedCost}
       onEstimatedCostChange={onEstimatedCostChange}
+      exerciseInfoLink={exerciseInfoLink}
+      onExerciseInfoLinkChange={onExerciseInfoLinkChange}
       schedule={schedule}
       onScheduleChange={onScheduleChange}
     />
@@ -226,6 +232,7 @@ export const ReportBuilder = ({
             additionalNotes={additionalNotes}
             customTreatmentGoals={customTreatmentGoals}
             estimatedCost={estimatedCost}
+            exerciseInfoLink={exerciseInfoLink}
             treatmentSchedule={treatmentSchedule}
             settings={settings}
             subcategories={subcategories}
@@ -270,6 +277,7 @@ export const ReportBuilder = ({
               selectedItems={selectedItems}
               customTreatmentGoals={customTreatmentGoals}
               estimatedCost={estimatedCost}
+              exerciseInfoLink={exerciseInfoLink}
               treatmentSchedule={treatmentSchedule}
               additionalNotes={additionalNotes}
               subcategories={subcategories}

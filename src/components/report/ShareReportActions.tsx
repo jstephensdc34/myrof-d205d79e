@@ -16,6 +16,7 @@ interface ShareReportActionsProps {
   additionalNotes: string;
   customTreatmentGoals: string;
   estimatedCost: string;
+  exerciseInfoLink?: string;
   treatmentSchedule?: string;
   settings: ReportSetting[];
   subcategories: Subcategory[];
@@ -32,6 +33,7 @@ export const ShareReportActions = ({
   additionalNotes,
   customTreatmentGoals,
   estimatedCost,
+  exerciseInfoLink,
   treatmentSchedule,
   settings,
   subcategories,
@@ -51,6 +53,7 @@ export const ShareReportActions = ({
       notes: additionalNotes,
       customTreatmentGoals,
       estimatedCost,
+      exerciseInfoLink,
       treatmentSchedule,
       settings,
       subcategories,
