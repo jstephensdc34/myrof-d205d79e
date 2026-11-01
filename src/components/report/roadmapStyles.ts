@@ -30,7 +30,7 @@ export const ROADMAP_CSS = `
 .roadmap-divider::before, .roadmap-divider::after { content: ''; height: 1px; background: hsl(var(--roadmap-border)); flex: 1; }
 .roadmap-footer { background: hsl(var(--roadmap-footer)); color: hsl(var(--roadmap-body)); border-top: 1px solid hsl(var(--roadmap-border)); padding: 1.5rem; text-align: center; font-size: .75rem; }
 @container (max-width: 400px) { .roadmap-header { padding: 1.25rem; } .roadmap-header h1 { font-size: 1.5rem; } .roadmap-body { padding: 1rem; } .roadmap-card { padding: 1rem; } }
-@container (min-width: 540px) { .roadmap-header-layout > div:first-child { width: auto; flex: 1 1 240px; } }
+@container (min-width: 540px) { .roadmap-header-layout > div:first-child { width: auto; flex: 1 1 240px; } .roadmap-split { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @container (min-width: 700px) { .roadmap-body, .roadmap-header { padding: 2.5rem; } }
 @media print { .roadmap-document { border: none; border-radius: 0; } .roadmap-card { break-inside: avoid; } }
 `;
