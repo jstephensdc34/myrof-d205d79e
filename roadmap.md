@@ -1,4 +1,7 @@
 ## Report navigation
+- [x] Save treatment frequency/duration and exercise instructions links with manual templates; verified Save, reload, Load and Update, with blank defaults for older plans.
+- [x] Add a patient-specific text-or-link cost estimate field below Additional Notes; verified all report styles, shared HTML, PDF content and clearing on New/Load.
+- [x] Update buyer setup SQL and rebuild the private Welcome Kit.
 - [x] Replace Dossier and Dashboard covers with style-matched headings and title all styles Clinical Report; verified signed-in preview, shared HTML and PDF first-page content.
 - [x] Offer Overview only in previews, PDF downloads, HTML sharing and emails.
 - [x] Add independent description expansion and Expand All across report styles.

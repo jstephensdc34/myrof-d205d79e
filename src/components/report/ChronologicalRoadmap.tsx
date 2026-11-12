@@ -1,3 +1,4 @@
+import { CostEstimateContent } from "./CostEstimateContent";
 import { ArrowDownCircle, Calendar, Map, PlayCircle, Target, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { PatientInfo, ReportItem } from "@/types";
@@ -51,7 +52,7 @@ export const ChronologicalRoadmap = ({ patient, items, settings, treatmentSchedu
   const goalItems = groups("plan").filter((item) => item.subcategoryId === "treatment_goals");
   const hasGoals = goalItems.length > 0 || !!customTreatmentGoals;
   const hasProblem = groups("problem").length > 0;
-  const hasPlan = groups("plan").length > 0 || !!treatmentSchedule || !!customTreatmentGoals || !!estimatedCost;
+  const hasPlan = groups("plan").length > 0 || !!treatmentSchedule || !!customTreatmentGoals;
   const hasClinic = groups("clinic").length > 0;
   const hasHome = groups("home").length > 0 || !!exerciseLink;
   const renderSection = (section: RoadmapSection, number: number, title: string, gridClass = "") => (
@@ -87,11 +88,7 @@ export const ChronologicalRoadmap = ({ patient, items, settings, treatmentSchedu
           </article>}
         </div>
       </div>}
-      {section === "plan" && estimatedCost && <article className="roadmap-card mt-6">
-        <div className="roadmap-card-top"><h3>Estimated Cost</h3></div>
-        <p className="text-xl font-bold text-treatment">{estimatedCost}</p>
-        <p className="mt-2 text-xs italic">Note: This is an estimate based on the recommended clinical care plan. Please refer to your official financial breakdown for detailed billing, insurance, and payment information.</p>
-      </article>}
+
     </section>
   );
 
@@ -129,6 +126,10 @@ export const ChronologicalRoadmap = ({ patient, items, settings, treatmentSchedu
         {additionalNotes && <section className="mt-8 border-t pt-6">
           <h2 className="mb-3 text-lg font-bold">Additional Notes</h2>
           <p className="whitespace-pre-wrap text-sm">{additionalNotes}</p>
+        </section>}
+        {estimatedCost.trim() && <section className="mt-8 border-t border-border pt-6">
+          <h2 className="mb-3 text-lg font-bold">Cost Estimate / Financial Summary</h2>
+          <CostEstimateContent value={estimatedCost} />
         </section>}
       </div>
       <footer className="roadmap-footer">

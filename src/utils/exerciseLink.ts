@@ -1,8 +1,4 @@
-/**
- * Report-only "Exercise Instructions Link" (Therapeutic Exercises tab).
- * Not persisted with care plans or library items — flows into the
- * preview, shared HTML and PDF via OverviewReport only.
- */
+/** Exercise instructions links flow into templates, preview, shared HTML and PDF. */
 export const getExerciseLink = (raw?: string): string => {
   const value = (raw ?? "").trim();
   if (!value) return "";

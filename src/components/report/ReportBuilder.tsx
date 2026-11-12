@@ -5,6 +5,7 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { PatientInfo, ReportItem, CategoryType } from "@/types";
 import { PatientInfoForm } from "@/components/report/PatientInfoForm";
+import { CostEstimateField } from "./CostEstimateField";
 import { NotesField } from "@/components/report/NotesField";
 import { ReportItemsSelector } from "@/components/report/ReportItemsSelector";
 import { OverviewReport } from "@/components/report/OverviewReport";
@@ -152,8 +153,6 @@ export const ReportBuilder = ({
       subcategories={subcategories}
       customTreatmentGoals={customTreatmentGoals}
       onTreatmentGoalsChange={onTreatmentGoalsChange}
-      estimatedCost={estimatedCost}
-      onEstimatedCostChange={onEstimatedCostChange}
       exerciseInfoLink={exerciseInfoLink}
       onExerciseInfoLinkChange={onExerciseInfoLinkChange}
       schedule={schedule}
@@ -195,6 +194,7 @@ export const ReportBuilder = ({
           notes={additionalNotes}
           onChange={onNotesChange}
         />
+        <CostEstimateField value={estimatedCost} onChange={onEstimatedCostChange} />
         
       </div>
       

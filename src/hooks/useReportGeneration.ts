@@ -1,5 +1,6 @@
 import { composeTreatmentSchedule, TreatmentScheduleParts } from "@/utils/treatmentSchedule";
 
+import { emptyTreatmentSchedule } from "@/utils/carePlanExtras";
 import { useState } from "react";
 import { CategoryType, PatientInfo, ReportItem } from "@/types";
 import { useToast } from "@/components/ui/use-toast";
@@ -25,7 +26,7 @@ export const useReportGeneration = (
   const [customTreatmentGoals, setCustomTreatmentGoals] = useState<string>("");
   const [estimatedCost, setEstimatedCost] = useState<string>("");
   const [exerciseInfoLink, setExerciseInfoLink] = useState<string>("");
-  const [schedule, setSchedule] = useState<TreatmentScheduleParts>({ visitsPerPeriod: "", periodUnit: "week", duration: "", durationUnit: "weeks" });
+  const [schedule, setSchedule] = useState<TreatmentScheduleParts>(emptyTreatmentSchedule);
   const treatmentSchedule = composeTreatmentSchedule(schedule);
   const [activeCategory, setActiveCategory] = useState<CategoryType>("diagnosis");
   const [isGeneratingPDF, setIsGeneratingPDF] = useState<boolean>(false);

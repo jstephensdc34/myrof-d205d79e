@@ -1,4 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
+import { readCarePlanExtras } from "@/utils/carePlanExtras";
+import type { TreatmentScheduleParts } from "@/utils/treatmentSchedule";
 import { CategoryType } from "@/types";
 
 export interface CarePlanRow {
@@ -12,6 +14,8 @@ export interface CarePlanRow {
   additional_notes: string | null;
   custom_treatment_goals: string | null;
   active_category: string | null;
+  treatment_schedule: TreatmentScheduleParts;
+  exercise_info_link: string;
   created_at: string;
   updated_at: string;
 }
@@ -25,10 +29,14 @@ export interface CarePlanPayload {
   additional_notes: string | null;
   custom_treatment_goals: string | null;
   active_category: CategoryType | null;
+  treatment_schedule: TreatmentScheduleParts;
+  exercise_info_link: string;
 }
 
 const fromRow = (row: any): CarePlanRow => ({
   ...row,
+  treatment_schedule: readCarePlanExtras(row).schedule,
+  exercise_info_link: readCarePlanExtras(row).exerciseInfoLink,
   selected_item_ids: Array.isArray(row.selected_item_ids) ? row.selected_item_ids : [],
 });
 
@@ -72,6 +80,8 @@ export const upsertDraft = async (payload: CarePlanPayload): Promise<CarePlanRow
         additional_notes: payload.additional_notes,
         custom_treatment_goals: payload.custom_treatment_goals,
         active_category: payload.active_category,
+      treatment_schedule: { ...payload.treatment_schedule },
+      exercise_info_link: payload.exercise_info_link,
       })
       .eq("id", existing.id)
       .select()
@@ -92,6 +102,8 @@ export const upsertDraft = async (payload: CarePlanPayload): Promise<CarePlanRow
       additional_notes: payload.additional_notes,
       custom_treatment_goals: payload.custom_treatment_goals,
       active_category: payload.active_category,
+      treatment_schedule: { ...payload.treatment_schedule },
+      exercise_info_link: payload.exercise_info_link,
     })
     .select()
     .single();
@@ -120,6 +132,8 @@ export const saveNamedCarePlan = async (
         additional_notes: payload.additional_notes,
         custom_treatment_goals: payload.custom_treatment_goals,
         active_category: payload.active_category,
+      treatment_schedule: { ...payload.treatment_schedule },
+      exercise_info_link: payload.exercise_info_link,
       })
       .eq("id", existingId)
       .select()
@@ -140,6 +154,8 @@ export const saveNamedCarePlan = async (
       additional_notes: payload.additional_notes,
       custom_treatment_goals: payload.custom_treatment_goals,
       active_category: payload.active_category,
+      treatment_schedule: { ...payload.treatment_schedule },
+      exercise_info_link: payload.exercise_info_link,
     })
     .select()
     .single();

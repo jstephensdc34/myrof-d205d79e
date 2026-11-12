@@ -1,4 +1,5 @@
 
+import { CostEstimateContent } from "./CostEstimateContent";
 import { forwardRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ReportItem, TREATMENT_SUBCATEGORIES } from "@/types";
@@ -373,7 +374,7 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
                 )}
 
                 {/* Section 3: Care Plan + Phase of Care + Treatment Goals */}
-                {(carePlanItems.length > 0 || phaseOfCareItems.length > 0 || treatmentGoalItems.length > 0 || customTreatmentGoals || estimatedCost || treatmentSchedule) && (
+                {(carePlanItems.length > 0 || phaseOfCareItems.length > 0 || treatmentGoalItems.length > 0 || customTreatmentGoals || treatmentSchedule) && (
                   <div>
                     <SectionHeader label={sectionStyles.carePlan.label} style={sectionStyles.carePlan} variant={reportStyle} />
                     <div className={overviewGridClass}>
@@ -420,20 +421,7 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
                       )}
 
 
-                      {/* Estimated Cost card - spans full width */}
-                      {estimatedCost && (
-                        <div className={`sm:col-span-2 rounded-lg border ${sectionStyles.carePlan.border} ${sectionStyles.carePlan.bg} overflow-hidden shadow-sm`}>
-                          <div className={`px-4 py-2 ${sectionStyles.carePlan.headerBg}`}>
-                            <h4 className={`font-semibold text-sm ${sectionStyles.carePlan.headerText}`}>Estimated Cost</h4>
-                          </div>
-                          <div className="px-4 py-4 text-center">
-                            <p className="text-2xl font-bold text-warning">{estimatedCost}</p>
-                            <p className="text-xs italic text-muted-foreground mt-2">
-                              Note: This is an estimate based on the recommended clinical care plan. Please refer to your official financial breakdown for detailed billing, insurance, and payment information.
-                            </p>
-                          </div>
-                        </div>
-                      )}
+
                     </div>
                   </div>
                 )}
@@ -510,6 +498,10 @@ export const OverviewReport = forwardRef<HTMLDivElement, OverviewReportProps>(({
                     </div>
                   </div>
                 )}
+                {estimatedCost.trim() && <section className="border-t border-border pt-6">
+                  <SectionHeader label="Cost Estimate / Financial Summary" style={sectionStyles.carePlan} variant={reportStyle} />
+                  <CostEstimateContent value={estimatedCost} />
+                </section>}
               </div>
 
               <div className="text-center text-xs text-muted-foreground mt-8">Page 1</div>

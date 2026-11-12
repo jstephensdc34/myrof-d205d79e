@@ -140,9 +140,16 @@ CREATE TABLE IF NOT EXISTS public.care_plans (
   additional_notes       text,
   custom_treatment_goals text,
   active_category        text,
+  treatment_schedule     jsonb NOT NULL DEFAULT '{}'::jsonb,
+  exercise_info_link     text NOT NULL DEFAULT '',
   created_at             timestamptz NOT NULL DEFAULT now(),
   updated_at             timestamptz NOT NULL DEFAULT now()
 );
+
+-- Also upgrades existing installations without changing saved plans.
+ALTER TABLE public.care_plans
+  ADD COLUMN IF NOT EXISTS treatment_schedule jsonb NOT NULL DEFAULT '{}'::jsonb,
+  ADD COLUMN IF NOT EXISTS exercise_info_link text NOT NULL DEFAULT '';
 
 CREATE INDEX IF NOT EXISTS care_plans_user_updated_idx
   ON public.care_plans (user_id, updated_at DESC);

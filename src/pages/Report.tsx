@@ -46,6 +46,7 @@ const Report = () => {
   } = useReportGeneration(items, settings, subcategories);
 
   const carePlans = useCarePlans({
+    schedule, exerciseInfoLink, setSchedule, setExerciseInfoLink, setEstimatedCost,
     patient,
     selectedItems,
     additionalNotes,

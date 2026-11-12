@@ -23,8 +23,6 @@ interface ReportItemsSelectorProps {
   subcategories: any[];
   customTreatmentGoals?: string;
   onTreatmentGoalsChange?: (goals: string) => void;
-  estimatedCost?: string;
-  onEstimatedCostChange?: (cost: string) => void;
   exerciseInfoLink?: string;
   onExerciseInfoLinkChange?: (link: string) => void;
   schedule?: TreatmentScheduleParts;
@@ -41,8 +39,6 @@ export const ReportItemsSelector = ({
   subcategories = [],
   customTreatmentGoals = "",
   onTreatmentGoalsChange,
-  estimatedCost = "",
-  onEstimatedCostChange,
   exerciseInfoLink = "",
   onExerciseInfoLinkChange,
   schedule,
@@ -164,10 +160,11 @@ export const ReportItemsSelector = ({
 
                 {category === "exercises" && onExerciseInfoLinkChange && (
                   <div className="mt-4">
-                    <label className="text-sm font-medium text-foreground mb-2 block">
+                    <label htmlFor="exercise-instructions-link" className="text-sm font-medium text-foreground mb-2 block">
                       Exercise Instructions Link (Optional)
                     </label>
                     <Input
+                      id="exercise-instructions-link"
                       placeholder="https://www.example.com/exercise-instructions"
                       value={exerciseInfoLink}
                       onChange={(e) => onExerciseInfoLinkChange(e.target.value)}
@@ -193,21 +190,7 @@ export const ReportItemsSelector = ({
                   </div>
                 )}
 
-                {category === "treatment" && activeSubcategory === "estimated_cost" && onEstimatedCostChange && (
-                  <div className="mt-4">
-                    <label className="text-sm font-medium text-foreground mb-2 block">
-                      Estimated Cost (free text)
-                    </label>
-                    <Input
-                      placeholder="e.g. $1,500 or $50 per visit"
-                      value={estimatedCost}
-                      onChange={(e) => onEstimatedCostChange(e.target.value)}
-                    />
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Shown prominently in the Treatment Plan section of the report.
-                    </p>
-                  </div>
-                )}
+
               </div>
             </TabsContent>
           ))}

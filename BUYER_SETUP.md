@@ -128,6 +128,10 @@ You will not need to do any of the following — they are intentionally not part
 
 ---
 
+## Template schedule and exercise link update
+
+For an existing installation, run the latest `setup.sql` again to enable saved treatment schedules and exercise instructions links. Existing plans are preserved and load with blank schedule/link fields until you update them. Cost estimates and financial links are never included in templates.
+
 ## Troubleshooting
 
 **"Configuration required" screen on first load.**

@@ -11,7 +11,15 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
+import { emptyTreatmentSchedule, readCarePlanExtras, serializeCarePlanExtras } from "@/utils/carePlanExtras";
+import type { TreatmentScheduleParts } from "@/utils/treatmentSchedule";
+
 interface UseCarePlansArgs {
+  schedule: TreatmentScheduleParts;
+  exerciseInfoLink: string;
+  setSchedule: (schedule: TreatmentScheduleParts) => void;
+  setExerciseInfoLink: (link: string) => void;
+  setEstimatedCost: (cost: string) => void;
   patient: PatientInfo;
   selectedItems: string[];
   additionalNotes: string;
@@ -39,7 +47,8 @@ export const useCarePlans = (args: UseCarePlansArgs) => {
     additional_notes: args.additionalNotes || null,
     custom_treatment_goals: args.customTreatmentGoals || null,
     active_category: args.activeCategory,
-  }), [args.patient, args.selectedItems, args.additionalNotes, args.customTreatmentGoals, args.activeCategory]);
+    ...serializeCarePlanExtras(args),
+  }), [args.patient, args.selectedItems, args.additionalNotes, args.customTreatmentGoals, args.activeCategory, args.schedule, args.exerciseInfoLink]);
 
   const refreshSavedPlans = useCallback(async () => {
     if (!isAuthenticatedRef.current) return;
@@ -93,6 +102,10 @@ export const useCarePlans = (args: UseCarePlansArgs) => {
       name: plan.patient_name ?? "",
       date: plan.report_date ?? new Date().toISOString().split("T")[0],
     });
+    const extras = readCarePlanExtras(plan);
+    args.setSchedule(extras.schedule);
+    args.setExerciseInfoLink(extras.exerciseInfoLink);
+    args.setEstimatedCost("");
     args.setSelectedItems(plan.selected_item_ids);
     args.setAdditionalNotes(plan.additional_notes ?? "");
     args.setCustomTreatmentGoals(plan.custom_treatment_goals ?? "");
@@ -101,7 +114,7 @@ export const useCarePlans = (args: UseCarePlansArgs) => {
     setCurrentPlanTitle(plan.title);
     toast({ title: "Care Plan Loaded", description: `"${plan.title}" is ready to edit.` });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [toast]);
+  }, [args, toast]);
 
   const removePlan = useCallback(async (id: string) => {
     try {
@@ -132,6 +145,9 @@ export const useCarePlans = (args: UseCarePlansArgs) => {
     setCurrentPlanTitle(null);
     args.setPatient({ name: "", date: new Date().toISOString().split("T")[0] });
     args.setSelectedItems([]);
+    args.setSchedule(emptyTreatmentSchedule());
+    args.setExerciseInfoLink("");
+    args.setEstimatedCost("");
     args.setAdditionalNotes("");
     args.setCustomTreatmentGoals("");
     // eslint-disable-next-line react-hooks/exhaustive-deps

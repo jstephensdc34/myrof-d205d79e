@@ -20,12 +20,14 @@ export type Database = {
           additional_notes: string | null
           created_at: string
           custom_treatment_goals: string | null
+          exercise_info_link: string
           id: string
           is_draft: boolean
           patient_name: string | null
           report_date: string | null
           selected_item_ids: Json
           title: string
+          treatment_schedule: Json
           updated_at: string
           user_id: string
         }
@@ -34,12 +36,14 @@ export type Database = {
           additional_notes?: string | null
           created_at?: string
           custom_treatment_goals?: string | null
+          exercise_info_link?: string
           id?: string
           is_draft?: boolean
           patient_name?: string | null
           report_date?: string | null
           selected_item_ids?: Json
           title?: string
+          treatment_schedule?: Json
           updated_at?: string
           user_id: string
         }
@@ -48,12 +52,14 @@ export type Database = {
           additional_notes?: string | null
           created_at?: string
           custom_treatment_goals?: string | null
+          exercise_info_link?: string
           id?: string
           is_draft?: boolean
           patient_name?: string | null
           report_date?: string | null
           selected_item_ids?: Json
           title?: string
+          treatment_schedule?: Json
           updated_at?: string
           user_id?: string
         }

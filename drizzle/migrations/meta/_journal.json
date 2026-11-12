@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1794502630636,
+      "tag": "0000_persist_care_plan_schedule_and_exercise_link",
+      "breakpoints": true
+    }
+  ]
+}
