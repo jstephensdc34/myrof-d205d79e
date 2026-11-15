@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const isValidFileName = (value: string) =>
-  /^([0-9a-f-]{36}/)?[A-Za-z0-9._-]+\.html$/i.test(value) && !value.includes("..");
+  /^([0-9a-f-]{36}\/)?[A-Za-z0-9._-]+\.html$/i.test(value) && !value.includes("..");
 
 const SharedReport = () => {
   const [searchParams] = useSearchParams();
