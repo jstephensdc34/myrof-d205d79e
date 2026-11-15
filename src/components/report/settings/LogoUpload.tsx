@@ -51,7 +51,10 @@ export const LogoUpload = ({
       // Generate a unique file name
       const fileExt = file.name.split('.').pop();
       const fileName = `logo-${Date.now()}.${fileExt}`;
-      const filePath = `logos/${fileName}`;
+      const { data: userData } = await supabase.auth.getUser();
+      const userId = userData.user?.id;
+      if (!userId) throw new Error('You must be signed in to upload a logo.');
+      const filePath = `${userId}/logos/${fileName}`;
 
       // Upload file to Supabase storage
       const { data, error } = await supabase.storage

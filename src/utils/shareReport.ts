@@ -28,9 +28,14 @@ export const shareReport = async (params: ShareReportParams): Promise<string> =>
   const safeName = params.patient.name.replace(/[^a-zA-Z0-9]/g, "-").toLowerCase();
   const fileName = `report-${format}-${safeName}-${timestamp}.html`;
 
+  const { data: userData } = await supabase.auth.getUser();
+  const userId = userData.user?.id;
+  if (!userId) throw new Error("You must be signed in to share a report.");
+  const objectPath = `${userId}/${fileName}`;
+
   const { error } = await supabase.storage
     .from("shared-reports")
-    .upload(fileName, new Blob([html], { type: "text/html" }), {
+    .upload(objectPath, new Blob([html], { type: "text/html" }), {
       contentType: "text/html",
       cacheControl: "3600",
     });
@@ -41,7 +46,7 @@ export const shareReport = async (params: ShareReportParams): Promise<string> =>
 
   const basePath = import.meta.env.BASE_URL || "/";
   const shareUrl = new URL(`${basePath.replace(/\/$/, "")}/shared-report`, window.location.origin);
-  shareUrl.searchParams.set("file", fileName);
+  shareUrl.searchParams.set("file", objectPath);
 
   return shareUrl.toString();
 };

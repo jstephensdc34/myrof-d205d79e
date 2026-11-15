@@ -5,7 +5,8 @@ import { AlertCircle, ExternalLink, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const isValidFileName = (value: string) => Boolean(value) && !value.includes("/") && !value.includes("..");
+const isValidFileName = (value: string) =>
+  /^([0-9a-f-]{36}/)?[A-Za-z0-9._-]+\.html$/i.test(value) && !value.includes("..");
 
 const SharedReport = () => {
   const [searchParams] = useSearchParams();
@@ -17,7 +18,7 @@ const SharedReport = () => {
 
   const storageUrl = useMemo(() => {
     if (!fileName) return "";
-    return `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/shared-reports/${encodeURIComponent(fileName)}`;
+    return `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/shared-reports/${fileName.split('/').map(encodeURIComponent).join('/')}`;
   }, [fileName]);
 
   useEffect(() => {

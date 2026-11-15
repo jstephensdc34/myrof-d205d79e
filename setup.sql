@@ -331,13 +331,13 @@ ON CONFLICT (id) DO UPDATE SET public = true;
 
 DROP POLICY IF EXISTS "clinic_assets_public_read" ON storage.objects;
 CREATE POLICY "clinic_assets_public_read"
-  ON storage.objects FOR SELECT TO anon, authenticated
-  USING (bucket_id = 'clinic-assets');
+  ON storage.objects FOR SELECT TO authenticated
+  USING (bucket_id = 'clinic-assets' AND owner = auth.uid());
 
 DROP POLICY IF EXISTS "clinic_assets_auth_insert" ON storage.objects;
 CREATE POLICY "clinic_assets_auth_insert"
   ON storage.objects FOR INSERT TO authenticated
-  WITH CHECK (bucket_id = 'clinic-assets');
+  WITH CHECK (bucket_id = 'clinic-assets' AND (storage.foldername(name))[1] = auth.uid()::text);
 
 DROP POLICY IF EXISTS "clinic_assets_owner_update" ON storage.objects;
 CREATE POLICY "clinic_assets_owner_update"
@@ -358,13 +358,13 @@ ON CONFLICT (id) DO UPDATE SET public = true;
 
 DROP POLICY IF EXISTS "shared_reports_public_read" ON storage.objects;
 CREATE POLICY "shared_reports_public_read"
-  ON storage.objects FOR SELECT TO anon, authenticated
-  USING (bucket_id = 'shared-reports');
+  ON storage.objects FOR SELECT TO authenticated
+  USING (bucket_id = 'shared-reports' AND owner = auth.uid());
 
 DROP POLICY IF EXISTS "shared_reports_auth_insert" ON storage.objects;
 CREATE POLICY "shared_reports_auth_insert"
   ON storage.objects FOR INSERT TO authenticated
-  WITH CHECK (bucket_id = 'shared-reports');
+  WITH CHECK (bucket_id = 'shared-reports' AND (storage.foldername(name))[1] = auth.uid()::text);
 
 DROP POLICY IF EXISTS "shared_reports_owner_update" ON storage.objects;
 CREATE POLICY "shared_reports_owner_update"
