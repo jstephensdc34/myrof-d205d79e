@@ -8,6 +8,7 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import Index from "./pages/Index";
 import Report from "./pages/Report";
 import Library from "./pages/Library";
+import Settings from "./pages/Settings";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import SharedReport from "./pages/SharedReport";
@@ -78,6 +79,7 @@ const App = () => {
                     <Route path="/report" element={<Report />} />
                     <Route path="/shared-report" element={<SharedReport />} />
                     <Route path="/library" element={<Library />} />
+                    <Route path="/settings" element={<Settings />} />
                     <Route path="/auth" element={<Auth />} />
                     <Route path="/reset-password" element={<ResetPassword />} />
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

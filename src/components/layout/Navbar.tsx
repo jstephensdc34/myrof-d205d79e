@@ -16,6 +16,11 @@ export const Navbar = () => {
           <div className="flex space-x-2">
             {isAuthenticated ? (
               <>
+                <Link to="/settings">
+                  <Button variant="outline" className="text-medical-600 border-medical-600 hover:bg-medical-100">
+                    Settings
+                  </Button>
+                </Link>
                 <Link to="/report">
                   <Button variant="default" className="bg-medical-600 hover:bg-medical-700">
                     Create Report

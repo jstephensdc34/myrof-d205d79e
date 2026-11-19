@@ -28,7 +28,7 @@ const Index = () => {
                 <p className="text-sm text-amber-800 mt-1">
                   Add your clinic name, contact info, and logo so they appear on every report and PDF you generate.
                 </p>
-                <Link to="/report" className="inline-block mt-2">
+                <Link to="/settings" className="inline-block mt-2">
                   <Button size="sm" className="bg-amber-600 hover:bg-amber-700">
                     Add clinic information
                   </Button>
@@ -45,7 +45,21 @@ const Index = () => {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-3xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl mx-auto">
+            <Card className="border-2 hover:border-medical-400 transition-all duration-200">
+              <CardHeader>
+                <CardTitle className="text-medical-700">Clinic Settings</CardTitle>
+                <CardDescription>Set your clinic name, logo, contact info and email template</CardDescription>
+              </CardHeader>
+              <CardContent className="flex flex-col items-center">
+                <Link to="/settings" className="w-full">
+                  <Button variant="outline" className="w-full text-medical-600 border-medical-600 hover:bg-medical-100">
+                    Open Settings
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+
             <Card className="border-2 hover:border-medical-400 transition-all duration-200">
               <CardHeader>
                 <CardTitle className="text-medical-700">Create New Report</CardTitle>

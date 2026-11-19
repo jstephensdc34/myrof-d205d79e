@@ -1,7 +1,6 @@
 
 import { useState, useEffect } from "react";
 import { Navbar } from "@/components/layout/Navbar";
-import { ReportSettings } from "@/components/report/ReportSettings";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useReportSettings } from "@/hooks/useReportSettings";
 import { useSupabaseConnection } from "@/hooks/useSupabaseConnection";
@@ -74,10 +73,6 @@ const Report = () => {
       <Navbar />
       <div className="container mx-auto py-8 px-4">
         <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "report" | "settings")} className="mb-6">
-          <TabsList className="mb-4">
-            <TabsTrigger value="report">Report Builder</TabsTrigger>
-            <TabsTrigger value="settings">Settings</TabsTrigger>
-          </TabsList>
           
           <TabsContent value="report">
             <UILayoutSwitcher value={uiLayout} onChange={setUiLayout} />
@@ -117,9 +112,6 @@ const Report = () => {
             />
           </TabsContent>
           
-          <TabsContent value="settings">
-            <ReportSettings onSettingsUpdated={reloadSettings} />
-          </TabsContent>
         </Tabs>
       </div>
     </div>
